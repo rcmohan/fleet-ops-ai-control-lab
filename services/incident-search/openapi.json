@@ -1,0 +1,374 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Prior Incident Search Service",
+    "description": "Retrieval and aggregate analysis over synthetic resolved incident history.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/incidents/search": {
+      "post": {
+        "tags": [
+          "Prior Incident Search Service"
+        ],
+        "summary": "Search similar incidents",
+        "description": "Search similar incidents",
+        "operationId": "searchSimilarIncidents",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/searchSimilarIncidentsResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eventType": {
+                    "title": "Eventtype",
+                    "type": "string"
+                  },
+                  "symptoms": {
+                    "items": {},
+                    "title": "Symptoms",
+                    "type": "array"
+                  },
+                  "regionCode": {
+                    "title": "Regioncode",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "eventType",
+                  "symptoms",
+                  "regionCode"
+                ],
+                "title": "searchSimilarIncidentsRequest",
+                "type": "object"
+              },
+              "example": {
+                "eventType": "battery_voltage",
+                "symptoms": [
+                  "low_voltage"
+                ],
+                "regionCode": "us-east"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/incidents/{incident_id}/resolution": {
+      "get": {
+        "tags": [
+          "Prior Incident Search Service"
+        ],
+        "summary": "Get incident resolution",
+        "description": "Get incident resolution",
+        "operationId": "getIncidentResolution",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getIncidentResolutionResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "incident_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/incident-patterns/resolutions": {
+      "get": {
+        "tags": [
+          "Prior Incident Search Service"
+        ],
+        "summary": "Get common resolution patterns",
+        "description": "Get common resolution patterns",
+        "operationId": "getCommonResolutionPatterns",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getCommonResolutionPatternsResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_type",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/incident-statistics/resolution-time": {
+      "get": {
+        "tags": [
+          "Prior Incident Search Service"
+        ],
+        "summary": "Get historical resolution-time statistics",
+        "description": "Get historical resolution-time statistics",
+        "operationId": "getHistoricalResolutionTime",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getHistoricalResolutionTimeResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_type",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "getCommonResolutionPatternsResponse": {
+        "properties": {
+          "eventType": {
+            "type": "string",
+            "title": "Eventtype",
+            "default": "battery_voltage"
+          },
+          "patterns": {
+            "items": {},
+            "type": "array",
+            "title": "Patterns",
+            "default": [
+              {
+                "resolution": "Inspect battery",
+                "occurrences": 12,
+                "successRate": 0.92
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getCommonResolutionPatternsResponse"
+      },
+      "getHistoricalResolutionTimeResponse": {
+        "properties": {
+          "eventType": {
+            "type": "string",
+            "title": "Eventtype",
+            "default": "battery_voltage"
+          },
+          "sampleSize": {
+            "type": "integer",
+            "title": "Samplesize",
+            "default": 20
+          },
+          "medianMinutes": {
+            "type": "integer",
+            "title": "Medianminutes",
+            "default": 150
+          },
+          "p95Minutes": {
+            "type": "integer",
+            "title": "P95Minutes",
+            "default": 360
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getHistoricalResolutionTimeResponse"
+      },
+      "getIncidentResolutionResponse": {
+        "properties": {
+          "incidentId": {
+            "type": "string",
+            "title": "Incidentid",
+            "default": "{incident_id}"
+          },
+          "rootCause": {
+            "type": "string",
+            "title": "Rootcause",
+            "default": "Synthetic battery aging"
+          },
+          "resolution": {
+            "type": "string",
+            "title": "Resolution",
+            "default": "Battery inspected and replaced"
+          },
+          "outcome": {
+            "type": "string",
+            "title": "Outcome",
+            "default": "resolved"
+          },
+          "timeToResolveMinutes": {
+            "type": "integer",
+            "title": "Timetoresolveminutes",
+            "default": 180
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getIncidentResolutionResponse"
+      },
+      "searchSimilarIncidentsResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items",
+            "default": [
+              {
+                "incidentId": "inc_demo_001",
+                "similarity": 0.88,
+                "eventType": "battery_voltage",
+                "outcome": "resolved"
+              }
+            ]
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "searchSimilarIncidentsResponse"
+      }
+    }
+  }
+}

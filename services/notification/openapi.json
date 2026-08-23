@@ -1,0 +1,412 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Notification Service",
+    "description": "Synthetic notification drafts, delivery attempts, and status with approval controls.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/notifications/fleet-drafts": {
+      "post": {
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Draft a fleet notification",
+        "description": "Draft a fleet notification",
+        "operationId": "draftFleetNotification",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "fleetId": {
+                    "type": "string",
+                    "title": "Fleetid"
+                  },
+                  "eventId": {
+                    "type": "string",
+                    "title": "Eventid"
+                  }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "fleetId",
+                  "eventId"
+                ],
+                "title": "draftFleetNotificationRequest"
+              },
+              "example": {
+                "fleetId": "flt_demo_001",
+                "eventId": "evt_demo_001"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/draftFleetNotificationResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/notifications/internal": {
+      "post": {
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Send an internal notification",
+        "description": "Send an internal notification",
+        "operationId": "sendInternalNotification",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "teamId": {
+                    "type": "string",
+                    "title": "Teamid"
+                  },
+                  "message": {
+                    "type": "string",
+                    "title": "Message"
+                  }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "teamId",
+                  "message"
+                ],
+                "title": "sendInternalNotificationRequest"
+              },
+              "example": {
+                "teamId": "team_ops",
+                "message": "Synthetic internal notification"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/sendInternalNotificationResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/notifications/fleet-manager": {
+      "post": {
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Send an approved fleet-manager notification",
+        "description": "Send an approved fleet-manager notification",
+        "operationId": "sendFleetManagerNotification",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "fleetId": {
+                    "type": "string",
+                    "title": "Fleetid"
+                  },
+                  "message": {
+                    "type": "string",
+                    "title": "Message"
+                  },
+                  "approvalId": {
+                    "type": "string",
+                    "title": "Approvalid"
+                  }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "fleetId",
+                  "message",
+                  "approvalId"
+                ],
+                "title": "sendFleetManagerNotificationRequest"
+              },
+              "example": {
+                "fleetId": "flt_demo_001",
+                "message": "Synthetic customer notification",
+                "approvalId": "apr_demo_001"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/sendFleetManagerNotificationResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/notifications/{notification_id}": {
+      "get": {
+        "tags": [
+          "Notification Service"
+        ],
+        "summary": "Get notification status",
+        "description": "Get notification status",
+        "operationId": "getNotificationStatus",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getNotificationStatusResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "notification_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "draftFleetNotificationResponse": {
+        "properties": {
+          "notificationId": {
+            "type": "string",
+            "title": "Notificationid",
+            "default": "ntf_demo_001"
+          },
+          "fleetId": {
+            "type": "string",
+            "title": "Fleetid",
+            "default": "flt_demo_001"
+          },
+          "eventId": {
+            "type": "string",
+            "title": "Eventid",
+            "default": "evt_demo_001"
+          },
+          "channel": {
+            "type": "string",
+            "title": "Channel",
+            "default": "email"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "draft"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": "Synthetic fleet notification draft"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "draftFleetNotificationResponse"
+      },
+      "getNotificationStatusResponse": {
+        "properties": {
+          "notificationId": {
+            "type": "string",
+            "title": "Notificationid",
+            "default": "{notification_id}"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "delivered"
+          },
+          "channel": {
+            "type": "string",
+            "title": "Channel",
+            "default": "email"
+          },
+          "attemptCount": {
+            "type": "integer",
+            "title": "Attemptcount",
+            "default": 1
+          },
+          "updatedAt": {
+            "type": "string",
+            "title": "Updatedat",
+            "default": "2026-08-22T12:00:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getNotificationStatusResponse"
+      },
+      "sendFleetManagerNotificationResponse": {
+        "properties": {
+          "notificationId": {
+            "type": "string",
+            "title": "Notificationid",
+            "default": "ntf_demo_003"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "delivered"
+          },
+          "channel": {
+            "type": "string",
+            "title": "Channel",
+            "default": "email"
+          },
+          "approvalId": {
+            "type": "string",
+            "title": "Approvalid",
+            "default": "apr_demo_001"
+          },
+          "deliveredAt": {
+            "type": "string",
+            "title": "Deliveredat",
+            "default": "2026-08-22T12:00:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "sendFleetManagerNotificationResponse"
+      },
+      "sendInternalNotificationResponse": {
+        "properties": {
+          "notificationId": {
+            "type": "string",
+            "title": "Notificationid",
+            "default": "ntf_demo_002"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "delivered"
+          },
+          "channel": {
+            "type": "string",
+            "title": "Channel",
+            "default": "internal"
+          },
+          "deliveredAt": {
+            "type": "string",
+            "title": "Deliveredat",
+            "default": "2026-08-22T12:00:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "sendInternalNotificationResponse"
+      }
+    }
+  }
+}

@@ -1,0 +1,748 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Telematics Unit Master Service",
+    "description": "Authoritative telematics hardware inventory and capability metadata.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/telematics-units/{unit_id}": {
+      "get": {
+        "tags": [
+          "Telematics Unit Master Service"
+        ],
+        "summary": "Get a telematics unit",
+        "description": "Get a telematics unit",
+        "operationId": "getTelematicsUnit",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getTelematicsUnitResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "unit_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/telematics-units": {
+      "post": {
+        "tags": [
+          "Telematics Unit Master Service"
+        ],
+        "summary": "Create a synthetic telematics unit",
+        "description": "Create a synthetic telematics unit",
+        "operationId": "createTelematicsUnit",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "serialNumber": {
+                    "type": "string",
+                    "title": "Serialnumber"
+                  },
+                  "hardwareModel": {
+                    "type": "string",
+                    "title": "Hardwaremodel"
+                  },
+                  "firmwareVersion": {
+                    "type": "string",
+                    "title": "Firmwareversion"
+                  }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "serialNumber",
+                  "hardwareModel",
+                  "firmwareVersion"
+                ],
+                "title": "createTelematicsUnitRequest"
+              },
+              "example": {
+                "serialNumber": "TCU-SYNTH-0001",
+                "hardwareModel": "NX-5G",
+                "firmwareVersion": "3.4.1"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createTelematicsUnitResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/telematics-units/{unit_id}/firmware": {
+      "put": {
+        "tags": [
+          "Telematics Unit Master Service"
+        ],
+        "summary": "Update installed firmware inventory",
+        "description": "Update installed firmware inventory",
+        "operationId": "updateFirmwareInventory",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/updateFirmwareInventoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "unit_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "firmwareVersion": {
+                    "title": "Firmwareversion",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "firmwareVersion"
+                ],
+                "title": "updateFirmwareInventoryRequest",
+                "type": "object"
+              },
+              "example": {
+                "firmwareVersion": "3.5.0"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/telematics-units/{unit_id}/lifecycle-status": {
+      "put": {
+        "tags": [
+          "Telematics Unit Master Service"
+        ],
+        "summary": "Set telematics unit lifecycle status",
+        "description": "Set telematics unit lifecycle status",
+        "operationId": "setTelematicsUnitLifecycleStatus",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/setTelematicsUnitLifecycleStatusResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "unit_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "status": {
+                    "title": "Status",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "status"
+                ],
+                "title": "setTelematicsUnitLifecycleStatusRequest",
+                "type": "object"
+              },
+              "example": {
+                "status": "suspended"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/telematics-units/{unit_id}/remote-command-eligibility": {
+      "put": {
+        "tags": [
+          "Telematics Unit Master Service"
+        ],
+        "summary": "Set remote-command eligibility",
+        "description": "Set remote-command eligibility",
+        "operationId": "setRemoteCommandEligibility",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/setRemoteCommandEligibilityResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "unit_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eligibility": {
+                    "title": "Eligibility",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "eligibility"
+                ],
+                "title": "setRemoteCommandEligibilityRequest",
+                "type": "object"
+              },
+              "example": {
+                "eligibility": "approval_required"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/telematics-units/{unit_id}/capabilities": {
+      "put": {
+        "tags": [
+          "Telematics Unit Master Service"
+        ],
+        "summary": "Replace unit capabilities",
+        "description": "Replace unit capabilities",
+        "operationId": "replaceTelematicsUnitCapabilities",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/replaceTelematicsUnitCapabilitiesResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "unit_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "capabilities": {
+                    "items": {},
+                    "title": "Capabilities",
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "capabilities"
+                ],
+                "title": "replaceTelematicsUnitCapabilitiesRequest",
+                "type": "object"
+              },
+              "example": {
+                "capabilities": [
+                  "diagnostics",
+                  "location"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "createTelematicsUnitResponse": {
+        "properties": {
+          "unitId": {
+            "type": "string",
+            "title": "Unitid",
+            "default": "tcu_demo_001"
+          },
+          "serialNumber": {
+            "type": "string",
+            "title": "Serialnumber",
+            "default": "TCU-SYNTH-0001"
+          },
+          "hardwareModel": {
+            "type": "string",
+            "title": "Hardwaremodel",
+            "default": "NX-5G"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "title": "Firmwareversion",
+            "default": "3.4.1"
+          },
+          "activationDate": {
+            "type": "string",
+            "title": "Activationdate",
+            "default": "2026-01-15"
+          },
+          "networkCarrier": {
+            "type": "string",
+            "title": "Networkcarrier",
+            "default": "Synthetic Wireless"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "active"
+          },
+          "remoteCommandEligibility": {
+            "type": "string",
+            "title": "Remotecommandeligibility",
+            "default": "approval_required"
+          },
+          "capabilities": {
+            "items": {},
+            "type": "array",
+            "title": "Capabilities",
+            "default": [
+              "diagnostics",
+              "location",
+              "remote_command"
+            ]
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 1
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "createTelematicsUnitResponse"
+      },
+      "getTelematicsUnitResponse": {
+        "properties": {
+          "unitId": {
+            "type": "string",
+            "title": "Unitid",
+            "default": "{unit_id}"
+          },
+          "serialNumber": {
+            "type": "string",
+            "title": "Serialnumber",
+            "default": "TCU-SYNTH-0001"
+          },
+          "hardwareModel": {
+            "type": "string",
+            "title": "Hardwaremodel",
+            "default": "NX-5G"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "title": "Firmwareversion",
+            "default": "3.4.1"
+          },
+          "activationDate": {
+            "type": "string",
+            "title": "Activationdate",
+            "default": "2026-01-15"
+          },
+          "networkCarrier": {
+            "type": "string",
+            "title": "Networkcarrier",
+            "default": "Synthetic Wireless"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "active"
+          },
+          "remoteCommandEligibility": {
+            "type": "string",
+            "title": "Remotecommandeligibility",
+            "default": "approval_required"
+          },
+          "capabilities": {
+            "items": {},
+            "type": "array",
+            "title": "Capabilities",
+            "default": [
+              "diagnostics",
+              "location",
+              "remote_command"
+            ]
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 1
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getTelematicsUnitResponse"
+      },
+      "replaceTelematicsUnitCapabilitiesResponse": {
+        "properties": {
+          "unitId": {
+            "type": "string",
+            "title": "Unitid",
+            "default": "{unit_id}"
+          },
+          "capabilities": {
+            "items": {},
+            "type": "array",
+            "title": "Capabilities",
+            "default": [
+              "diagnostics",
+              "location"
+            ]
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 2
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "replaceTelematicsUnitCapabilitiesResponse"
+      },
+      "setRemoteCommandEligibilityResponse": {
+        "properties": {
+          "unitId": {
+            "type": "string",
+            "title": "Unitid",
+            "default": "{unit_id}"
+          },
+          "serialNumber": {
+            "type": "string",
+            "title": "Serialnumber",
+            "default": "TCU-SYNTH-0001"
+          },
+          "hardwareModel": {
+            "type": "string",
+            "title": "Hardwaremodel",
+            "default": "NX-5G"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "title": "Firmwareversion",
+            "default": "3.4.1"
+          },
+          "activationDate": {
+            "type": "string",
+            "title": "Activationdate",
+            "default": "2026-01-15"
+          },
+          "networkCarrier": {
+            "type": "string",
+            "title": "Networkcarrier",
+            "default": "Synthetic Wireless"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "active"
+          },
+          "remoteCommandEligibility": {
+            "type": "string",
+            "title": "Remotecommandeligibility",
+            "default": "approval_required"
+          },
+          "capabilities": {
+            "items": {},
+            "type": "array",
+            "title": "Capabilities",
+            "default": [
+              "diagnostics",
+              "location",
+              "remote_command"
+            ]
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 2
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "setRemoteCommandEligibilityResponse"
+      },
+      "setTelematicsUnitLifecycleStatusResponse": {
+        "properties": {
+          "unitId": {
+            "type": "string",
+            "title": "Unitid",
+            "default": "{unit_id}"
+          },
+          "serialNumber": {
+            "type": "string",
+            "title": "Serialnumber",
+            "default": "TCU-SYNTH-0001"
+          },
+          "hardwareModel": {
+            "type": "string",
+            "title": "Hardwaremodel",
+            "default": "NX-5G"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "title": "Firmwareversion",
+            "default": "3.4.1"
+          },
+          "activationDate": {
+            "type": "string",
+            "title": "Activationdate",
+            "default": "2026-01-15"
+          },
+          "networkCarrier": {
+            "type": "string",
+            "title": "Networkcarrier",
+            "default": "Synthetic Wireless"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "suspended"
+          },
+          "remoteCommandEligibility": {
+            "type": "string",
+            "title": "Remotecommandeligibility",
+            "default": "approval_required"
+          },
+          "capabilities": {
+            "items": {},
+            "type": "array",
+            "title": "Capabilities",
+            "default": [
+              "diagnostics",
+              "location",
+              "remote_command"
+            ]
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 2
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "setTelematicsUnitLifecycleStatusResponse"
+      },
+      "updateFirmwareInventoryResponse": {
+        "properties": {
+          "unitId": {
+            "type": "string",
+            "title": "Unitid",
+            "default": "{unit_id}"
+          },
+          "serialNumber": {
+            "type": "string",
+            "title": "Serialnumber",
+            "default": "TCU-SYNTH-0001"
+          },
+          "hardwareModel": {
+            "type": "string",
+            "title": "Hardwaremodel",
+            "default": "NX-5G"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "title": "Firmwareversion",
+            "default": "3.5.0"
+          },
+          "activationDate": {
+            "type": "string",
+            "title": "Activationdate",
+            "default": "2026-01-15"
+          },
+          "networkCarrier": {
+            "type": "string",
+            "title": "Networkcarrier",
+            "default": "Synthetic Wireless"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "active"
+          },
+          "remoteCommandEligibility": {
+            "type": "string",
+            "title": "Remotecommandeligibility",
+            "default": "approval_required"
+          },
+          "capabilities": {
+            "items": {},
+            "type": "array",
+            "title": "Capabilities",
+            "default": [
+              "diagnostics",
+              "location",
+              "remote_command"
+            ]
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 2
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "updateFirmwareInventoryResponse"
+      }
+    }
+  }
+}

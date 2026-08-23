@@ -1,0 +1,711 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Service Provider Master Service",
+    "description": "Authoritative synthetic provider directory, coverage, capabilities, and capacity.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/service-providers/{provider_id}": {
+      "get": {
+        "tags": [
+          "Service Provider Master Service"
+        ],
+        "summary": "Get a service provider",
+        "description": "Get a service provider",
+        "operationId": "getServiceProvider",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getServiceProviderResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "provider_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      },
+      "patch": {
+        "tags": [
+          "Service Provider Master Service"
+        ],
+        "summary": "Update provider-owned fields",
+        "description": "Update provider-owned fields",
+        "operationId": "updateServiceProvider",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/updateServiceProviderResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "provider_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "dailyCapacity": {
+                    "title": "Dailycapacity",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "dailyCapacity"
+                ],
+                "title": "updateServiceProviderRequest",
+                "type": "object"
+              },
+              "example": {
+                "dailyCapacity": 25
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/service-providers": {
+      "get": {
+        "tags": [
+          "Service Provider Master Service"
+        ],
+        "summary": "List matching service providers",
+        "description": "List matching service providers",
+        "operationId": "listServiceProviders",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/listServiceProvidersResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "capability",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      },
+      "post": {
+        "tags": [
+          "Service Provider Master Service"
+        ],
+        "summary": "Create a synthetic service provider",
+        "description": "Create a synthetic service provider",
+        "operationId": "createServiceProvider",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createServiceProviderResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "providerName": {
+                    "title": "Providername",
+                    "type": "string"
+                  },
+                  "regions": {
+                    "items": {},
+                    "title": "Regions",
+                    "type": "array"
+                  },
+                  "capabilities": {
+                    "items": {},
+                    "title": "Capabilities",
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "providerName",
+                  "regions",
+                  "capabilities"
+                ],
+                "title": "createServiceProviderRequest",
+                "type": "object"
+              },
+              "example": {
+                "providerName": "Synthetic Service Network East",
+                "regions": [
+                  "us-east"
+                ],
+                "capabilities": [
+                  "battery",
+                  "diagnostics"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/service-providers/{provider_id}/status": {
+      "put": {
+        "tags": [
+          "Service Provider Master Service"
+        ],
+        "summary": "Set provider lifecycle status",
+        "description": "Set provider lifecycle status",
+        "operationId": "setServiceProviderStatus",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/setServiceProviderStatusResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "provider_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "status": {
+                    "title": "Status",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "status"
+                ],
+                "title": "setServiceProviderStatusRequest",
+                "type": "object"
+              },
+              "example": {
+                "status": "at_capacity"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/service-providers/{provider_id}/coverage": {
+      "put": {
+        "tags": [
+          "Service Provider Master Service"
+        ],
+        "summary": "Replace provider coverage and capabilities",
+        "description": "Replace provider coverage and capabilities",
+        "operationId": "replaceServiceProviderCoverage",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/replaceServiceProviderCoverageResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "provider_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "regions": {
+                    "items": {},
+                    "title": "Regions",
+                    "type": "array"
+                  },
+                  "capabilities": {
+                    "items": {},
+                    "title": "Capabilities",
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "regions",
+                  "capabilities"
+                ],
+                "title": "replaceServiceProviderCoverageRequest",
+                "type": "object"
+              },
+              "example": {
+                "regions": [
+                  "us-east"
+                ],
+                "capabilities": [
+                  "battery",
+                  "diagnostics"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "createServiceProviderResponse": {
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "title": "Providerid",
+            "default": "sp_demo_001"
+          },
+          "providerName": {
+            "type": "string",
+            "title": "Providername",
+            "default": "Synthetic Service Network East"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "active"
+          },
+          "averageResponseMinutes": {
+            "type": "integer",
+            "title": "Averageresponseminutes",
+            "default": 45
+          },
+          "dailyCapacity": {
+            "type": "integer",
+            "title": "Dailycapacity",
+            "default": 20
+          },
+          "regions": {
+            "items": {},
+            "type": "array",
+            "title": "Regions",
+            "default": [
+              "us-east"
+            ]
+          },
+          "capabilities": {
+            "items": {},
+            "type": "array",
+            "title": "Capabilities",
+            "default": [
+              "battery",
+              "diagnostics"
+            ]
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 1
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "createServiceProviderResponse"
+      },
+      "getServiceProviderResponse": {
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "title": "Providerid",
+            "default": "{provider_id}"
+          },
+          "providerName": {
+            "type": "string",
+            "title": "Providername",
+            "default": "Synthetic Service Network East"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "active"
+          },
+          "averageResponseMinutes": {
+            "type": "integer",
+            "title": "Averageresponseminutes",
+            "default": 45
+          },
+          "dailyCapacity": {
+            "type": "integer",
+            "title": "Dailycapacity",
+            "default": 20
+          },
+          "regions": {
+            "items": {},
+            "type": "array",
+            "title": "Regions",
+            "default": [
+              "us-east"
+            ]
+          },
+          "capabilities": {
+            "items": {},
+            "type": "array",
+            "title": "Capabilities",
+            "default": [
+              "battery",
+              "diagnostics"
+            ]
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 1
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getServiceProviderResponse"
+      },
+      "listServiceProvidersResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items",
+            "default": [
+              {
+                "providerId": "sp_demo_001",
+                "providerName": "Synthetic Service Network East",
+                "lifecycleStatus": "active",
+                "averageResponseMinutes": 45,
+                "dailyCapacity": 20,
+                "regions": [
+                  "us-east"
+                ],
+                "capabilities": [
+                  "battery",
+                  "diagnostics"
+                ],
+                "sourceVersion": 1
+              }
+            ]
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "listServiceProvidersResponse"
+      },
+      "replaceServiceProviderCoverageResponse": {
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "title": "Providerid",
+            "default": "{provider_id}"
+          },
+          "regions": {
+            "items": {},
+            "type": "array",
+            "title": "Regions",
+            "default": [
+              "us-east"
+            ]
+          },
+          "capabilities": {
+            "items": {},
+            "type": "array",
+            "title": "Capabilities",
+            "default": [
+              "battery",
+              "diagnostics"
+            ]
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 2
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "replaceServiceProviderCoverageResponse"
+      },
+      "setServiceProviderStatusResponse": {
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "title": "Providerid",
+            "default": "{provider_id}"
+          },
+          "providerName": {
+            "type": "string",
+            "title": "Providername",
+            "default": "Synthetic Service Network East"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "at_capacity"
+          },
+          "averageResponseMinutes": {
+            "type": "integer",
+            "title": "Averageresponseminutes",
+            "default": 45
+          },
+          "dailyCapacity": {
+            "type": "integer",
+            "title": "Dailycapacity",
+            "default": 20
+          },
+          "regions": {
+            "items": {},
+            "type": "array",
+            "title": "Regions",
+            "default": [
+              "us-east"
+            ]
+          },
+          "capabilities": {
+            "items": {},
+            "type": "array",
+            "title": "Capabilities",
+            "default": [
+              "battery",
+              "diagnostics"
+            ]
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 2
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "setServiceProviderStatusResponse"
+      },
+      "updateServiceProviderResponse": {
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "title": "Providerid",
+            "default": "{provider_id}"
+          },
+          "providerName": {
+            "type": "string",
+            "title": "Providername",
+            "default": "Synthetic Service Network East"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "active"
+          },
+          "averageResponseMinutes": {
+            "type": "integer",
+            "title": "Averageresponseminutes",
+            "default": 45
+          },
+          "dailyCapacity": {
+            "type": "integer",
+            "title": "Dailycapacity",
+            "default": 20
+          },
+          "regions": {
+            "items": {},
+            "type": "array",
+            "title": "Regions",
+            "default": [
+              "us-east"
+            ]
+          },
+          "capabilities": {
+            "items": {},
+            "type": "array",
+            "title": "Capabilities",
+            "default": [
+              "battery",
+              "diagnostics"
+            ]
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 2
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "updateServiceProviderResponse"
+      }
+    }
+  }
+}

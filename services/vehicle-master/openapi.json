@@ -1,0 +1,867 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Vehicle Master Service",
+    "description": "Authoritative vehicle identity, specifications, lifecycle, and assignment references.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vehicles/{vehicle_id}": {
+      "get": {
+        "tags": [
+          "Vehicle Master Service"
+        ],
+        "summary": "Get a vehicle profile",
+        "description": "Get a vehicle profile",
+        "operationId": "getVehicleProfile",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getVehicleProfileResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      },
+      "patch": {
+        "tags": [
+          "Vehicle Master Service"
+        ],
+        "summary": "Update vehicle-owned profile fields",
+        "description": "Update vehicle-owned profile fields",
+        "operationId": "updateVehicleProfile",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/updateVehicleProfileResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "regionCode": {
+                    "title": "Regioncode",
+                    "type": "string"
+                  },
+                  "priorityLevel": {
+                    "title": "Prioritylevel",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "regionCode",
+                  "priorityLevel"
+                ],
+                "title": "updateVehicleProfileRequest",
+                "type": "object"
+              },
+              "example": {
+                "regionCode": "us-east",
+                "priorityLevel": "high"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vehicles": {
+      "post": {
+        "tags": [
+          "Vehicle Master Service"
+        ],
+        "summary": "Create a synthetic vehicle",
+        "description": "Create a synthetic vehicle",
+        "operationId": "createVehicle",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createVehicleResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "syntheticVin": {
+                    "title": "Syntheticvin",
+                    "type": "string"
+                  },
+                  "make": {
+                    "title": "Make",
+                    "type": "string"
+                  },
+                  "model": {
+                    "title": "Model",
+                    "type": "string"
+                  },
+                  "modelYear": {
+                    "title": "Modelyear",
+                    "type": "integer"
+                  },
+                  "powertrainType": {
+                    "title": "Powertraintype",
+                    "type": "string"
+                  },
+                  "regionCode": {
+                    "title": "Regioncode",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "syntheticVin",
+                  "make",
+                  "model",
+                  "modelYear",
+                  "powertrainType",
+                  "regionCode"
+                ],
+                "title": "createVehicleRequest",
+                "type": "object"
+              },
+              "example": {
+                "syntheticVin": "SYNTH000000000001",
+                "make": "Nova",
+                "model": "Transit-E",
+                "modelYear": 2026,
+                "powertrainType": "battery_electric",
+                "regionCode": "us-east"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Vehicle Master Service"
+        ],
+        "summary": "List vehicles referencing a fleet",
+        "description": "List vehicles referencing a fleet",
+        "operationId": "listVehiclesByFleet",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/listVehiclesByFleetResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fleet_id",
+            "in": "query",
+            "required": false,
+            "description": "Opaque Fleet Master ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/vehicles/{vehicle_id}/lifecycle-status": {
+      "put": {
+        "tags": [
+          "Vehicle Master Service"
+        ],
+        "summary": "Set vehicle lifecycle status",
+        "description": "Set vehicle lifecycle status",
+        "operationId": "setVehicleLifecycleStatus",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/setVehicleLifecycleStatusResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "status": {
+                    "title": "Status",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "status"
+                ],
+                "title": "setVehicleLifecycleStatusRequest",
+                "type": "object"
+              },
+              "example": {
+                "status": "inactive"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vehicles/{vehicle_id}/fleet-assignment": {
+      "put": {
+        "tags": [
+          "Vehicle Master Service"
+        ],
+        "summary": "Assign or unassign a fleet ID",
+        "description": "Assign or unassign a fleet ID",
+        "operationId": "assignVehicleToFleet",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/assignVehicleToFleetResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "fleetId": {
+                    "title": "Fleetid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "fleetId"
+                ],
+                "title": "assignVehicleToFleetRequest",
+                "type": "object"
+              },
+              "example": {
+                "fleetId": "flt_demo_001"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vehicles/{vehicle_id}/telematics-unit-assignment": {
+      "put": {
+        "tags": [
+          "Vehicle Master Service"
+        ],
+        "summary": "Assign or unassign a telematics unit ID",
+        "description": "Assign or unassign a telematics unit ID",
+        "operationId": "assignTelematicsUnit",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/assignTelematicsUnitResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "telematicsUnitId": {
+                    "title": "Telematicsunitid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "telematicsUnitId"
+                ],
+                "title": "assignTelematicsUnitRequest",
+                "type": "object"
+              },
+              "example": {
+                "telematicsUnitId": "tcu_demo_001"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "assignTelematicsUnitResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "telematicsUnitId": {
+            "type": "string",
+            "title": "Telematicsunitid",
+            "default": "tcu_demo_001"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 2
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "assignTelematicsUnitResponse"
+      },
+      "assignVehicleToFleetResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "fleetId": {
+            "type": "string",
+            "title": "Fleetid",
+            "default": "flt_demo_001"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 2
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "assignVehicleToFleetResponse"
+      },
+      "createVehicleResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "veh_demo_001"
+          },
+          "syntheticVin": {
+            "type": "string",
+            "title": "Syntheticvin",
+            "default": "SYNTH000000000001"
+          },
+          "make": {
+            "type": "string",
+            "title": "Make",
+            "default": "Nova"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "default": "Transit-E"
+          },
+          "modelYear": {
+            "type": "integer",
+            "title": "Modelyear",
+            "default": 2026
+          },
+          "powertrainType": {
+            "type": "string",
+            "title": "Powertraintype",
+            "default": "battery_electric"
+          },
+          "regionCode": {
+            "type": "string",
+            "title": "Regioncode",
+            "default": "us-east"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "active"
+          },
+          "serviceStatus": {
+            "type": "string",
+            "title": "Servicestatus",
+            "default": "in_service"
+          },
+          "warrantyStatus": {
+            "type": "string",
+            "title": "Warrantystatus",
+            "default": "active"
+          },
+          "priorityLevel": {
+            "type": "string",
+            "title": "Prioritylevel",
+            "default": "standard"
+          },
+          "fleetId": {
+            "type": "string",
+            "title": "Fleetid",
+            "default": "flt_demo_001"
+          },
+          "telematicsUnitId": {
+            "type": "string",
+            "title": "Telematicsunitid",
+            "default": "tcu_demo_001"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 1
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "createVehicleResponse"
+      },
+      "getVehicleProfileResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "syntheticVin": {
+            "type": "string",
+            "title": "Syntheticvin",
+            "default": "SYNTH000000000001"
+          },
+          "make": {
+            "type": "string",
+            "title": "Make",
+            "default": "Nova"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "default": "Transit-E"
+          },
+          "modelYear": {
+            "type": "integer",
+            "title": "Modelyear",
+            "default": 2026
+          },
+          "powertrainType": {
+            "type": "string",
+            "title": "Powertraintype",
+            "default": "battery_electric"
+          },
+          "regionCode": {
+            "type": "string",
+            "title": "Regioncode",
+            "default": "us-east"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "active"
+          },
+          "serviceStatus": {
+            "type": "string",
+            "title": "Servicestatus",
+            "default": "in_service"
+          },
+          "warrantyStatus": {
+            "type": "string",
+            "title": "Warrantystatus",
+            "default": "active"
+          },
+          "priorityLevel": {
+            "type": "string",
+            "title": "Prioritylevel",
+            "default": "standard"
+          },
+          "fleetId": {
+            "type": "string",
+            "title": "Fleetid",
+            "default": "flt_demo_001"
+          },
+          "telematicsUnitId": {
+            "type": "string",
+            "title": "Telematicsunitid",
+            "default": "tcu_demo_001"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 1
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getVehicleProfileResponse"
+      },
+      "listVehiclesByFleetResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items",
+            "default": [
+              {
+                "vehicleId": "veh_demo_001",
+                "syntheticVin": "SYNTH000000000001",
+                "make": "Nova",
+                "model": "Transit-E",
+                "modelYear": 2026,
+                "powertrainType": "battery_electric",
+                "regionCode": "us-east",
+                "lifecycleStatus": "active",
+                "serviceStatus": "in_service",
+                "warrantyStatus": "active",
+                "priorityLevel": "standard",
+                "fleetId": "flt_demo_001",
+                "telematicsUnitId": "tcu_demo_001",
+                "sourceVersion": 1
+              }
+            ]
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "listVehiclesByFleetResponse"
+      },
+      "setVehicleLifecycleStatusResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "syntheticVin": {
+            "type": "string",
+            "title": "Syntheticvin",
+            "default": "SYNTH000000000001"
+          },
+          "make": {
+            "type": "string",
+            "title": "Make",
+            "default": "Nova"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "default": "Transit-E"
+          },
+          "modelYear": {
+            "type": "integer",
+            "title": "Modelyear",
+            "default": 2026
+          },
+          "powertrainType": {
+            "type": "string",
+            "title": "Powertraintype",
+            "default": "battery_electric"
+          },
+          "regionCode": {
+            "type": "string",
+            "title": "Regioncode",
+            "default": "us-east"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "inactive"
+          },
+          "serviceStatus": {
+            "type": "string",
+            "title": "Servicestatus",
+            "default": "in_service"
+          },
+          "warrantyStatus": {
+            "type": "string",
+            "title": "Warrantystatus",
+            "default": "active"
+          },
+          "priorityLevel": {
+            "type": "string",
+            "title": "Prioritylevel",
+            "default": "standard"
+          },
+          "fleetId": {
+            "type": "string",
+            "title": "Fleetid",
+            "default": "flt_demo_001"
+          },
+          "telematicsUnitId": {
+            "type": "string",
+            "title": "Telematicsunitid",
+            "default": "tcu_demo_001"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 2
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "setVehicleLifecycleStatusResponse"
+      },
+      "updateVehicleProfileResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "syntheticVin": {
+            "type": "string",
+            "title": "Syntheticvin",
+            "default": "SYNTH000000000001"
+          },
+          "make": {
+            "type": "string",
+            "title": "Make",
+            "default": "Nova"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "default": "Transit-E"
+          },
+          "modelYear": {
+            "type": "integer",
+            "title": "Modelyear",
+            "default": 2026
+          },
+          "powertrainType": {
+            "type": "string",
+            "title": "Powertraintype",
+            "default": "battery_electric"
+          },
+          "regionCode": {
+            "type": "string",
+            "title": "Regioncode",
+            "default": "us-east"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "title": "Lifecyclestatus",
+            "default": "active"
+          },
+          "serviceStatus": {
+            "type": "string",
+            "title": "Servicestatus",
+            "default": "in_service"
+          },
+          "warrantyStatus": {
+            "type": "string",
+            "title": "Warrantystatus",
+            "default": "active"
+          },
+          "priorityLevel": {
+            "type": "string",
+            "title": "Prioritylevel",
+            "default": "standard"
+          },
+          "fleetId": {
+            "type": "string",
+            "title": "Fleetid",
+            "default": "flt_demo_001"
+          },
+          "telematicsUnitId": {
+            "type": "string",
+            "title": "Telematicsunitid",
+            "default": "tcu_demo_001"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 2
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "updateVehicleProfileResponse"
+      }
+    }
+  }
+}

@@ -1,0 +1,520 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Vehicle Context Facade",
+    "description": "Read-only MCP/UCP composition of authoritative vehicle-related domain APIs.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vehicle-context/{vehicle_id}/profile": {
+      "get": {
+        "tags": [
+          "Vehicle Context Facade"
+        ],
+        "summary": "Get authoritative vehicle profile context",
+        "description": "Get authoritative vehicle profile context",
+        "operationId": "getVehicleProfile",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getVehicleProfileResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/vehicle-context/{vehicle_id}/telematics-unit": {
+      "get": {
+        "tags": [
+          "Vehicle Context Facade"
+        ],
+        "summary": "Get the assigned telematics unit context",
+        "description": "Get the assigned telematics unit context",
+        "operationId": "getVehicleTelematicsUnit",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getVehicleTelematicsUnitResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/vehicle-context/{vehicle_id}/fleet-assignment": {
+      "get": {
+        "tags": [
+          "Vehicle Context Facade"
+        ],
+        "summary": "Get fleet assignment context",
+        "description": "Get fleet assignment context",
+        "operationId": "getVehicleFleetAssignment",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getVehicleFleetAssignmentResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/vehicle-context/{vehicle_id}/service-history": {
+      "get": {
+        "tags": [
+          "Vehicle Context Facade"
+        ],
+        "summary": "Get composed service history",
+        "description": "Get composed service history",
+        "operationId": "getVehicleServiceHistory",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getVehicleServiceHistoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/vehicle-context/{vehicle_id}/current-state": {
+      "get": {
+        "tags": [
+          "Vehicle Context Facade"
+        ],
+        "summary": "Get current digital-twin state",
+        "description": "Get current digital-twin state",
+        "operationId": "getVehicleCurrentState",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getVehicleCurrentStateResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/vehicle-context/{vehicle_id}": {
+      "get": {
+        "tags": [
+          "Vehicle Context Facade"
+        ],
+        "summary": "Get a composed vehicle context bundle",
+        "description": "Get a composed vehicle context bundle",
+        "operationId": "getVehicleContext",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getVehicleContextResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Comma-separated context sections",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "getVehicleContextResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "profile": {
+            "type": "object",
+            "title": "Profile",
+            "default": {
+              "vehicleId": "veh_demo_001",
+              "make": "Nova",
+              "model": "Transit-E",
+              "modelYear": 2026,
+              "fleetId": "flt_demo_001",
+              "telematicsUnitId": "tcu_demo_001"
+            }
+          },
+          "fleet": {
+            "type": "object",
+            "title": "Fleet",
+            "default": {
+              "fleetId": "flt_demo_001"
+            }
+          },
+          "telematicsUnit": {
+            "type": "object",
+            "title": "Telematicsunit",
+            "default": {
+              "unitId": "tcu_demo_001"
+            }
+          },
+          "operationalState": {
+            "type": "object",
+            "title": "Operationalstate",
+            "default": {
+              "healthState": "healthy"
+            }
+          },
+          "unavailableDependencies": {
+            "items": {},
+            "type": "array",
+            "title": "Unavailabledependencies",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getVehicleContextResponse"
+      },
+      "getVehicleCurrentStateResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "healthState": {
+            "type": "string",
+            "title": "Healthstate",
+            "default": "healthy"
+          },
+          "odometerKm": {
+            "type": "number",
+            "title": "Odometerkm",
+            "default": 15000.0
+          },
+          "observedAt": {
+            "type": "string",
+            "title": "Observedat",
+            "default": "2026-08-22T12:00:00Z"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "digital-twin-context"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getVehicleCurrentStateResponse"
+      },
+      "getVehicleFleetAssignmentResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "fleetId": {
+            "type": "string",
+            "title": "Fleetid",
+            "default": "flt_demo_001"
+          },
+          "customerName": {
+            "type": "string",
+            "title": "Customername",
+            "default": "Northstar Synthetic Logistics"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "fleet-master"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getVehicleFleetAssignmentResponse"
+      },
+      "getVehicleProfileResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "make": {
+            "type": "string",
+            "title": "Make",
+            "default": "Nova"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "default": "Transit-E"
+          },
+          "modelYear": {
+            "type": "integer",
+            "title": "Modelyear",
+            "default": 2026
+          },
+          "fleetId": {
+            "type": "string",
+            "title": "Fleetid",
+            "default": "flt_demo_001"
+          },
+          "telematicsUnitId": {
+            "type": "string",
+            "title": "Telematicsunitid",
+            "default": "tcu_demo_001"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "vehicle-master"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getVehicleProfileResponse"
+      },
+      "getVehicleServiceHistoryResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items",
+            "default": [
+              {
+                "maintenanceId": "mtn_demo_001",
+                "status": "completed"
+              }
+            ]
+          },
+          "partial": {
+            "type": "boolean",
+            "title": "Partial",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getVehicleServiceHistoryResponse"
+      },
+      "getVehicleTelematicsUnitResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "unitId": {
+            "type": "string",
+            "title": "Unitid",
+            "default": "tcu_demo_001"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "title": "Firmwareversion",
+            "default": "3.4.1"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "telematics-unit-master"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getVehicleTelematicsUnitResponse"
+      }
+    }
+  }
+}

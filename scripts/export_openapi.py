@@ -1,12 +1,13 @@
 import importlib.util
 import json
+import sys
 from pathlib import Path
-
-from fleetops_runtime import build_app
-
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVICES = ROOT / "services"
+sys.path.insert(0, str(ROOT))
+
+from fleetops_runtime import build_app
 
 
 def load_contract(contract_file: Path):
@@ -32,4 +33,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

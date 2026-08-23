@@ -1,0 +1,20 @@
+FROM python:3.13-slim
+
+ARG SERVICE_PATH
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    FLEETOPS_SERVICE_PATH=/app/service
+
+WORKDIR /app
+
+COPY requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY fleetops_runtime ./fleetops_runtime
+COPY service_app.py ./service_app.py
+COPY ${SERVICE_PATH} ./service
+
+EXPOSE 8080
+
+CMD ["uvicorn", "service_app:app", "--host", "0.0.0.0", "--port", "8080"]
+

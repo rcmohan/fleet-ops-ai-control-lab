@@ -1,21 +1,39 @@
 # Application Service Contracts
 
-Each child folder is an independently owned application/domain boundary. The `API.md` files contain language-neutral signatures only; they are not runtime implementations, generated clients, transport bindings, or persistence code.
+Each child folder is an independently owned application/domain boundary. Every service contains:
 
-## Contract notation
+- `contract.py` — route definitions, request data objects, response data objects, and deterministic dummy values.
+- `openapi.json` — generated OpenAPI 3.1 contract.
+- `README.md` — ownership and boundary notes.
 
-```text
-Operation(request: RequestType, context: RequestContext) -> Result<ResponseType, ServiceError>
+The shared FastAPI runtime in `fleetops_runtime/` turns each contract into a runnable API. The services intentionally perform no persistence or downstream calls yet.
 
-type RequestContext = {
-  correlationId: string
-  actorId: string
-}
+## Run all services
 
-type PageRequest = { cursor?: string, limit?: integer }
-type Page<T> = { items: T[], nextCursor?: string }
-type TimeWindow = { from: timestamp, to: timestamp }
-type ServiceError = NotFound | InvalidRequest | Conflict | Forbidden | DependencyUnavailable
+```powershell
+docker compose up --build
+```
+
+Each API exposes:
+
+- Swagger UI at `/docs`
+- OpenAPI at `/openapi.json`
+- Liveness at `/health/live`
+- Readiness at `/health/ready`
+
+Ports are assigned from `8101` through `8115` in `compose.yaml` in catalog order.
+
+## Run one service locally
+
+```powershell
+$env:FLEETOPS_SERVICE_PATH = "services/approval"
+uvicorn service_app:app --reload --port 8114
+```
+
+Regenerate checked-in OpenAPI documents after changing a contract:
+
+```powershell
+python scripts/export_openapi.py
 ```
 
 Identifiers are opaque strings issued by the owning service. A signature containing another domain's ID does not create data ownership or a database foreign key.
@@ -44,7 +62,7 @@ Identifiers are opaque strings issued by the owning service. A signature contain
 
 - Each service owns its contracts and data; no service reads another service's database.
 - Cross-domain composition occurs through service calls or event-driven projections.
-- Mutating operations require an idempotency key when exposed over a transport.
-- Transport-specific HTTP, gRPC, event, and MCP mappings will be designed later.
-- Authentication, authorization, validation, pagination, and error payload details remain contract-design work.
-
+- Mutating operations will require an idempotency key when persistence is implemented.
+- Authentication and authorization are not implemented in the dummy services.
+- Request bodies are validated against generated Pydantic data objects; dummy responses are deterministic.
+- Database adapters, event publishing, downstream composition, and production error models remain implementation work.

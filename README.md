@@ -20,3 +20,15 @@ observability and auditability
 bounded autonomous execution
 
 The entire project should use synthetic data only. It should not use data, code, architecture, APIs, or business rules from any existing solutions.
+
+## Dummy application services
+
+The independently deployable FastAPI service stubs live under `services/`. Each has domain-specific routes and data objects, a generated OpenAPI 3.1 document, health endpoints, and deterministic synthetic responses.
+
+```powershell
+python -m pip install -r requirements-dev.txt
+python -m pytest -q
+docker compose up --build
+```
+
+Swagger UI is available on `/docs` for every running service. Compose maps the services to localhost ports `8101` through `8115`; see `services/README.md` for the catalog and local-run instructions.
