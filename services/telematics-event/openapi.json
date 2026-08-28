@@ -1,0 +1,603 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Telematics Event Service",
+    "description": "Synthetic telemetry ingestion, immutable event queries, and active alert projections.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/events": {
+      "post": {
+        "tags": [
+          "Telematics Event Service"
+        ],
+        "summary": "Ingest a synthetic vehicle event",
+        "description": "Ingest a synthetic vehicle event",
+        "operationId": "ingestVehicleEvent",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ingestVehicleEventResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "vehicleId": {
+                    "title": "Vehicleid",
+                    "type": "string"
+                  },
+                  "eventType": {
+                    "title": "Eventtype",
+                    "type": "string"
+                  },
+                  "observedAt": {
+                    "title": "Observedat",
+                    "type": "string"
+                  },
+                  "payload": {
+                    "title": "Payload",
+                    "type": "object"
+                  },
+                  "synthetic": {
+                    "title": "Synthetic",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "vehicleId",
+                  "eventType",
+                  "observedAt",
+                  "payload",
+                  "synthetic"
+                ],
+                "title": "ingestVehicleEventRequest",
+                "type": "object"
+              },
+              "example": {
+                "vehicleId": "veh_demo_001",
+                "eventType": "battery_voltage",
+                "observedAt": "2026-08-22T12:00:00Z",
+                "payload": {
+                  "voltage": 11.8
+                },
+                "synthetic": true
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Telematics Event Service"
+        ],
+        "summary": "Search events by type",
+        "description": "Search events by type",
+        "operationId": "searchEventsByType",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/searchEventsByTypeResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_type",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/vehicles/{vehicle_id}/events": {
+      "get": {
+        "tags": [
+          "Telematics Event Service"
+        ],
+        "summary": "Get recent vehicle events",
+        "description": "Get recent vehicle events",
+        "operationId": "getRecentVehicleEvents",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getRecentVehicleEventsResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/events/{event_id}": {
+      "get": {
+        "tags": [
+          "Telematics Event Service"
+        ],
+        "summary": "Get event details",
+        "description": "Get event details",
+        "operationId": "getEventDetails",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getEventDetailsResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/regions/{region}/events": {
+      "get": {
+        "tags": [
+          "Telematics Event Service"
+        ],
+        "summary": "Search events by region",
+        "description": "Search events by region",
+        "operationId": "searchEventsByRegion",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/searchEventsByRegionResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "region",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/vehicles/{vehicle_id}/active-alerts": {
+      "get": {
+        "tags": [
+          "Telematics Event Service"
+        ],
+        "summary": "Get active vehicle alerts",
+        "description": "Get active vehicle alerts",
+        "operationId": "getActiveAlerts",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getActiveAlertsResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "getActiveAlertsResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "alerts": {
+            "items": {},
+            "type": "array",
+            "title": "Alerts",
+            "default": [
+              {
+                "alertId": "alert_demo_001",
+                "eventId": "evt_demo_001",
+                "severity": "warning",
+                "status": "active"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getActiveAlertsResponse"
+      },
+      "getEventDetailsResponse": {
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "title": "Eventid",
+            "default": "{event_id}"
+          },
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "veh_demo_001"
+          },
+          "eventType": {
+            "type": "string",
+            "title": "Eventtype",
+            "default": "battery_voltage"
+          },
+          "severity": {
+            "type": "string",
+            "title": "Severity",
+            "default": "warning"
+          },
+          "regionCode": {
+            "type": "string",
+            "title": "Regioncode",
+            "default": "us-east"
+          },
+          "observedAt": {
+            "type": "string",
+            "title": "Observedat",
+            "default": "2026-08-22T12:00:00Z"
+          },
+          "payload": {
+            "type": "object",
+            "title": "Payload",
+            "default": {
+              "voltage": 11.8
+            }
+          },
+          "synthetic": {
+            "type": "boolean",
+            "title": "Synthetic",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getEventDetailsResponse"
+      },
+      "getRecentVehicleEventsResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items",
+            "default": [
+              {
+                "eventId": "evt_demo_001",
+                "vehicleId": "{vehicle_id}",
+                "eventType": "battery_voltage",
+                "severity": "warning",
+                "regionCode": "us-east",
+                "observedAt": "2026-08-22T12:00:00Z",
+                "payload": {
+                  "voltage": 11.8
+                },
+                "synthetic": true
+              }
+            ]
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getRecentVehicleEventsResponse"
+      },
+      "ingestVehicleEventResponse": {
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "title": "Eventid",
+            "default": "evt_demo_001"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "accepted"
+          },
+          "acceptedAt": {
+            "type": "string",
+            "title": "Acceptedat",
+            "default": "2026-08-22T12:00:01Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ingestVehicleEventResponse"
+      },
+      "searchEventsByRegionResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items",
+            "default": [
+              {
+                "eventId": "evt_demo_001",
+                "vehicleId": "veh_demo_001",
+                "eventType": "battery_voltage",
+                "severity": "warning",
+                "regionCode": "us-east",
+                "observedAt": "2026-08-22T12:00:00Z",
+                "payload": {
+                  "voltage": 11.8
+                },
+                "synthetic": true
+              }
+            ]
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "searchEventsByRegionResponse"
+      },
+      "searchEventsByTypeResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items",
+            "default": [
+              {
+                "eventId": "evt_demo_001",
+                "vehicleId": "veh_demo_001",
+                "eventType": "battery_voltage",
+                "severity": "warning",
+                "regionCode": "us-east",
+                "observedAt": "2026-08-22T12:00:00Z",
+                "payload": {
+                  "voltage": 11.8
+                },
+                "synthetic": true
+              }
+            ]
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "searchEventsByTypeResponse"
+      }
+    }
+  }
+}

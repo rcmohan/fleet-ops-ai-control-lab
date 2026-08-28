@@ -1,0 +1,433 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Policy and Playbook Service",
+    "description": "Versioned synthetic policies, playbooks, escalation rules, and action controls.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/playbooks/search": {
+      "get": {
+        "tags": [
+          "Policy and Playbook Service"
+        ],
+        "summary": "Search playbooks",
+        "description": "Search playbooks",
+        "operationId": "searchPlaybooks",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/searchPlaybooksResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/policies/{policy_id}": {
+      "get": {
+        "tags": [
+          "Policy and Playbook Service"
+        ],
+        "summary": "Get a policy version",
+        "description": "Get a policy version",
+        "operationId": "getPolicy",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getPolicyResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/escalation-rules": {
+      "get": {
+        "tags": [
+          "Policy and Playbook Service"
+        ],
+        "summary": "Get matching escalation rules",
+        "description": "Get matching escalation rules",
+        "operationId": "getEscalationRules",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getEscalationRulesResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_type",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/action-eligibility": {
+      "get": {
+        "tags": [
+          "Policy and Playbook Service"
+        ],
+        "summary": "Evaluate action eligibility",
+        "description": "Evaluate action eligibility",
+        "operationId": "getActionEligibility",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getActionEligibilityResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "action_type",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "risk_level",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/actions/{action_type}/approval-requirement": {
+      "get": {
+        "tags": [
+          "Policy and Playbook Service"
+        ],
+        "summary": "Get required approval for an action",
+        "description": "Get required approval for an action",
+        "operationId": "getRequiredApproval",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getRequiredApprovalResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "action_type",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "getActionEligibilityResponse": {
+        "properties": {
+          "eligible": {
+            "type": "boolean",
+            "title": "Eligible",
+            "default": false
+          },
+          "riskLevel": {
+            "type": "string",
+            "title": "Risklevel",
+            "default": "high"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason",
+            "default": "Human approval required"
+          },
+          "policyId": {
+            "type": "string",
+            "title": "Policyid",
+            "default": "policy_demo_001"
+          },
+          "policyVersion": {
+            "type": "string",
+            "title": "Policyversion",
+            "default": "1.0"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getActionEligibilityResponse"
+      },
+      "getEscalationRulesResponse": {
+        "properties": {
+          "rules": {
+            "items": {},
+            "type": "array",
+            "title": "Rules",
+            "default": [
+              {
+                "ruleId": "rule_demo_001",
+                "eventType": "battery_voltage",
+                "severity": "critical",
+                "targetTeam": "safety_ops"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getEscalationRulesResponse"
+      },
+      "getPolicyResponse": {
+        "properties": {
+          "policyId": {
+            "type": "string",
+            "title": "Policyid",
+            "default": "{policy_id}"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": "Synthetic Remote Action Policy"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "default": "1.0"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "active"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "default": "Dummy policy content"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getPolicyResponse"
+      },
+      "getRequiredApprovalResponse": {
+        "properties": {
+          "actionType": {
+            "type": "string",
+            "title": "Actiontype",
+            "default": "{action_type}"
+          },
+          "approvalRequired": {
+            "type": "boolean",
+            "title": "Approvalrequired",
+            "default": true
+          },
+          "requiredReviewerRole": {
+            "type": "string",
+            "title": "Requiredreviewerrole",
+            "default": "operations_manager"
+          },
+          "policyId": {
+            "type": "string",
+            "title": "Policyid",
+            "default": "policy_demo_001"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getRequiredApprovalResponse"
+      },
+      "searchPlaybooksResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items",
+            "default": [
+              {
+                "playbookId": "pb_demo_001",
+                "title": "Battery Voltage Triage",
+                "score": 0.91,
+                "version": "1.0"
+              }
+            ]
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "searchPlaybooksResponse"
+      }
+    }
+  }
+}

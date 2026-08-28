@@ -1,0 +1,130 @@
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  healthcheck:
+    test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health/ready')"]
+    interval: 10s
+    timeout: 3s
+    retries: 5
+    start_period: 5s
+
+services:
+  vehicle-master:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/vehicle-master }
+    ports: ["8101:8080"]
+
+  telematics-unit-master:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/telematics-unit-master }
+    ports: ["8102:8080"]
+
+  fleet-master:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/fleet-master }
+    ports: ["8103:8080"]
+
+  maintenance-history:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/maintenance-history }
+    ports: ["8104:8080"]
+
+  service-provider-master:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/service-provider-master }
+    ports: ["8105:8080"]
+
+  vehicle-context-facade:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/vehicle-context-facade }
+    ports: ["8106:8080"]
+
+  telematics-event:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/telematics-event }
+    ports: ["8107:8080"]
+
+  digital-twin-context:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/digital-twin-context }
+    ports: ["8108:8080"]
+
+  policy-playbook:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/policy-playbook }
+    ports: ["8109:8080"]
+
+  incident-search:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/incident-search }
+    ports: ["8110:8080"]
+
+  risk-scoring:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/risk-scoring }
+    ports: ["8111:8080"]
+
+  case-management:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/case-management }
+    ports: ["8112:8080"]
+
+  notification:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/notification }
+    ports: ["8113:8080"]
+
+  approval:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/approval }
+    ports: ["8114:8080"]
+
+  audit-observability:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/audit-observability }
+    ports: ["8115:8080"]
+

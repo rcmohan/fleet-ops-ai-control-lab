@@ -1,0 +1,492 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Risk Scoring Service",
+    "description": "Explainable synthetic event, safety, SLA, customer-impact, and priority scoring.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/risk/events/{event_id}": {
+      "get": {
+        "tags": [
+          "Risk Scoring Service"
+        ],
+        "summary": "Calculate event risk",
+        "description": "Calculate event risk",
+        "operationId": "calculateEventRisk",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/calculateEventRiskResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/risk/vehicles/{vehicle_id}/fleets/{fleet_id}/sla": {
+      "get": {
+        "tags": [
+          "Risk Scoring Service"
+        ],
+        "summary": "Calculate SLA risk",
+        "description": "Calculate SLA risk",
+        "operationId": "calculateSlaRisk",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/calculateSlaRiskResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fleet_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/risk/events/{event_id}/safety": {
+      "get": {
+        "tags": [
+          "Risk Scoring Service"
+        ],
+        "summary": "Calculate safety risk",
+        "description": "Calculate safety risk",
+        "operationId": "calculateSafetyRisk",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/calculateSafetyRiskResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/risk/events/{event_id}/customer-impact": {
+      "get": {
+        "tags": [
+          "Risk Scoring Service"
+        ],
+        "summary": "Calculate customer impact",
+        "description": "Calculate customer impact",
+        "operationId": "calculateCustomerImpact",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/calculateCustomerImpactResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/risk/events/{event_id}/composite-priority": {
+      "get": {
+        "tags": [
+          "Risk Scoring Service"
+        ],
+        "summary": "Calculate composite priority",
+        "description": "Calculate composite priority",
+        "operationId": "calculateCompositePriority",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/calculateCompositePriorityResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "calculateCompositePriorityResponse": {
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "title": "Eventid",
+            "default": "{event_id}"
+          },
+          "priorityScore": {
+            "type": "number",
+            "title": "Priorityscore",
+            "default": 54.0
+          },
+          "urgency": {
+            "type": "string",
+            "title": "Urgency",
+            "default": "medium"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "default": 0.84
+          },
+          "componentScores": {
+            "type": "object",
+            "title": "Componentscores",
+            "default": {
+              "event": 42.0,
+              "safety": 20.0,
+              "sla": 65.0
+            }
+          },
+          "scoringPolicyVersion": {
+            "type": "string",
+            "title": "Scoringpolicyversion",
+            "default": "1.0"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "calculateCompositePriorityResponse"
+      },
+      "calculateCustomerImpactResponse": {
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "title": "Eventid",
+            "default": "{event_id}"
+          },
+          "affectedFleetIds": {
+            "items": {},
+            "type": "array",
+            "title": "Affectedfleetids",
+            "default": [
+              "flt_demo_001"
+            ]
+          },
+          "affectedVehicleCount": {
+            "type": "integer",
+            "title": "Affectedvehiclecount",
+            "default": 1
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "default": 42.0
+          },
+          "level": {
+            "type": "string",
+            "title": "Level",
+            "default": "medium"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "default": 0.84
+          },
+          "factors": {
+            "items": {},
+            "type": "array",
+            "title": "Factors",
+            "default": [
+              {
+                "name": "severity",
+                "contribution": 20.0
+              }
+            ]
+          },
+          "scoringPolicyVersion": {
+            "type": "string",
+            "title": "Scoringpolicyversion",
+            "default": "1.0"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "calculateCustomerImpactResponse"
+      },
+      "calculateEventRiskResponse": {
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "title": "Eventid",
+            "default": "{event_id}"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "default": 42.0
+          },
+          "level": {
+            "type": "string",
+            "title": "Level",
+            "default": "medium"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "default": 0.84
+          },
+          "factors": {
+            "items": {},
+            "type": "array",
+            "title": "Factors",
+            "default": [
+              {
+                "name": "severity",
+                "contribution": 20.0
+              }
+            ]
+          },
+          "scoringPolicyVersion": {
+            "type": "string",
+            "title": "Scoringpolicyversion",
+            "default": "1.0"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "calculateEventRiskResponse"
+      },
+      "calculateSafetyRiskResponse": {
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "title": "Eventid",
+            "default": "{event_id}"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "default": 42.0
+          },
+          "level": {
+            "type": "string",
+            "title": "Level",
+            "default": "medium"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "default": 0.84
+          },
+          "factors": {
+            "items": {},
+            "type": "array",
+            "title": "Factors",
+            "default": [
+              {
+                "name": "severity",
+                "contribution": 20.0
+              }
+            ]
+          },
+          "scoringPolicyVersion": {
+            "type": "string",
+            "title": "Scoringpolicyversion",
+            "default": "1.0"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "calculateSafetyRiskResponse"
+      },
+      "calculateSlaRiskResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "fleetId": {
+            "type": "string",
+            "title": "Fleetid",
+            "default": "{fleet_id}"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "default": 42.0
+          },
+          "level": {
+            "type": "string",
+            "title": "Level",
+            "default": "medium"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "default": 0.84
+          },
+          "factors": {
+            "items": {},
+            "type": "array",
+            "title": "Factors",
+            "default": [
+              {
+                "name": "severity",
+                "contribution": 20.0
+              }
+            ]
+          },
+          "scoringPolicyVersion": {
+            "type": "string",
+            "title": "Scoringpolicyversion",
+            "default": "1.0"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "calculateSlaRiskResponse"
+      }
+    }
+  }
+}

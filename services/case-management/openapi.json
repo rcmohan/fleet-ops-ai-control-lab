@@ -1,0 +1,560 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Case Management Service",
+    "description": "Synthetic operational service cases, assignments, status, and attachments.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/cases": {
+      "post": {
+        "tags": [
+          "Case Management Service"
+        ],
+        "summary": "Create a service case",
+        "description": "Create a service case",
+        "operationId": "createServiceCase",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "vehicleId": {
+                    "type": "string",
+                    "title": "Vehicleid"
+                  },
+                  "recommendationId": {
+                    "type": "string",
+                    "title": "Recommendationid"
+                  },
+                  "summary": {
+                    "type": "string",
+                    "title": "Summary"
+                  }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "vehicleId",
+                  "recommendationId",
+                  "summary"
+                ],
+                "title": "createServiceCaseRequest"
+              },
+              "example": {
+                "vehicleId": "veh_demo_001",
+                "recommendationId": "rec_demo_001",
+                "summary": "Inspect low battery voltage"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createServiceCaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/cases/{case_id}/status": {
+      "put": {
+        "tags": [
+          "Case Management Service"
+        ],
+        "summary": "Update case status",
+        "description": "Update case status",
+        "operationId": "updateCase",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/updateCaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "status": {
+                    "title": "Status",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "status"
+                ],
+                "title": "updateCaseRequest",
+                "type": "object"
+              },
+              "example": {
+                "status": "in_progress"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Case Management Service"
+        ],
+        "summary": "Get case status",
+        "description": "Get case status",
+        "operationId": "getCaseStatus",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getCaseStatusResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/cases/{case_id}/assignment": {
+      "put": {
+        "tags": [
+          "Case Management Service"
+        ],
+        "summary": "Assign a case to a team",
+        "description": "Assign a case to a team",
+        "operationId": "assignCase",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/assignCaseResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "teamId": {
+                    "title": "Teamid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "teamId"
+                ],
+                "title": "assignCaseRequest",
+                "type": "object"
+              },
+              "example": {
+                "teamId": "team_ops"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/cases/{case_id}/agent-summaries": {
+      "post": {
+        "tags": [
+          "Case Management Service"
+        ],
+        "summary": "Attach an agent summary",
+        "description": "Attach an agent summary",
+        "operationId": "attachAgentSummary",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/attachAgentSummaryResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "recommendationId": {
+                    "title": "Recommendationid",
+                    "type": "string"
+                  },
+                  "summary": {
+                    "title": "Summary",
+                    "type": "string"
+                  },
+                  "traceId": {
+                    "title": "Traceid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "recommendationId",
+                  "summary",
+                  "traceId"
+                ],
+                "title": "attachAgentSummaryRequest",
+                "type": "object"
+              },
+              "example": {
+                "recommendationId": "rec_demo_001",
+                "summary": "Synthetic evidence-backed summary",
+                "traceId": "trace_demo_001"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "assignCaseResponse": {
+        "properties": {
+          "caseId": {
+            "type": "string",
+            "title": "Caseid",
+            "default": "{case_id}"
+          },
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "veh_demo_001"
+          },
+          "recommendationId": {
+            "type": "string",
+            "title": "Recommendationid",
+            "default": "rec_demo_001"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "open"
+          },
+          "assignedTeamId": {
+            "type": "string",
+            "title": "Assignedteamid",
+            "default": "team_ops"
+          },
+          "workflowState": {
+            "type": "string",
+            "title": "Workflowstate",
+            "default": "triage"
+          },
+          "auditTraceId": {
+            "type": "string",
+            "title": "Audittraceid",
+            "default": "trace_demo_001"
+          },
+          "createdAt": {
+            "type": "string",
+            "title": "Createdat",
+            "default": "2026-08-22T12:00:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "assignCaseResponse"
+      },
+      "attachAgentSummaryResponse": {
+        "properties": {
+          "attachmentId": {
+            "type": "string",
+            "title": "Attachmentid",
+            "default": "attachment_demo_001"
+          },
+          "caseId": {
+            "type": "string",
+            "title": "Caseid",
+            "default": "{case_id}"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "default": "agent_summary"
+          },
+          "createdAt": {
+            "type": "string",
+            "title": "Createdat",
+            "default": "2026-08-22T12:01:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "attachAgentSummaryResponse"
+      },
+      "createServiceCaseResponse": {
+        "properties": {
+          "caseId": {
+            "type": "string",
+            "title": "Caseid",
+            "default": "case_demo_001"
+          },
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "veh_demo_001"
+          },
+          "recommendationId": {
+            "type": "string",
+            "title": "Recommendationid",
+            "default": "rec_demo_001"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "open"
+          },
+          "assignedTeamId": {
+            "type": "string",
+            "title": "Assignedteamid",
+            "default": "team_ops"
+          },
+          "workflowState": {
+            "type": "string",
+            "title": "Workflowstate",
+            "default": "triage"
+          },
+          "auditTraceId": {
+            "type": "string",
+            "title": "Audittraceid",
+            "default": "trace_demo_001"
+          },
+          "createdAt": {
+            "type": "string",
+            "title": "Createdat",
+            "default": "2026-08-22T12:00:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "createServiceCaseResponse"
+      },
+      "getCaseStatusResponse": {
+        "properties": {
+          "caseId": {
+            "type": "string",
+            "title": "Caseid",
+            "default": "{case_id}"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "open"
+          },
+          "assignedTeamId": {
+            "type": "string",
+            "title": "Assignedteamid",
+            "default": "team_ops"
+          },
+          "workflowState": {
+            "type": "string",
+            "title": "Workflowstate",
+            "default": "triage"
+          },
+          "auditTraceId": {
+            "type": "string",
+            "title": "Audittraceid",
+            "default": "trace_demo_001"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getCaseStatusResponse"
+      },
+      "updateCaseResponse": {
+        "properties": {
+          "caseId": {
+            "type": "string",
+            "title": "Caseid",
+            "default": "{case_id}"
+          },
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "veh_demo_001"
+          },
+          "recommendationId": {
+            "type": "string",
+            "title": "Recommendationid",
+            "default": "rec_demo_001"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "in_progress"
+          },
+          "assignedTeamId": {
+            "type": "string",
+            "title": "Assignedteamid",
+            "default": "team_ops"
+          },
+          "workflowState": {
+            "type": "string",
+            "title": "Workflowstate",
+            "default": "assigned"
+          },
+          "auditTraceId": {
+            "type": "string",
+            "title": "Audittraceid",
+            "default": "trace_demo_001"
+          },
+          "createdAt": {
+            "type": "string",
+            "title": "Createdat",
+            "default": "2026-08-22T12:00:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "updateCaseResponse"
+      }
+    }
+  }
+}

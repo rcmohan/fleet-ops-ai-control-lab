@@ -1,0 +1,519 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Digital Twin Context Service",
+    "description": "Derived point-in-time vehicle and fleet operational state.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-twins/vehicles/{vehicle_id}": {
+      "get": {
+        "tags": [
+          "Digital Twin Context Service"
+        ],
+        "summary": "Get vehicle operational state",
+        "description": "Get vehicle operational state",
+        "operationId": "getVehicleOperationalState",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getVehicleOperationalStateResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/digital-twins/fleets/{fleet_id}": {
+      "get": {
+        "tags": [
+          "Digital Twin Context Service"
+        ],
+        "summary": "Get fleet operational state",
+        "description": "Get fleet operational state",
+        "operationId": "getFleetOperationalState",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getFleetOperationalStateResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fleet_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/digital-twins/entities/{entity_id}/related": {
+      "get": {
+        "tags": [
+          "Digital Twin Context Service"
+        ],
+        "summary": "Get logically related entities",
+        "description": "Get logically related entities",
+        "operationId": "getRelatedEntities",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getRelatedEntitiesResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "entity_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/digital-twins/events/{event_id}/downstream-impact": {
+      "get": {
+        "tags": [
+          "Digital Twin Context Service"
+        ],
+        "summary": "Get downstream event impact",
+        "description": "Get downstream event impact",
+        "operationId": "getDownstreamImpact",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getDownstreamImpactResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/digital-twins/entities/{entity_id}/dependency-graph": {
+      "get": {
+        "tags": [
+          "Digital Twin Context Service"
+        ],
+        "summary": "Get entity dependency graph",
+        "description": "Get entity dependency graph",
+        "operationId": "getDependencyGraph",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getDependencyGraphResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "entity_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/digital-twins/events": {
+      "post": {
+        "tags": [
+          "Digital Twin Context Service"
+        ],
+        "summary": "Apply an event to the digital twin",
+        "description": "Apply an event to the digital twin",
+        "operationId": "applyOperationalEvent",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "eventId": {
+                    "type": "string",
+                    "title": "Eventid"
+                  },
+                  "vehicleId": {
+                    "type": "string",
+                    "title": "Vehicleid"
+                  },
+                  "eventType": {
+                    "type": "string",
+                    "title": "Eventtype"
+                  },
+                  "observedAt": {
+                    "type": "string",
+                    "title": "Observedat"
+                  },
+                  "payload": {
+                    "type": "object",
+                    "title": "Payload"
+                  }
+                },
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "eventId",
+                  "vehicleId",
+                  "eventType",
+                  "observedAt",
+                  "payload"
+                ],
+                "title": "applyOperationalEventRequest"
+              },
+              "example": {
+                "eventId": "evt_demo_001",
+                "vehicleId": "veh_demo_001",
+                "eventType": "battery_voltage",
+                "observedAt": "2026-08-22T12:00:00Z",
+                "payload": {
+                  "voltage": 11.8
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/applyOperationalEventResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-dummy-implementation": true
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "applyOperationalEventResponse": {
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "title": "Eventid",
+            "default": "evt_demo_001"
+          },
+          "stateVersion": {
+            "type": "integer",
+            "title": "Stateversion",
+            "default": 8
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "applied"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "applyOperationalEventResponse"
+      },
+      "getDependencyGraphResponse": {
+        "properties": {
+          "rootEntityId": {
+            "type": "string",
+            "title": "Rootentityid",
+            "default": "{entity_id}"
+          },
+          "nodes": {
+            "items": {},
+            "type": "array",
+            "title": "Nodes",
+            "default": [
+              {
+                "entityId": "veh_demo_001",
+                "entityType": "vehicle"
+              }
+            ]
+          },
+          "edges": {
+            "items": {},
+            "type": "array",
+            "title": "Edges",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getDependencyGraphResponse"
+      },
+      "getDownstreamImpactResponse": {
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "title": "Eventid",
+            "default": "{event_id}"
+          },
+          "affectedVehicleIds": {
+            "items": {},
+            "type": "array",
+            "title": "Affectedvehicleids",
+            "default": [
+              "veh_demo_001"
+            ]
+          },
+          "affectedFleetIds": {
+            "items": {},
+            "type": "array",
+            "title": "Affectedfleetids",
+            "default": [
+              "flt_demo_001"
+            ]
+          },
+          "riskLevel": {
+            "type": "string",
+            "title": "Risklevel",
+            "default": "low"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "default": "Synthetic limited impact"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getDownstreamImpactResponse"
+      },
+      "getFleetOperationalStateResponse": {
+        "properties": {
+          "fleetId": {
+            "type": "string",
+            "title": "Fleetid",
+            "default": "{fleet_id}"
+          },
+          "vehicleCount": {
+            "type": "integer",
+            "title": "Vehiclecount",
+            "default": 100
+          },
+          "healthyVehicleCount": {
+            "type": "integer",
+            "title": "Healthyvehiclecount",
+            "default": 96
+          },
+          "warningVehicleCount": {
+            "type": "integer",
+            "title": "Warningvehiclecount",
+            "default": 4
+          },
+          "criticalVehicleCount": {
+            "type": "integer",
+            "title": "Criticalvehiclecount",
+            "default": 0
+          },
+          "observedAt": {
+            "type": "string",
+            "title": "Observedat",
+            "default": "2026-08-22T12:00:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getFleetOperationalStateResponse"
+      },
+      "getRelatedEntitiesResponse": {
+        "properties": {
+          "entityId": {
+            "type": "string",
+            "title": "Entityid",
+            "default": "{entity_id}"
+          },
+          "relatedEntities": {
+            "items": {},
+            "type": "array",
+            "title": "Relatedentities",
+            "default": [
+              {
+                "entityId": "veh_demo_001",
+                "entityType": "vehicle",
+                "relationship": "member"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getRelatedEntitiesResponse"
+      },
+      "getVehicleOperationalStateResponse": {
+        "properties": {
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid",
+            "default": "{vehicle_id}"
+          },
+          "healthState": {
+            "type": "string",
+            "title": "Healthstate",
+            "default": "healthy"
+          },
+          "connectivityState": {
+            "type": "string",
+            "title": "Connectivitystate",
+            "default": "connected"
+          },
+          "odometerKm": {
+            "type": "number",
+            "title": "Odometerkm",
+            "default": 15000.0
+          },
+          "activeIncidentIds": {
+            "items": {},
+            "type": "array",
+            "title": "Activeincidentids",
+            "default": []
+          },
+          "observedAt": {
+            "type": "string",
+            "title": "Observedat",
+            "default": "2026-08-22T12:00:00Z"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion",
+            "default": 7
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getVehicleOperationalStateResponse"
+      }
+    }
+  }
+}

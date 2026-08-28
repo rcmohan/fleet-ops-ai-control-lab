@@ -1,0 +1,504 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Approval Service",
+    "description": "Human approval requests and reviewer decisions for controlled actions.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/approvals": {
+      "post": {
+        "tags": [
+          "Approval Service"
+        ],
+        "summary": "Request human approval",
+        "description": "Request human approval",
+        "operationId": "requestHumanApproval",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/requestHumanApprovalResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "actionId": {
+                    "title": "Actionid",
+                    "type": "string"
+                  },
+                  "actionType": {
+                    "title": "Actiontype",
+                    "type": "string"
+                  },
+                  "riskLevel": {
+                    "title": "Risklevel",
+                    "type": "string"
+                  },
+                  "evidenceTraceId": {
+                    "title": "Evidencetraceid",
+                    "type": "string"
+                  },
+                  "requestedReviewerRole": {
+                    "title": "Requestedreviewerrole",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "actionId",
+                  "actionType",
+                  "riskLevel",
+                  "evidenceTraceId",
+                  "requestedReviewerRole"
+                ],
+                "title": "requestHumanApprovalRequest",
+                "type": "object"
+              },
+              "example": {
+                "actionId": "act_demo_001",
+                "actionType": "fleet_notification",
+                "riskLevel": "high",
+                "evidenceTraceId": "trace_demo_001",
+                "requestedReviewerRole": "operations_manager"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Approval Service"
+        ],
+        "summary": "List pending approvals for a reviewer",
+        "description": "List pending approvals for a reviewer",
+        "operationId": "listPendingApprovals",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/listPendingApprovalsResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "reviewer_id",
+            "in": "query",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/approvals/{approval_id}": {
+      "get": {
+        "tags": [
+          "Approval Service"
+        ],
+        "summary": "Get approval status",
+        "description": "Get approval status",
+        "operationId": "getApprovalStatus",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getApprovalStatusResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "approval_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true
+      }
+    },
+    "/v1/approvals/{approval_id}/decisions": {
+      "post": {
+        "tags": [
+          "Approval Service"
+        ],
+        "summary": "Record an approval decision",
+        "description": "Record an approval decision",
+        "operationId": "recordApprovalDecision",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/recordApprovalDecisionResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "approval_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "decision": {
+                    "title": "Decision",
+                    "type": "string"
+                  },
+                  "comments": {
+                    "title": "Comments",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "decision",
+                  "comments"
+                ],
+                "title": "recordApprovalDecisionRequest",
+                "type": "object"
+              },
+              "example": {
+                "decision": "approved",
+                "comments": "Approved for synthetic execution"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "getApprovalStatusResponse": {
+        "properties": {
+          "approvalId": {
+            "type": "string",
+            "title": "Approvalid",
+            "default": "{approval_id}"
+          },
+          "actionId": {
+            "type": "string",
+            "title": "Actionid",
+            "default": "act_demo_001"
+          },
+          "actionType": {
+            "type": "string",
+            "title": "Actiontype",
+            "default": "fleet_notification"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "pending"
+          },
+          "riskLevel": {
+            "type": "string",
+            "title": "Risklevel",
+            "default": "high"
+          },
+          "requestedReviewerRole": {
+            "type": "string",
+            "title": "Requestedreviewerrole",
+            "default": "operations_manager"
+          },
+          "reviewerId": {
+            "type": "string",
+            "title": "Reviewerid",
+            "default": ""
+          },
+          "comments": {
+            "type": "string",
+            "title": "Comments",
+            "default": ""
+          },
+          "requestedAt": {
+            "type": "string",
+            "title": "Requestedat",
+            "default": "2026-08-22T12:00:00Z"
+          },
+          "decidedAt": {
+            "type": "string",
+            "title": "Decidedat",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "getApprovalStatusResponse"
+      },
+      "listPendingApprovalsResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items",
+            "default": [
+              {
+                "approvalId": "apr_demo_001",
+                "actionId": "act_demo_001",
+                "actionType": "fleet_notification",
+                "status": "pending",
+                "riskLevel": "high",
+                "requestedReviewerRole": "operations_manager",
+                "reviewerId": "",
+                "comments": "",
+                "requestedAt": "2026-08-22T12:00:00Z",
+                "decidedAt": ""
+              }
+            ]
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "listPendingApprovalsResponse"
+      },
+      "recordApprovalDecisionResponse": {
+        "properties": {
+          "approvalId": {
+            "type": "string",
+            "title": "Approvalid",
+            "default": "{approval_id}"
+          },
+          "actionId": {
+            "type": "string",
+            "title": "Actionid",
+            "default": "act_demo_001"
+          },
+          "actionType": {
+            "type": "string",
+            "title": "Actiontype",
+            "default": "fleet_notification"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "approved"
+          },
+          "riskLevel": {
+            "type": "string",
+            "title": "Risklevel",
+            "default": "high"
+          },
+          "requestedReviewerRole": {
+            "type": "string",
+            "title": "Requestedreviewerrole",
+            "default": "operations_manager"
+          },
+          "reviewerId": {
+            "type": "string",
+            "title": "Reviewerid",
+            "default": "reviewer_demo_001"
+          },
+          "comments": {
+            "type": "string",
+            "title": "Comments",
+            "default": "Approved for synthetic execution"
+          },
+          "requestedAt": {
+            "type": "string",
+            "title": "Requestedat",
+            "default": "2026-08-22T12:00:00Z"
+          },
+          "decidedAt": {
+            "type": "string",
+            "title": "Decidedat",
+            "default": "2026-08-22T12:05:00Z"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "recordApprovalDecisionResponse"
+      },
+      "requestHumanApprovalResponse": {
+        "properties": {
+          "approvalId": {
+            "type": "string",
+            "title": "Approvalid",
+            "default": "apr_demo_001"
+          },
+          "actionId": {
+            "type": "string",
+            "title": "Actionid",
+            "default": "act_demo_001"
+          },
+          "actionType": {
+            "type": "string",
+            "title": "Actiontype",
+            "default": "fleet_notification"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "pending"
+          },
+          "riskLevel": {
+            "type": "string",
+            "title": "Risklevel",
+            "default": "high"
+          },
+          "requestedReviewerRole": {
+            "type": "string",
+            "title": "Requestedreviewerrole",
+            "default": "operations_manager"
+          },
+          "reviewerId": {
+            "type": "string",
+            "title": "Reviewerid",
+            "default": ""
+          },
+          "comments": {
+            "type": "string",
+            "title": "Comments",
+            "default": ""
+          },
+          "requestedAt": {
+            "type": "string",
+            "title": "Requestedat",
+            "default": "2026-08-22T12:00:00Z"
+          },
+          "decidedAt": {
+            "type": "string",
+            "title": "Decidedat",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "requestHumanApprovalResponse"
+      }
+    }
+  }
+}
