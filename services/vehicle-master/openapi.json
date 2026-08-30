@@ -6,7 +6,7 @@
     "contact": {
       "name": "FleetOps AI Control Lab"
     },
-    "version": "0.1.0"
+    "version": "1.0.0"
   },
   "paths": {
     "/health/live": {
@@ -22,7 +22,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HealthStatus"
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Liveness Health Live Get"
                 }
               }
             }
@@ -43,7 +47,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HealthStatus"
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Readiness Health Ready Get"
                 }
               }
             }
@@ -53,94 +61,102 @@
     },
     "/v1/vehicles/{vehicle_id}": {
       "get": {
-        "tags": [
-          "Vehicle Master Service"
-        ],
-        "summary": "Get a vehicle profile",
-        "description": "Get a vehicle profile",
+        "summary": "Get Vehicle",
         "operationId": "getVehicleProfile",
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Vehicle Id"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/getVehicleProfileResponse"
+                  "type": "object",
+                  "title": "Response Getvehicleprofile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
           }
-        },
-        "parameters": [
-          {
-            "name": "vehicle_id",
-            "in": "path",
-            "required": true,
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "x-dummy-implementation": true
+        }
       },
       "patch": {
-        "tags": [
-          "Vehicle Master Service"
-        ],
-        "summary": "Update vehicle-owned profile fields",
-        "description": "Update vehicle-owned profile fields",
+        "summary": "Update Vehicle",
         "operationId": "updateVehicleProfile",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/updateVehicleProfileResponse"
-                }
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "vehicle_id",
             "in": "path",
             "required": true,
-            "description": "",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "title": "Vehicle Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
             }
           }
         ],
-        "x-dummy-implementation": true,
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "regionCode": {
-                    "title": "Regioncode",
-                    "type": "string"
-                  },
-                  "priorityLevel": {
-                    "title": "Prioritylevel",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "regionCode",
-                  "priorityLevel"
-                ],
-                "title": "updateVehicleProfileRequest",
-                "type": "object"
-              },
-              "example": {
-                "regionCode": "us-east",
-                "priorityLevel": "high"
+                "$ref": "#/components/schemas/VehiclePatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Updatevehicleprofile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -148,185 +164,227 @@
       }
     },
     "/v1/vehicles": {
-      "post": {
-        "tags": [
-          "Vehicle Master Service"
-        ],
-        "summary": "Create a synthetic vehicle",
-        "description": "Create a synthetic vehicle",
-        "operationId": "createVehicle",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/createVehicleResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [],
-        "x-dummy-implementation": true,
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "syntheticVin": {
-                    "title": "Syntheticvin",
-                    "type": "string"
-                  },
-                  "make": {
-                    "title": "Make",
-                    "type": "string"
-                  },
-                  "model": {
-                    "title": "Model",
-                    "type": "string"
-                  },
-                  "modelYear": {
-                    "title": "Modelyear",
-                    "type": "integer"
-                  },
-                  "powertrainType": {
-                    "title": "Powertraintype",
-                    "type": "string"
-                  },
-                  "regionCode": {
-                    "title": "Regioncode",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "syntheticVin",
-                  "make",
-                  "model",
-                  "modelYear",
-                  "powertrainType",
-                  "regionCode"
-                ],
-                "title": "createVehicleRequest",
-                "type": "object"
-              },
-              "example": {
-                "syntheticVin": "SYNTH000000000001",
-                "make": "Nova",
-                "model": "Transit-E",
-                "modelYear": 2026,
-                "powertrainType": "battery_electric",
-                "regionCode": "us-east"
-              }
-            }
-          }
-        }
-      },
       "get": {
-        "tags": [
-          "Vehicle Master Service"
-        ],
-        "summary": "List vehicles referencing a fleet",
-        "description": "List vehicles referencing a fleet",
+        "summary": "List Vehicles",
         "operationId": "listVehiclesByFleet",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/listVehiclesByFleetResponse"
-                }
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "fleet_id",
             "in": "query",
             "required": false,
-            "description": "Opaque Fleet Master ID",
             "schema": {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Fleet Id"
+            }
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Region"
+            }
+          },
+          {
+            "name": "lifecycle_status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lifecycle Status"
             }
           },
           {
             "name": "cursor",
             "in": "query",
             "required": false,
-            "description": "",
             "schema": {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
             }
           },
           {
             "name": "limit",
             "in": "query",
             "required": false,
-            "description": "",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
             }
           }
         ],
-        "x-dummy-implementation": true
-      }
-    },
-    "/v1/vehicles/{vehicle_id}/lifecycle-status": {
-      "put": {
-        "tags": [
-          "Vehicle Master Service"
-        ],
-        "summary": "Set vehicle lifecycle status",
-        "description": "Set vehicle lifecycle status",
-        "operationId": "setVehicleLifecycleStatus",
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/setVehicleLifecycleStatusResponse"
+                  "type": "object",
+                  "title": "Response Listvehiclesbyfleet"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
           }
-        },
+        }
+      },
+      "post": {
+        "summary": "Create Vehicle",
+        "operationId": "createVehicle",
         "parameters": [
           {
-            "name": "vehicle_id",
-            "in": "path",
-            "required": true,
-            "description": "",
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
             "schema": {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
             }
           }
         ],
-        "x-dummy-implementation": true,
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "status": {
-                    "title": "Status",
-                    "type": "string"
-                  }
+                "$ref": "#/components/schemas/VehicleCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Createvehicle"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vehicles/{vehicle_id}/lifecycle-status": {
+      "put": {
+        "summary": "Set Lifecycle",
+        "operationId": "setVehicleLifecycleStatus",
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Vehicle Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
                 },
-                "required": [
-                  "status"
-                ],
-                "title": "setVehicleLifecycleStatusRequest",
-                "type": "object"
-              },
-              "example": {
-                "status": "inactive"
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LifecycleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Setvehiclelifecyclestatus"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -335,56 +393,64 @@
     },
     "/v1/vehicles/{vehicle_id}/fleet-assignment": {
       "put": {
-        "tags": [
-          "Vehicle Master Service"
-        ],
-        "summary": "Assign or unassign a fleet ID",
-        "description": "Assign or unassign a fleet ID",
+        "summary": "Assign Fleet",
         "operationId": "assignVehicleToFleet",
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Vehicle Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FleetAssignment"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/assignVehicleToFleetResponse"
+                  "type": "object",
+                  "title": "Response Assignvehicletofleet"
                 }
               }
             }
-          }
-        },
-        "parameters": [
-          {
-            "name": "vehicle_id",
-            "in": "path",
-            "required": true,
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "x-dummy-implementation": true,
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "fleetId": {
-                    "title": "Fleetid",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "fleetId"
-                ],
-                "title": "assignVehicleToFleetRequest",
-                "type": "object"
-              },
-              "example": {
-                "fleetId": "flt_demo_001"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -393,56 +459,64 @@
     },
     "/v1/vehicles/{vehicle_id}/telematics-unit-assignment": {
       "put": {
-        "tags": [
-          "Vehicle Master Service"
-        ],
-        "summary": "Assign or unassign a telematics unit ID",
-        "description": "Assign or unassign a telematics unit ID",
+        "summary": "Assign Unit",
         "operationId": "assignTelematicsUnit",
+        "parameters": [
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Vehicle Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitAssignment"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/assignTelematicsUnitResponse"
+                  "type": "object",
+                  "title": "Response Assigntelematicsunit"
                 }
               }
             }
-          }
-        },
-        "parameters": [
-          {
-            "name": "vehicle_id",
-            "in": "path",
-            "required": true,
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "x-dummy-implementation": true,
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "telematicsUnitId": {
-                    "title": "Telematicsunitid",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "telematicsUnitId"
-                ],
-                "title": "assignTelematicsUnitRequest",
-                "type": "object"
-              },
-              "example": {
-                "telematicsUnitId": "tcu_demo_001"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -452,415 +526,352 @@
   },
   "components": {
     "schemas": {
-      "HealthStatus": {
+      "FleetAssignment": {
         "properties": {
-          "service": {
-            "type": "string",
-            "title": "Service"
-          },
+          "fleetId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fleetid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "FleetAssignment"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LifecycleRequest": {
+        "properties": {
           "status": {
             "type": "string",
+            "enum": [
+              "ordered",
+              "active",
+              "inactive",
+              "retired"
+            ],
             "title": "Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "LifecycleRequest"
+      },
+      "UnitAssignment": {
+        "properties": {
+          "telematicsUnitId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telematicsunitid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "UnitAssignment"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
           },
-          "version": {
+          "msg": {
             "type": "string",
-            "title": "Version"
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
           }
         },
         "type": "object",
         "required": [
-          "service",
-          "status",
-          "version"
+          "loc",
+          "msg",
+          "type"
         ],
-        "title": "HealthStatus"
+        "title": "ValidationError"
       },
-      "assignTelematicsUnitResponse": {
+      "VehicleCreate": {
         "properties": {
-          "vehicleId": {
-            "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
-          },
-          "telematicsUnitId": {
-            "type": "string",
-            "title": "Telematicsunitid",
-            "default": "tcu_demo_001"
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "assignTelematicsUnitResponse"
-      },
-      "assignVehicleToFleetResponse": {
-        "properties": {
-          "vehicleId": {
-            "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
-          },
-          "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "assignVehicleToFleetResponse"
-      },
-      "createVehicleResponse": {
-        "properties": {
-          "vehicleId": {
-            "type": "string",
-            "title": "Vehicleid",
-            "default": "veh_demo_001"
-          },
           "syntheticVin": {
             "type": "string",
-            "title": "Syntheticvin",
-            "default": "SYNTH000000000001"
+            "maxLength": 32,
+            "minLength": 8,
+            "title": "Syntheticvin"
           },
           "make": {
             "type": "string",
-            "title": "Make",
-            "default": "Nova"
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Make"
           },
           "model": {
             "type": "string",
-            "title": "Model",
-            "default": "Transit-E"
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Model"
           },
           "modelYear": {
             "type": "integer",
-            "title": "Modelyear",
-            "default": 2026
+            "maximum": 2200.0,
+            "minimum": 1980.0,
+            "title": "Modelyear"
           },
           "powertrainType": {
             "type": "string",
-            "title": "Powertraintype",
-            "default": "battery_electric"
+            "enum": [
+              "gasoline",
+              "diesel",
+              "hybrid",
+              "plug_in_hybrid",
+              "battery_electric",
+              "hydrogen",
+              "other"
+            ],
+            "title": "Powertraintype"
           },
           "regionCode": {
             "type": "string",
-            "title": "Regioncode",
-            "default": "us-east"
-          },
-          "lifecycleStatus": {
-            "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Regioncode"
           },
           "serviceStatus": {
             "type": "string",
+            "enum": [
+              "in_service",
+              "maintenance",
+              "out_of_service",
+              "retired"
+            ],
             "title": "Servicestatus",
             "default": "in_service"
           },
           "warrantyStatus": {
             "type": "string",
+            "enum": [
+              "active",
+              "expired",
+              "unknown"
+            ],
             "title": "Warrantystatus",
-            "default": "active"
+            "default": "unknown"
           },
           "priorityLevel": {
             "type": "string",
+            "enum": [
+              "low",
+              "standard",
+              "high",
+              "critical"
+            ],
             "title": "Prioritylevel",
             "default": "standard"
           },
           "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
-          },
-          "telematicsUnitId": {
-            "type": "string",
-            "title": "Telematicsunitid",
-            "default": "tcu_demo_001"
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 1
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "createVehicleResponse"
-      },
-      "getVehicleProfileResponse": {
-        "properties": {
-          "vehicleId": {
-            "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
-          },
-          "syntheticVin": {
-            "type": "string",
-            "title": "Syntheticvin",
-            "default": "SYNTH000000000001"
-          },
-          "make": {
-            "type": "string",
-            "title": "Make",
-            "default": "Nova"
-          },
-          "model": {
-            "type": "string",
-            "title": "Model",
-            "default": "Transit-E"
-          },
-          "modelYear": {
-            "type": "integer",
-            "title": "Modelyear",
-            "default": 2026
-          },
-          "powertrainType": {
-            "type": "string",
-            "title": "Powertraintype",
-            "default": "battery_electric"
-          },
-          "regionCode": {
-            "type": "string",
-            "title": "Regioncode",
-            "default": "us-east"
-          },
-          "lifecycleStatus": {
-            "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
-          },
-          "serviceStatus": {
-            "type": "string",
-            "title": "Servicestatus",
-            "default": "in_service"
-          },
-          "warrantyStatus": {
-            "type": "string",
-            "title": "Warrantystatus",
-            "default": "active"
-          },
-          "priorityLevel": {
-            "type": "string",
-            "title": "Prioritylevel",
-            "default": "standard"
-          },
-          "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
-          },
-          "telematicsUnitId": {
-            "type": "string",
-            "title": "Telematicsunitid",
-            "default": "tcu_demo_001"
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 1
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "getVehicleProfileResponse"
-      },
-      "listVehiclesByFleetResponse": {
-        "properties": {
-          "items": {
-            "items": {},
-            "type": "array",
-            "title": "Items",
-            "default": [
+            "anyOf": [
               {
-                "vehicleId": "veh_demo_001",
-                "syntheticVin": "SYNTH000000000001",
-                "make": "Nova",
-                "model": "Transit-E",
-                "modelYear": 2026,
-                "powertrainType": "battery_electric",
-                "regionCode": "us-east",
-                "lifecycleStatus": "active",
-                "serviceStatus": "in_service",
-                "warrantyStatus": "active",
-                "priorityLevel": "standard",
-                "fleetId": "flt_demo_001",
-                "telematicsUnitId": "tcu_demo_001",
-                "sourceVersion": 1
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
               }
-            ]
-          },
-          "nextCursor": {
-            "type": "string",
-            "title": "Nextcursor",
-            "default": ""
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "listVehiclesByFleetResponse"
-      },
-      "setVehicleLifecycleStatusResponse": {
-        "properties": {
-          "vehicleId": {
-            "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
-          },
-          "syntheticVin": {
-            "type": "string",
-            "title": "Syntheticvin",
-            "default": "SYNTH000000000001"
-          },
-          "make": {
-            "type": "string",
-            "title": "Make",
-            "default": "Nova"
-          },
-          "model": {
-            "type": "string",
-            "title": "Model",
-            "default": "Transit-E"
-          },
-          "modelYear": {
-            "type": "integer",
-            "title": "Modelyear",
-            "default": 2026
-          },
-          "powertrainType": {
-            "type": "string",
-            "title": "Powertraintype",
-            "default": "battery_electric"
-          },
-          "regionCode": {
-            "type": "string",
-            "title": "Regioncode",
-            "default": "us-east"
-          },
-          "lifecycleStatus": {
-            "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "inactive"
-          },
-          "serviceStatus": {
-            "type": "string",
-            "title": "Servicestatus",
-            "default": "in_service"
-          },
-          "warrantyStatus": {
-            "type": "string",
-            "title": "Warrantystatus",
-            "default": "active"
-          },
-          "priorityLevel": {
-            "type": "string",
-            "title": "Prioritylevel",
-            "default": "standard"
-          },
-          "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
+            ],
+            "title": "Fleetid"
           },
           "telematicsUnitId": {
-            "type": "string",
-            "title": "Telematicsunitid",
-            "default": "tcu_demo_001"
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telematicsunitid"
           }
         },
         "additionalProperties": false,
         "type": "object",
-        "title": "setVehicleLifecycleStatusResponse"
+        "required": [
+          "syntheticVin",
+          "make",
+          "model",
+          "modelYear",
+          "powertrainType",
+          "regionCode"
+        ],
+        "title": "VehicleCreate"
       },
-      "updateVehicleProfileResponse": {
+      "VehiclePatch": {
         "properties": {
-          "vehicleId": {
-            "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
-          },
-          "syntheticVin": {
-            "type": "string",
-            "title": "Syntheticvin",
-            "default": "SYNTH000000000001"
-          },
           "make": {
-            "type": "string",
-            "title": "Make",
-            "default": "Nova"
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Make"
           },
           "model": {
-            "type": "string",
-            "title": "Model",
-            "default": "Transit-E"
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
           },
           "modelYear": {
-            "type": "integer",
-            "title": "Modelyear",
-            "default": 2026
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 2200.0,
+                "minimum": 1980.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Modelyear"
           },
           "powertrainType": {
-            "type": "string",
-            "title": "Powertraintype",
-            "default": "battery_electric"
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "gasoline",
+                  "diesel",
+                  "hybrid",
+                  "plug_in_hybrid",
+                  "battery_electric",
+                  "hydrogen",
+                  "other"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Powertraintype"
           },
           "regionCode": {
-            "type": "string",
-            "title": "Regioncode",
-            "default": "us-east"
-          },
-          "lifecycleStatus": {
-            "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Regioncode"
           },
           "serviceStatus": {
-            "type": "string",
-            "title": "Servicestatus",
-            "default": "in_service"
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "in_service",
+                  "maintenance",
+                  "out_of_service",
+                  "retired"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Servicestatus"
           },
           "warrantyStatus": {
-            "type": "string",
-            "title": "Warrantystatus",
-            "default": "active"
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "expired",
+                  "unknown"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warrantystatus"
           },
           "priorityLevel": {
-            "type": "string",
-            "title": "Prioritylevel",
-            "default": "standard"
-          },
-          "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
-          },
-          "telematicsUnitId": {
-            "type": "string",
-            "title": "Telematicsunitid",
-            "default": "tcu_demo_001"
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "low",
+                  "standard",
+                  "high",
+                  "critical"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prioritylevel"
           }
         },
         "additionalProperties": false,
         "type": "object",
-        "title": "updateVehicleProfileResponse"
+        "title": "VehiclePatch"
       }
     }
   }

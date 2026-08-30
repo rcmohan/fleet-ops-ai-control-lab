@@ -1,12 +1,14 @@
 # Application Service Contracts
 
-Each child folder is an independently owned application/domain boundary. Every service contains:
+Each child folder is an independently owned application/domain boundary. Every service contains a generated `openapi.json` and ownership `README.md`.
 
-- `contract.py` — route definitions, request data objects, response data objects, and deterministic dummy values.
-- `openapi.json` — generated OpenAPI 3.1 contract.
-- `README.md` — ownership and boundary notes.
+Implemented master-data services additionally own:
 
-The shared FastAPI runtime in `fleetops_runtime/` turns each contract into a runnable API. The services intentionally perform no persistence or downstream calls yet.
+- `app.py` — FastAPI routes and application behavior.
+- `models.py` — domain-specific request models and validation.
+- `seed_data.py` — synthetic development records.
+
+The other services retain a `contract.py` that the shared runtime turns into deterministic simulation endpoints. This compatibility path is temporary and is not used by the implemented master-data services.
 
 ## Run all services
 
@@ -62,7 +64,8 @@ Identifiers are opaque strings issued by the owning service. A signature contain
 
 - Each service owns its contracts and data; no service reads another service's database.
 - Cross-domain composition occurs through service calls or event-driven projections.
-- Mutating operations will require an idempotency key when persistence is implemented.
+- Master-data mutations accept an optional `Idempotency-Key` header and replay the first result for the same operation and key.
 - Authentication and authorization are not implemented in the dummy services.
-- Request bodies are validated against generated Pydantic data objects; dummy responses are deterministic.
+- Master-data request bodies use explicit Pydantic domain models; non-master dummy responses remain deterministic.
+- Master-data state is isolated per application process and seeded from its owning service folder. PostgreSQL migration files document the durable production schema; a database adapter remains a separate deployment concern.
 - Database adapters, event publishing, downstream composition, and production error models remain implementation work.

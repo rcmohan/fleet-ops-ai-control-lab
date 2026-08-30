@@ -2,7 +2,7 @@
 
 Owns provider identity, regional coverage, service capabilities, response-time targets, and capacity profile.
 
-The dummy FastAPI endpoints are defined in `contract.py`; the generated API document is `openapi.json`.
+This directory owns its FastAPI application, domain models, synthetic seed data, generated OpenAPI document, and boundary documentation. It does not use the legacy contract-stub runtime.
 
 Implemented operations:
 
@@ -11,5 +11,6 @@ Implemented operations:
 - `create_service_provider(provider)`
 - `update_service_provider(provider_id, changes)`
 - `set_provider_status(provider_id, status)`
+- `replace_provider_coverage(provider_id, regions, capabilities)`
 
 Fleet and maintenance domains store only `service_provider_id` references.

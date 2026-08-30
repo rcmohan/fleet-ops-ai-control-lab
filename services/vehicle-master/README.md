@@ -2,7 +2,7 @@
 
 Owns stable vehicle identity, factory/specification attributes, lifecycle status, and the current fleet/device reference IDs.
 
-The dummy FastAPI endpoints are defined in `contract.py`; the generated API document is `openapi.json`.
+This directory owns its FastAPI application, domain models, synthetic seed data, generated OpenAPI document, and boundary documentation. It does not use the legacy contract-stub runtime.
 
 Implemented operations:
 
@@ -12,5 +12,8 @@ Implemented operations:
 - `set_vehicle_lifecycle_status(vehicle_id, status)`
 - `assign_vehicle_to_fleet(vehicle_id, fleet_id)`
 - `assign_telematics_unit(vehicle_id, telematics_unit_id)`
+- `list_vehicles(filters)`
 
 `fleet_id` and `telematics_unit_id` are opaque references. This service neither joins to nor writes the Fleet Master or Telematics Unit Master databases.
+
+Assignment request fields accept `null` to unassign. A telematics unit can be assigned to only one vehicle within this service. Records are retired through lifecycle changes rather than deleted.

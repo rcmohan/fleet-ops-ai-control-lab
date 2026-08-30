@@ -23,7 +23,7 @@ The entire project should use synthetic data only. It should not use data, code,
 
 ## Dummy application services
 
-The independently deployable FastAPI service stubs live under `services/`. Each has domain-specific routes and data objects, a generated OpenAPI 3.1 document, health endpoints, and deterministic synthetic responses.
+The independently deployable FastAPI services live under `services/`. The vehicle, fleet, telematics-unit, and service-provider master-data APIs implement validated stateful behavior over synthetic records. Transactional and operational domains remain contract stubs with deterministic synthetic responses.
 
 ```powershell
 python -m pip install -r requirements-dev.txt

@@ -47,16 +47,16 @@ The facade may join responses in memory, but it must not persist copies of anoth
 
 ```text
 services/
-  vehicle-master/           # API/application/domain adapters (future implementation)
-  telematics-unit-master/   # API/application/domain adapters (future implementation)
-  fleet-master/             # API/application/domain adapters (future implementation)
+  vehicle-master/           # App, models, seed data, API document
+  telematics-unit-master/   # App, models, seed data, API document
+  fleet-master/             # App, models, seed data, API document
   maintenance-history/      # API/application/domain adapters (future implementation)
-  service-provider-master/  # API/application/domain adapters (future implementation)
+  service-provider-master/  # App, models, seed data, API document
 database/
   <service>/001_create_schema.sql
 ```
 
-Only service boundary documents and initial database migrations are included at this stage. No runtime, API handler, container, or deployment code is scaffolded yet.
+The four master-data services own their runtime API code. Their current repository is process-local; the initial PostgreSQL migrations define the future durable adapter boundary.
 
 ## Suggested delivery sequence
 
@@ -66,4 +66,3 @@ Only service boundary documents and initial database migrations are included at 
 4. Implement repositories and application services inside each boundary.
 5. Add the MCP/UCP composition facade with timeouts, partial-result handling, and tracing.
 6. Add synthetic seed generation through service-owned import commands or APIs.
-

@@ -6,7 +6,7 @@
     "contact": {
       "name": "FleetOps AI Control Lab"
     },
-    "version": "0.1.0"
+    "version": "1.0.0"
   },
   "paths": {
     "/health/live": {
@@ -22,7 +22,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HealthStatus"
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Liveness Health Live Get"
                 }
               }
             }
@@ -43,7 +47,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HealthStatus"
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Readiness Health Ready Get"
                 }
               }
             }
@@ -53,150 +61,314 @@
     },
     "/v1/telematics-units/{unit_id}": {
       "get": {
-        "tags": [
-          "Telematics Unit Master Service"
-        ],
-        "summary": "Get a telematics unit",
-        "description": "Get a telematics unit",
+        "summary": "Get Unit",
         "operationId": "getTelematicsUnit",
+        "parameters": [
+          {
+            "name": "unit_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Unit Id"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/getTelematicsUnitResponse"
+                  "type": "object",
+                  "title": "Response Gettelematicsunit"
                 }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "unit_id",
-            "in": "path",
-            "required": true,
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "x-dummy-implementation": true
-      }
-    },
-    "/v1/telematics-units": {
-      "post": {
-        "tags": [
-          "Telematics Unit Master Service"
-        ],
-        "summary": "Create a synthetic telematics unit",
-        "description": "Create a synthetic telematics unit",
-        "operationId": "createTelematicsUnit",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "serialNumber": {
-                    "type": "string",
-                    "title": "Serialnumber"
-                  },
-                  "hardwareModel": {
-                    "type": "string",
-                    "title": "Hardwaremodel"
-                  },
-                  "firmwareVersion": {
-                    "type": "string",
-                    "title": "Firmwareversion"
-                  }
-                },
-                "additionalProperties": false,
-                "type": "object",
-                "required": [
-                  "serialNumber",
-                  "hardwareModel",
-                  "firmwareVersion"
-                ],
-                "title": "createTelematicsUnitRequest"
-              },
-              "example": {
-                "serialNumber": "TCU-SYNTH-0001",
-                "hardwareModel": "NX-5G",
-                "firmwareVersion": "3.4.1"
               }
             }
           },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
+          "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/createTelematicsUnitResponse"
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
           }
-        },
-        "x-dummy-implementation": true
-      }
-    },
-    "/v1/telematics-units/{unit_id}/firmware": {
-      "put": {
-        "tags": [
-          "Telematics Unit Master Service"
-        ],
-        "summary": "Update installed firmware inventory",
-        "description": "Update installed firmware inventory",
-        "operationId": "updateFirmwareInventory",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/updateFirmwareInventoryResponse"
-                }
-              }
-            }
-          }
-        },
+        }
+      },
+      "patch": {
+        "summary": "Update Unit",
+        "operationId": "updateTelematicsUnit",
         "parameters": [
           {
             "name": "unit_id",
             "in": "path",
             "required": true,
-            "description": "",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "title": "Unit Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
             }
           }
         ],
-        "x-dummy-implementation": true,
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "firmwareVersion": {
-                    "title": "Firmwareversion",
-                    "type": "string"
-                  }
+                "$ref": "#/components/schemas/TelematicsUnitPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Updatetelematicsunit"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/telematics-units": {
+      "get": {
+        "summary": "List Units",
+        "operationId": "listTelematicsUnits",
+        "parameters": [
+          {
+            "name": "lifecycle_status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
                 },
-                "required": [
-                  "firmwareVersion"
-                ],
-                "title": "updateFirmwareInventoryRequest",
-                "type": "object"
-              },
-              "example": {
-                "firmwareVersion": "3.5.0"
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lifecycle Status"
+            }
+          },
+          {
+            "name": "capability",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Capability"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Listtelematicsunits"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Unit",
+        "operationId": "createTelematicsUnit",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TelematicsUnitCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Createtelematicsunit"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/telematics-units/{unit_id}/firmware": {
+      "put": {
+        "summary": "Update Firmware",
+        "operationId": "updateFirmwareInventory",
+        "parameters": [
+          {
+            "name": "unit_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Unit Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FirmwareRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Updatefirmwareinventory"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -205,56 +377,64 @@
     },
     "/v1/telematics-units/{unit_id}/lifecycle-status": {
       "put": {
-        "tags": [
-          "Telematics Unit Master Service"
-        ],
-        "summary": "Set telematics unit lifecycle status",
-        "description": "Set telematics unit lifecycle status",
+        "summary": "Set Lifecycle",
         "operationId": "setTelematicsUnitLifecycleStatus",
+        "parameters": [
+          {
+            "name": "unit_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Unit Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LifecycleRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/setTelematicsUnitLifecycleStatusResponse"
+                  "type": "object",
+                  "title": "Response Settelematicsunitlifecyclestatus"
                 }
               }
             }
-          }
-        },
-        "parameters": [
-          {
-            "name": "unit_id",
-            "in": "path",
-            "required": true,
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "x-dummy-implementation": true,
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "status": {
-                    "title": "Status",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "status"
-                ],
-                "title": "setTelematicsUnitLifecycleStatusRequest",
-                "type": "object"
-              },
-              "example": {
-                "status": "suspended"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -263,56 +443,64 @@
     },
     "/v1/telematics-units/{unit_id}/remote-command-eligibility": {
       "put": {
-        "tags": [
-          "Telematics Unit Master Service"
-        ],
-        "summary": "Set remote-command eligibility",
-        "description": "Set remote-command eligibility",
+        "summary": "Set Eligibility",
         "operationId": "setRemoteCommandEligibility",
+        "parameters": [
+          {
+            "name": "unit_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Unit Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EligibilityRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/setRemoteCommandEligibilityResponse"
+                  "type": "object",
+                  "title": "Response Setremotecommandeligibility"
                 }
               }
             }
-          }
-        },
-        "parameters": [
-          {
-            "name": "unit_id",
-            "in": "path",
-            "required": true,
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "x-dummy-implementation": true,
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "eligibility": {
-                    "title": "Eligibility",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "eligibility"
-                ],
-                "title": "setRemoteCommandEligibilityRequest",
-                "type": "object"
-              },
-              "example": {
-                "eligibility": "approval_required"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -321,60 +509,64 @@
     },
     "/v1/telematics-units/{unit_id}/capabilities": {
       "put": {
-        "tags": [
-          "Telematics Unit Master Service"
-        ],
-        "summary": "Replace unit capabilities",
-        "description": "Replace unit capabilities",
+        "summary": "Replace Capabilities",
         "operationId": "replaceTelematicsUnitCapabilities",
+        "parameters": [
+          {
+            "name": "unit_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Unit Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CapabilitiesRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/replaceTelematicsUnitCapabilitiesResponse"
+                  "type": "object",
+                  "title": "Response Replacetelematicsunitcapabilities"
                 }
               }
             }
-          }
-        },
-        "parameters": [
-          {
-            "name": "unit_id",
-            "in": "path",
-            "required": true,
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "x-dummy-implementation": true,
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "additionalProperties": false,
-                "properties": {
-                  "capabilities": {
-                    "items": {},
-                    "title": "Capabilities",
-                    "type": "array"
-                  }
-                },
-                "required": [
-                  "capabilities"
-                ],
-                "title": "replaceTelematicsUnitCapabilitiesRequest",
-                "type": "object"
-              },
-              "example": {
-                "capabilities": [
-                  "diagnostics",
-                  "location"
-                ]
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -384,364 +576,249 @@
   },
   "components": {
     "schemas": {
-      "HealthStatus": {
+      "CapabilitiesRequest": {
         "properties": {
-          "service": {
+          "capabilities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Capabilities"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "capabilities"
+        ],
+        "title": "CapabilitiesRequest"
+      },
+      "EligibilityRequest": {
+        "properties": {
+          "eligibility": {
             "type": "string",
-            "title": "Service"
-          },
+            "enum": [
+              "eligible",
+              "approval_required",
+              "not_eligible"
+            ],
+            "title": "Eligibility"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "eligibility"
+        ],
+        "title": "EligibilityRequest"
+      },
+      "FirmwareRequest": {
+        "properties": {
+          "firmwareVersion": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Firmwareversion"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "firmwareVersion"
+        ],
+        "title": "FirmwareRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LifecycleRequest": {
+        "properties": {
           "status": {
             "type": "string",
+            "enum": [
+              "inventory",
+              "active",
+              "suspended",
+              "decommissioned"
+            ],
             "title": "Status"
-          },
-          "version": {
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "LifecycleRequest"
+      },
+      "TelematicsUnitCreate": {
+        "properties": {
+          "serialNumber": {
             "type": "string",
-            "title": "Version"
+            "maxLength": 96,
+            "minLength": 3,
+            "title": "Serialnumber"
+          },
+          "hardwareModel": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Hardwaremodel"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Firmwareversion"
+          },
+          "activationDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Activationdate"
+          },
+          "networkCarrier": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Networkcarrier"
+          },
+          "lifecycleStatus": {
+            "type": "string",
+            "enum": [
+              "inventory",
+              "active",
+              "suspended",
+              "decommissioned"
+            ],
+            "title": "Lifecyclestatus",
+            "default": "inventory"
+          },
+          "remoteCommandEligibility": {
+            "type": "string",
+            "enum": [
+              "eligible",
+              "approval_required",
+              "not_eligible"
+            ],
+            "title": "Remotecommandeligibility",
+            "default": "not_eligible"
+          },
+          "capabilities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Capabilities"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "serialNumber",
+          "hardwareModel",
+          "firmwareVersion"
+        ],
+        "title": "TelematicsUnitCreate"
+      },
+      "TelematicsUnitPatch": {
+        "properties": {
+          "hardwareModel": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hardwaremodel"
+          },
+          "activationDate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Activationdate"
+          },
+          "networkCarrier": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Networkcarrier"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "TelematicsUnitPatch"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
           }
         },
         "type": "object",
         "required": [
-          "service",
-          "status",
-          "version"
+          "loc",
+          "msg",
+          "type"
         ],
-        "title": "HealthStatus"
-      },
-      "createTelematicsUnitResponse": {
-        "properties": {
-          "unitId": {
-            "type": "string",
-            "title": "Unitid",
-            "default": "tcu_demo_001"
-          },
-          "serialNumber": {
-            "type": "string",
-            "title": "Serialnumber",
-            "default": "TCU-SYNTH-0001"
-          },
-          "hardwareModel": {
-            "type": "string",
-            "title": "Hardwaremodel",
-            "default": "NX-5G"
-          },
-          "firmwareVersion": {
-            "type": "string",
-            "title": "Firmwareversion",
-            "default": "3.4.1"
-          },
-          "activationDate": {
-            "type": "string",
-            "title": "Activationdate",
-            "default": "2026-01-15"
-          },
-          "networkCarrier": {
-            "type": "string",
-            "title": "Networkcarrier",
-            "default": "Synthetic Wireless"
-          },
-          "lifecycleStatus": {
-            "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
-          },
-          "remoteCommandEligibility": {
-            "type": "string",
-            "title": "Remotecommandeligibility",
-            "default": "approval_required"
-          },
-          "capabilities": {
-            "items": {},
-            "type": "array",
-            "title": "Capabilities",
-            "default": [
-              "diagnostics",
-              "location",
-              "remote_command"
-            ]
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 1
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "createTelematicsUnitResponse"
-      },
-      "getTelematicsUnitResponse": {
-        "properties": {
-          "unitId": {
-            "type": "string",
-            "title": "Unitid",
-            "default": "{unit_id}"
-          },
-          "serialNumber": {
-            "type": "string",
-            "title": "Serialnumber",
-            "default": "TCU-SYNTH-0001"
-          },
-          "hardwareModel": {
-            "type": "string",
-            "title": "Hardwaremodel",
-            "default": "NX-5G"
-          },
-          "firmwareVersion": {
-            "type": "string",
-            "title": "Firmwareversion",
-            "default": "3.4.1"
-          },
-          "activationDate": {
-            "type": "string",
-            "title": "Activationdate",
-            "default": "2026-01-15"
-          },
-          "networkCarrier": {
-            "type": "string",
-            "title": "Networkcarrier",
-            "default": "Synthetic Wireless"
-          },
-          "lifecycleStatus": {
-            "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
-          },
-          "remoteCommandEligibility": {
-            "type": "string",
-            "title": "Remotecommandeligibility",
-            "default": "approval_required"
-          },
-          "capabilities": {
-            "items": {},
-            "type": "array",
-            "title": "Capabilities",
-            "default": [
-              "diagnostics",
-              "location",
-              "remote_command"
-            ]
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 1
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "getTelematicsUnitResponse"
-      },
-      "replaceTelematicsUnitCapabilitiesResponse": {
-        "properties": {
-          "unitId": {
-            "type": "string",
-            "title": "Unitid",
-            "default": "{unit_id}"
-          },
-          "capabilities": {
-            "items": {},
-            "type": "array",
-            "title": "Capabilities",
-            "default": [
-              "diagnostics",
-              "location"
-            ]
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "replaceTelematicsUnitCapabilitiesResponse"
-      },
-      "setRemoteCommandEligibilityResponse": {
-        "properties": {
-          "unitId": {
-            "type": "string",
-            "title": "Unitid",
-            "default": "{unit_id}"
-          },
-          "serialNumber": {
-            "type": "string",
-            "title": "Serialnumber",
-            "default": "TCU-SYNTH-0001"
-          },
-          "hardwareModel": {
-            "type": "string",
-            "title": "Hardwaremodel",
-            "default": "NX-5G"
-          },
-          "firmwareVersion": {
-            "type": "string",
-            "title": "Firmwareversion",
-            "default": "3.4.1"
-          },
-          "activationDate": {
-            "type": "string",
-            "title": "Activationdate",
-            "default": "2026-01-15"
-          },
-          "networkCarrier": {
-            "type": "string",
-            "title": "Networkcarrier",
-            "default": "Synthetic Wireless"
-          },
-          "lifecycleStatus": {
-            "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
-          },
-          "remoteCommandEligibility": {
-            "type": "string",
-            "title": "Remotecommandeligibility",
-            "default": "approval_required"
-          },
-          "capabilities": {
-            "items": {},
-            "type": "array",
-            "title": "Capabilities",
-            "default": [
-              "diagnostics",
-              "location",
-              "remote_command"
-            ]
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "setRemoteCommandEligibilityResponse"
-      },
-      "setTelematicsUnitLifecycleStatusResponse": {
-        "properties": {
-          "unitId": {
-            "type": "string",
-            "title": "Unitid",
-            "default": "{unit_id}"
-          },
-          "serialNumber": {
-            "type": "string",
-            "title": "Serialnumber",
-            "default": "TCU-SYNTH-0001"
-          },
-          "hardwareModel": {
-            "type": "string",
-            "title": "Hardwaremodel",
-            "default": "NX-5G"
-          },
-          "firmwareVersion": {
-            "type": "string",
-            "title": "Firmwareversion",
-            "default": "3.4.1"
-          },
-          "activationDate": {
-            "type": "string",
-            "title": "Activationdate",
-            "default": "2026-01-15"
-          },
-          "networkCarrier": {
-            "type": "string",
-            "title": "Networkcarrier",
-            "default": "Synthetic Wireless"
-          },
-          "lifecycleStatus": {
-            "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "suspended"
-          },
-          "remoteCommandEligibility": {
-            "type": "string",
-            "title": "Remotecommandeligibility",
-            "default": "approval_required"
-          },
-          "capabilities": {
-            "items": {},
-            "type": "array",
-            "title": "Capabilities",
-            "default": [
-              "diagnostics",
-              "location",
-              "remote_command"
-            ]
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "setTelematicsUnitLifecycleStatusResponse"
-      },
-      "updateFirmwareInventoryResponse": {
-        "properties": {
-          "unitId": {
-            "type": "string",
-            "title": "Unitid",
-            "default": "{unit_id}"
-          },
-          "serialNumber": {
-            "type": "string",
-            "title": "Serialnumber",
-            "default": "TCU-SYNTH-0001"
-          },
-          "hardwareModel": {
-            "type": "string",
-            "title": "Hardwaremodel",
-            "default": "NX-5G"
-          },
-          "firmwareVersion": {
-            "type": "string",
-            "title": "Firmwareversion",
-            "default": "3.5.0"
-          },
-          "activationDate": {
-            "type": "string",
-            "title": "Activationdate",
-            "default": "2026-01-15"
-          },
-          "networkCarrier": {
-            "type": "string",
-            "title": "Networkcarrier",
-            "default": "Synthetic Wireless"
-          },
-          "lifecycleStatus": {
-            "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
-          },
-          "remoteCommandEligibility": {
-            "type": "string",
-            "title": "Remotecommandeligibility",
-            "default": "approval_required"
-          },
-          "capabilities": {
-            "items": {},
-            "type": "array",
-            "title": "Capabilities",
-            "default": [
-              "diagnostics",
-              "location",
-              "remote_command"
-            ]
-          },
-          "sourceVersion": {
-            "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "title": "updateFirmwareInventoryResponse"
+        "title": "ValidationError"
       }
     }
   }
