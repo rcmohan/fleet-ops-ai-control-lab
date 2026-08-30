@@ -7,9 +7,9 @@ from fleetops_runtime.service_support import ApiModel
 
 class ProviderCreate(ApiModel):
     provider_name: str = Field(alias="providerName", min_length=1, max_length=160)
-    lifecycle_status: Literal[
-        "active", "at_capacity", "suspended", "closed"
-    ] = Field("active", alias="lifecycleStatus")
+    lifecycle_status: Literal["active", "at_capacity", "suspended", "closed"] = Field(
+        "active", alias="lifecycleStatus"
+    )
     average_response_minutes: int | None = Field(
         None, alias="averageResponseMinutes", ge=0
     )

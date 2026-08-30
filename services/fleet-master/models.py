@@ -31,9 +31,9 @@ class FleetCreate(ApiModel):
     customer_name: str = Field(alias="customerName", min_length=1, max_length=160)
     industry_code: str = Field(alias="industryCode", min_length=1, max_length=64)
     declared_fleet_size: int = Field(0, alias="declaredFleetSize", ge=0)
-    contract_tier: Literal[
-        "basic", "standard", "premium", "enterprise"
-    ] = Field(alias="contractTier")
+    contract_tier: Literal["basic", "standard", "premium", "enterprise"] = Field(
+        alias="contractTier"
+    )
     sla_level: Literal["standard", "enhanced", "mission_critical"] = Field(
         alias="slaLevel"
     )
@@ -41,12 +41,10 @@ class FleetCreate(ApiModel):
     preferred_service_provider_id: str | None = Field(
         None, alias="preferredServiceProviderId", max_length=64
     )
-    lifecycle_status: Literal["prospect", "active", "suspended", "closed"] = (
-        Field("active", alias="lifecycleStatus")
+    lifecycle_status: Literal["prospect", "active", "suspended", "closed"] = Field(
+        "active", alias="lifecycleStatus"
     )
-    operating_regions: list[str] = Field(
-        default_factory=list, alias="operatingRegions"
-    )
+    operating_regions: list[str] = Field(default_factory=list, alias="operatingRegions")
     escalation_contacts: list[EscalationContact] = Field(
         default_factory=list, alias="escalationContacts"
     )
@@ -59,22 +57,20 @@ class FleetPatch(ApiModel):
     industry_code: str | None = Field(
         None, alias="industryCode", min_length=1, max_length=64
     )
-    declared_fleet_size: int | None = Field(
-        None, alias="declaredFleetSize", ge=0
+    declared_fleet_size: int | None = Field(None, alias="declaredFleetSize", ge=0)
+    contract_tier: Literal["basic", "standard", "premium", "enterprise"] | None = Field(
+        None, alias="contractTier"
     )
-    contract_tier: Literal[
-        "basic", "standard", "premium", "enterprise"
-    ] | None = Field(None, alias="contractTier")
-    sla_level: Literal[
-        "standard", "enhanced", "mission_critical"
-    ] | None = Field(None, alias="slaLevel")
+    sla_level: Literal["standard", "enhanced", "mission_critical"] | None = Field(
+        None, alias="slaLevel"
+    )
     priority_level: Priority | None = Field(None, alias="priorityLevel")
     preferred_service_provider_id: str | None = Field(
         None, alias="preferredServiceProviderId", max_length=64
     )
-    lifecycle_status: Literal[
-        "prospect", "active", "suspended", "closed"
-    ] | None = Field(None, alias="lifecycleStatus")
+    lifecycle_status: Literal["prospect", "active", "suspended", "closed"] | None = (
+        Field(None, alias="lifecycleStatus")
+    )
 
 
 class RegionsRequest(ApiModel):

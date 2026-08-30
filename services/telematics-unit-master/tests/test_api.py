@@ -10,6 +10,7 @@ SERVICE = Path(__file__).resolve().parents[1]
 
 def test_unit_inventory_and_capability_validation() -> None:
     client = TestClient(load_service_app(SERVICE))
+    headers = {"X-Tenant-ID": "ten_test_alpha"}
     created = client.post(
         "/v1/telematics-units",
         json={
@@ -18,6 +19,7 @@ def test_unit_inventory_and_capability_validation() -> None:
             "firmwareVersion": "1.0.0",
             "capabilities": ["LOCATION", "diagnostics"],
         },
+        headers=headers,
     ).json()
     assert created["unitId"].startswith("tcu_")
     assert created["capabilities"] == ["location", "diagnostics"]
@@ -25,5 +27,6 @@ def test_unit_inventory_and_capability_validation() -> None:
     response = client.put(
         f"/v1/telematics-units/{created['unitId']}/capabilities",
         json={"capabilities": ["location", "location"]},
+        headers=headers,
     )
     assert response.status_code == 422

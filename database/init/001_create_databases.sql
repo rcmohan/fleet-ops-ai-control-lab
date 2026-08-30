@@ -1,0 +1,5 @@
+CREATE DATABASE fleetops_tenant_master;
+CREATE DATABASE fleetops_vehicle_master;
+CREATE DATABASE fleetops_telematics_unit_master;
+CREATE DATABASE fleetops_fleet_master;
+CREATE DATABASE fleetops_service_provider_master;

@@ -6,8 +6,13 @@ from fleetops_runtime.service_support import ApiModel
 
 
 Powertrain = Literal[
-    "gasoline", "diesel", "hybrid", "plug_in_hybrid",
-    "battery_electric", "hydrogen", "other",
+    "gasoline",
+    "diesel",
+    "hybrid",
+    "plug_in_hybrid",
+    "battery_electric",
+    "hydrogen",
+    "other",
 ]
 Priority = Literal["low", "standard", "high", "critical"]
 
@@ -47,9 +52,9 @@ class VehiclePatch(ApiModel):
     region_code: str | None = Field(
         None, alias="regionCode", min_length=1, max_length=32
     )
-    service_status: Literal[
-        "in_service", "maintenance", "out_of_service", "retired"
-    ] | None = Field(None, alias="serviceStatus")
+    service_status: (
+        Literal["in_service", "maintenance", "out_of_service", "retired"] | None
+    ) = Field(None, alias="serviceStatus")
     warranty_status: Literal["active", "expired", "unknown"] | None = Field(
         None, alias="warrantyStatus"
     )

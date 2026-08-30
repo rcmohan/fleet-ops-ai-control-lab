@@ -31,4 +31,10 @@ python -m pytest -q
 docker compose up --build
 ```
 
-Swagger UI is available on `/docs` for every running service. Compose maps the services to localhost ports `8101` through `8115`; see `services/README.md` for the catalog and local-run instructions.
+Swagger UI is available on `/docs` for every running service. Compose maps Tenant Master to `8100` and the remaining services to `8101` through `8115`; see `services/README.md` for the catalog and local-run instructions.
+
+Seed a reproducible tenant after the master services are healthy:
+
+```powershell
+python scripts/seed_synthetic_tenant.py --seed 20260829
+```

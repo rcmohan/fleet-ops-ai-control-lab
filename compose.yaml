@@ -8,12 +8,47 @@ x-service-defaults: &service-defaults
     start_period: 5s
 
 services:
+  master-data-postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fleetops
+      POSTGRES_PASSWORD: fleetops_synthetic
+      POSTGRES_DB: postgres
+    ports: ["5432:5432"]
+    volumes:
+      - master-data-postgres:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fleetops -d postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  tenant-master:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/tenant-master }
+    environment:
+      DATABASE_URL: postgresql://fleetops:fleetops_synthetic@master-data-postgres:5432/fleetops_tenant_master
+    depends_on:
+      master-data-postgres: { condition: service_healthy }
+    ports: ["8100:8080"]
+
   vehicle-master:
     <<: *service-defaults
     build:
       context: .
       dockerfile: Dockerfile.service
       args: { SERVICE_PATH: services/vehicle-master }
+    environment:
+      DATABASE_URL: postgresql://fleetops:fleetops_synthetic@master-data-postgres:5432/fleetops_vehicle_master
+      TENANT_MASTER_URL: http://tenant-master:8080
+    depends_on:
+      master-data-postgres: { condition: service_healthy }
+      tenant-master: { condition: service_healthy }
     ports: ["8101:8080"]
 
   telematics-unit-master:
@@ -22,6 +57,12 @@ services:
       context: .
       dockerfile: Dockerfile.service
       args: { SERVICE_PATH: services/telematics-unit-master }
+    environment:
+      DATABASE_URL: postgresql://fleetops:fleetops_synthetic@master-data-postgres:5432/fleetops_telematics_unit_master
+      TENANT_MASTER_URL: http://tenant-master:8080
+    depends_on:
+      master-data-postgres: { condition: service_healthy }
+      tenant-master: { condition: service_healthy }
     ports: ["8102:8080"]
 
   fleet-master:
@@ -30,6 +71,12 @@ services:
       context: .
       dockerfile: Dockerfile.service
       args: { SERVICE_PATH: services/fleet-master }
+    environment:
+      DATABASE_URL: postgresql://fleetops:fleetops_synthetic@master-data-postgres:5432/fleetops_fleet_master
+      TENANT_MASTER_URL: http://tenant-master:8080
+    depends_on:
+      master-data-postgres: { condition: service_healthy }
+      tenant-master: { condition: service_healthy }
     ports: ["8103:8080"]
 
   maintenance-history:
@@ -46,6 +93,12 @@ services:
       context: .
       dockerfile: Dockerfile.service
       args: { SERVICE_PATH: services/service-provider-master }
+    environment:
+      DATABASE_URL: postgresql://fleetops:fleetops_synthetic@master-data-postgres:5432/fleetops_service_provider_master
+      TENANT_MASTER_URL: http://tenant-master:8080
+    depends_on:
+      master-data-postgres: { condition: service_healthy }
+      tenant-master: { condition: service_healthy }
     ports: ["8105:8080"]
 
   vehicle-context-facade:
@@ -128,3 +181,5 @@ services:
       args: { SERVICE_PATH: services/audit-observability }
     ports: ["8115:8080"]
 
+volumes:
+  master-data-postgres:

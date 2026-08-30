@@ -10,6 +10,7 @@ SERVICE = Path(__file__).resolve().parents[1]
 
 def test_fleet_owns_regions_contacts_and_sla_classification() -> None:
     client = TestClient(load_service_app(SERVICE))
+    headers = {"X-Tenant-ID": "ten_test_alpha"}
     created = client.post(
         "/v1/fleets",
         json={
@@ -26,9 +27,10 @@ def test_fleet_owns_regions_contacts_and_sla_classification() -> None:
                 }
             ],
         },
+        headers=headers,
     ).json()
     assert created["fleetId"].startswith("flt_")
     assert created["operatingRegions"] == ["us-west"]
     assert created["escalationContacts"][0]["contactId"].startswith("contact_")
-    sla = client.get(f"/v1/fleets/{created['fleetId']}/sla").json()
+    sla = client.get(f"/v1/fleets/{created['fleetId']}/sla", headers=headers).json()
     assert sla["responseTargetMinutes"] == 120

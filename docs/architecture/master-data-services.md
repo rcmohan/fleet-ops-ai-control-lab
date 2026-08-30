@@ -6,12 +6,13 @@ The master-data capability is split into independently deployable bounded contex
 
 Cross-domain relationships are stored as opaque IDs. They are deliberately not protected by database foreign keys; referential validation happens through APIs or asynchronous events. This keeps each database independently deployable and prevents shared-schema coupling.
 
-The SQL in `database/` targets PostgreSQL. Every subdirectory represents a different logical database and its migration history must be run against that service's own database.
+Service-owned migrations under `services/<service>/migrations` target PostgreSQL. Every master service uses a different logical database and applies only its own migration history.
 
 ## Bounded contexts
 
 | Service | Owns | External ID references | Does not own |
 | --- | --- | --- | --- |
+| Tenant Master | Tenant identity and lifecycle | None | Fleet, vehicle, device, provider, or telemetry data |
 | Vehicle Master | Vehicle identity, specification, lifecycle status, current assignment references | `fleet_id`, `telematics_unit_id` | Fleet profiles, device details, telemetry, maintenance events |
 | Telematics Unit Master | Device identity, activation, firmware inventory, capabilities, command eligibility | None initially | Vehicle identity, heartbeats, live connectivity |
 | Fleet Master | Customer/fleet identity, tier, SLA classification, operating regions | `preferred_service_provider_id` | Vehicles and provider details |
@@ -47,22 +48,20 @@ The facade may join responses in memory, but it must not persist copies of anoth
 
 ```text
 services/
-  vehicle-master/           # App, models, seed data, API document
-  telematics-unit-master/   # App, models, seed data, API document
-  fleet-master/             # App, models, seed data, API document
+  tenant-master/            # App, models, migrations, API document, tests
+  vehicle-master/           # App, models, migrations, API document, tests
+  telematics-unit-master/   # App, models, migrations, API document, tests
+  fleet-master/             # App, models, migrations, API document, tests
   maintenance-history/      # API/application/domain adapters (future implementation)
-  service-provider-master/  # App, models, seed data, API document
-database/
-  <service>/001_create_schema.sql
+  service-provider-master/  # App, models, migrations, API document, tests
+  <service>/migrations/     # Service-owned PostgreSQL migration history
 ```
 
-The four master-data services own their runtime API code. Their current repository is process-local; the initial PostgreSQL migrations define the future durable adapter boundary.
+The five master-data services own their runtime API and migration code. Compose provides a separate logical PostgreSQL database for each service. Tests use an in-memory adapter with the same tenant-scoped repository contract.
 
 ## Suggested delivery sequence
 
-1. Provision one PostgreSQL database and credential per service.
-2. Apply each service's `001_create_schema.sql` only to its matching database.
-3. Define versioned service contracts and domain events.
-4. Implement repositories and application services inside each boundary.
-5. Add the MCP/UCP composition facade with timeouts, partial-result handling, and tracing.
-6. Add synthetic seed generation through service-owned import commands or APIs.
+1. Replace local shared credentials with one credential per service.
+2. Add versioned domain-change events and transactional outboxes.
+3. Add the MCP/UCP composition facade with timeouts, partial-result handling, and tracing.
+4. Add authorization-backed tenant claims in place of the development tenant header.

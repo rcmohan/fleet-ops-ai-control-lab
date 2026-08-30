@@ -38,6 +38,4 @@ def load_service_app(service_path: Path) -> FastAPI:
         module = _load_module(contract_file)
         return build_app(module.CONTRACT)
 
-    raise RuntimeError(
-        f"Service {service_path} must contain app.py or contract.py"
-    )
+    raise RuntimeError(f"Service {service_path} must contain app.py or contract.py")

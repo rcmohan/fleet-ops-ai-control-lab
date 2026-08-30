@@ -6,7 +6,8 @@ Implemented master-data services additionally own:
 
 - `app.py` — FastAPI routes and application behavior.
 - `models.py` — domain-specific request models and validation.
-- `seed_data.py` — synthetic development records.
+- `migrations/` — service-owned PostgreSQL schema history.
+- `tests/` — service-owned API and tenant-isolation tests.
 
 The other services retain a `contract.py` that the shared runtime turns into deterministic simulation endpoints. This compatibility path is temporary and is not used by the implemented master-data services.
 
@@ -23,7 +24,7 @@ Each API exposes:
 - Liveness at `/health/live`
 - Readiness at `/health/ready`
 
-Ports are assigned from `8101` through `8115` in `compose.yaml` in catalog order.
+Tenant Master uses port `8100`; the original catalog uses `8101` through `8115`.
 
 ## Run one service locally
 
@@ -44,6 +45,7 @@ Identifiers are opaque strings issued by the owning service. A signature contain
 
 | Domain folder | Responsibility |
 | --- | --- |
+| `tenant-master` | Tenant identity and lifecycle |
 | `vehicle-master` | Vehicle identity and lifecycle |
 | `telematics-unit-master` | Telematics device inventory |
 | `fleet-master` | Fleet/customer, contract, SLA, region, and contact data |
@@ -67,5 +69,7 @@ Identifiers are opaque strings issued by the owning service. A signature contain
 - Master-data mutations accept an optional `Idempotency-Key` header and replay the first result for the same operation and key.
 - Authentication and authorization are not implemented in the dummy services.
 - Master-data request bodies use explicit Pydantic domain models; non-master dummy responses remain deterministic.
-- Master-data state is isolated per application process and seeded from its owning service folder. PostgreSQL migration files document the durable production schema; a database adapter remains a separate deployment concern.
+- Compose-backed master-data state is durable in a separate logical PostgreSQL database per service. Without `DATABASE_URL`, tests use a tenant-scoped process-local adapter.
+- The four domain services require `X-Tenant-ID`; Compose verifies that tenant through Tenant Master before accessing data.
+- Synthetic data is created only through service APIs by `scripts/seed_synthetic_tenant.py`.
 - Database adapters, event publishing, downstream composition, and production error models remain implementation work.

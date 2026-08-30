@@ -12,7 +12,7 @@ def test_every_service_is_runnable_and_has_openapi() -> None:
     service_paths = sorted(
         path for path in (ROOT / "services").iterdir() if path.is_dir()
     )
-    assert len(service_paths) == 15
+    assert len(service_paths) == 16
 
     for service_path in service_paths:
         app = load_service_app(service_path)
@@ -28,7 +28,8 @@ def test_every_service_is_runnable_and_has_openapi() -> None:
         domain_routes = [
             route
             for route in app.routes
-            if route.path not in {
+            if route.path
+            not in {
                 "/docs",
                 "/docs/oauth2-redirect",
                 "/redoc",

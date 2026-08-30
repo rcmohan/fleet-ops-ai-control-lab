@@ -72,6 +72,19 @@
               "type": "string",
               "title": "Unit Id"
             }
+          },
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 64,
+              "description": "Opaque Tenant Master identifier",
+              "title": "X-Tenant-Id"
+            },
+            "description": "Opaque Tenant Master identifier"
           }
         ],
         "responses": {
@@ -126,6 +139,19 @@
               ],
               "title": "Idempotency-Key"
             }
+          },
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 64,
+              "description": "Opaque Tenant Master identifier",
+              "title": "X-Tenant-Id"
+            },
+            "description": "Opaque Tenant Master identifier"
           }
         ],
         "requestBody": {
@@ -227,6 +253,19 @@
               "default": 50,
               "title": "Limit"
             }
+          },
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 64,
+              "description": "Opaque Tenant Master identifier",
+              "title": "X-Tenant-Id"
+            },
+            "description": "Opaque Tenant Master identifier"
           }
         ],
         "responses": {
@@ -272,6 +311,19 @@
               ],
               "title": "Idempotency-Key"
             }
+          },
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 64,
+              "description": "Opaque Tenant Master identifier",
+              "title": "X-Tenant-Id"
+            },
+            "description": "Opaque Tenant Master identifier"
           }
         ],
         "requestBody": {
@@ -338,6 +390,19 @@
               ],
               "title": "Idempotency-Key"
             }
+          },
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 64,
+              "description": "Opaque Tenant Master identifier",
+              "title": "X-Tenant-Id"
+            },
+            "description": "Opaque Tenant Master identifier"
           }
         ],
         "requestBody": {
@@ -404,6 +469,19 @@
               ],
               "title": "Idempotency-Key"
             }
+          },
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 64,
+              "description": "Opaque Tenant Master identifier",
+              "title": "X-Tenant-Id"
+            },
+            "description": "Opaque Tenant Master identifier"
           }
         ],
         "requestBody": {
@@ -470,6 +548,19 @@
               ],
               "title": "Idempotency-Key"
             }
+          },
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 64,
+              "description": "Opaque Tenant Master identifier",
+              "title": "X-Tenant-Id"
+            },
+            "description": "Opaque Tenant Master identifier"
           }
         ],
         "requestBody": {
@@ -536,6 +627,19 @@
               ],
               "title": "Idempotency-Key"
             }
+          },
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 64,
+              "description": "Opaque Tenant Master identifier",
+              "title": "X-Tenant-Id"
+            },
+            "description": "Opaque Tenant Master identifier"
           }
         ],
         "requestBody": {

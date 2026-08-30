@@ -10,6 +10,7 @@ SERVICE = Path(__file__).resolve().parents[1]
 
 def test_vehicle_crud_filtering_and_unassignment() -> None:
     client = TestClient(load_service_app(SERVICE))
+    tenant_headers = {"X-Tenant-ID": "ten_test_alpha"}
     payload = {
         "syntheticVin": "SYNTH-TEST-VEHICLE-01",
         "make": "Nova",
@@ -23,7 +24,7 @@ def test_vehicle_crud_filtering_and_unassignment() -> None:
     created = client.post(
         "/v1/vehicles",
         json=payload,
-        headers={"Idempotency-Key": "vehicle-create-1"},
+        headers={**tenant_headers, "Idempotency-Key": "vehicle-create-1"},
     )
     assert created.status_code == 200
     vehicle = created.json()
@@ -31,21 +32,25 @@ def test_vehicle_crud_filtering_and_unassignment() -> None:
     replay = client.post(
         "/v1/vehicles",
         json=payload,
-        headers={"Idempotency-Key": "vehicle-create-1"},
+        headers={**tenant_headers, "Idempotency-Key": "vehicle-create-1"},
     )
     assert replay.json() == vehicle
-    assert client.post("/v1/vehicles", json=payload).status_code == 409
+    assert (
+        client.post("/v1/vehicles", json=payload, headers=tenant_headers).status_code
+        == 409
+    )
 
     listed = client.get(
-        "/v1/vehicles", params={"fleet_id": "flt_test_001"}
+        "/v1/vehicles",
+        params={"fleet_id": "flt_test_001"},
+        headers=tenant_headers,
     ).json()
-    assert [item["vehicleId"] for item in listed["items"]] == [
-        vehicle["vehicleId"]
-    ]
+    assert [item["vehicleId"] for item in listed["items"]] == [vehicle["vehicleId"]]
 
     updated = client.patch(
         f"/v1/vehicles/{vehicle['vehicleId']}",
         json={"priorityLevel": "critical"},
+        headers=tenant_headers,
     ).json()
     assert updated["priorityLevel"] == "critical"
     assert updated["sourceVersion"] == 2
@@ -53,6 +58,18 @@ def test_vehicle_crud_filtering_and_unassignment() -> None:
     unassigned = client.put(
         f"/v1/vehicles/{vehicle['vehicleId']}/fleet-assignment",
         json={"fleetId": None},
+        headers=tenant_headers,
     ).json()
     assert unassigned["fleetId"] is None
-    assert client.get("/v1/vehicles/not-present").status_code == 404
+    assert (
+        client.get("/v1/vehicles/not-present", headers=tenant_headers).status_code
+        == 404
+    )
+    assert (
+        client.get(
+            f"/v1/vehicles/{vehicle['vehicleId']}",
+            headers={"X-Tenant-ID": "ten_test_beta"},
+        ).status_code
+        == 404
+    )
+    assert client.get(f"/v1/vehicles/{vehicle['vehicleId']}").status_code == 422

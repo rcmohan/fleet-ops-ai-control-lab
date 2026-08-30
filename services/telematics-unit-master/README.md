@@ -2,7 +2,7 @@
 
 Owns telematics hardware identity, activation metadata, installed firmware inventory, supported capabilities, and remote-command eligibility policy flags.
 
-This directory owns its FastAPI application, domain models, synthetic seed data, generated OpenAPI document, and boundary documentation. It does not use the legacy contract-stub runtime.
+This directory owns its FastAPI application, domain models, PostgreSQL migrations, tests, generated OpenAPI document, and boundary documentation. Synthetic records are created through the service API.
 
 Implemented operations:
 
