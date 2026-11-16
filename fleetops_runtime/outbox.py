@@ -76,12 +76,16 @@ async def dispatch_once(db: Database, services: ServiceClients, batch: int = 20)
     return delivered
 
 
-async def run_dispatcher(db: Database, services: ServiceClients, interval: float = 1.0) -> None:
+async def run_dispatcher(
+    db: Database, services: ServiceClients, interval: float = 0.5, batch: int = 100
+) -> None:
     while True:
+        delivered = 0
         try:
-            await dispatch_once(db, services)
+            delivered = await dispatch_once(db, services, batch)
         except asyncio.CancelledError:
             raise
         except Exception:
             log.exception("outbox dispatch failed")
-        await asyncio.sleep(interval)
+        if delivered < batch:  # caught up (or failing); otherwise drain the backlog at once
+            await asyncio.sleep(interval)

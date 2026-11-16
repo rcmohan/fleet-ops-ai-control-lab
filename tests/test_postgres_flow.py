@@ -454,6 +454,34 @@ async def test_seed_loader_loads_csvs_and_reruns_cleanly(mesh: Mesh, tmp_path) -
     assert len(members["items"]) == fleet["declaredFleetSize"]
 
 
+async def test_simulator_drives_events_alerts_and_twin(mesh: Mesh, tmp_path) -> None:
+    from fleetops_seed import Loader, build_catalog, mesh_urls
+    from fleetops_sim import Injection, RunConfig, Simulator
+
+    write_seed = build_catalog(providers=4, fleets=3, vehicles=25, spare_units=2, incidents=10)
+    report = await Loader(mesh.http, mesh_urls).load(write_seed)
+    assert report.failures == []
+
+    start = datetime.now(UTC).replace(second=0, microsecond=0) - timedelta(minutes=30)
+    config = RunConfig(start=start, minutes=30, max_vehicles=8, seed=unique("sim"),
+                       injections=[Injection("battery_connectivity", "veh_golden_001", 5)])
+    stats = await Simulator(mesh.http, mesh_urls, config).run()
+    assert stats.failures == [], stats.failures
+    assert stats.outcome["accepted"] == sum(stats.sent.values()) > 0
+
+    alerts = await mesh.ok("GET", "telematics-event", "/v1/vehicles/veh_golden_001/active-alerts")
+    assert {"battery_voltage", "diagnostic_failure"} <= {a["alertType"] for a in alerts["alerts"]}
+
+    while await mesh.deliver("telematics-event"):
+        pass
+    state = await mesh.ok("GET", "digital-twin-context",
+                          "/v1/digital-twins/vehicles/veh_golden_001")
+    assert state["healthState"] == "critical"
+    assert {issue["issue"] for issue in state["activeIssues"]} >= {"battery", "diagnostic"}
+    fleet = await mesh.ok("GET", "digital-twin-context", "/v1/digital-twins/fleets/flt_golden")
+    assert fleet["criticalVehicleCount"] == 1
+
+
 async def test_audit_is_append_only(mesh: Mesh) -> None:
     trace = unique("trace")
     started = {"eventId": unique("audit"), "traceId": trace, "agentName": "triage",
