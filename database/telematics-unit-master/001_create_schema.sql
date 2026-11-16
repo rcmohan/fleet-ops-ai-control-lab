@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE SCHEMA IF NOT EXISTS master_data;
 
 CREATE TABLE IF NOT EXISTS master_data.telematics_units (
@@ -34,5 +32,4 @@ CREATE TABLE IF NOT EXISTS master_data.telematics_unit_capabilities (
 CREATE INDEX IF NOT EXISTS idx_telematics_units_status
     ON master_data.telematics_units (lifecycle_status);
 
-COMMIT;
 

@@ -47,23 +47,23 @@ The facade may join responses in memory, but it must not persist copies of anoth
 
 ```text
 services/
-  vehicle-master/           # API/application/domain adapters (future implementation)
-  telematics-unit-master/   # API/application/domain adapters (future implementation)
-  fleet-master/             # API/application/domain adapters (future implementation)
-  maintenance-history/      # API/application/domain adapters (future implementation)
-  service-provider-master/  # API/application/domain adapters (future implementation)
+  vehicle-master/           # contract.py (routes) and handlers.py (behavior)
+  telematics-unit-master/   # contract.py (routes) and handlers.py (behavior)
+  fleet-master/             # contract.py (routes) and handlers.py (behavior)
+  maintenance-history/      # contract.py (routes) and handlers.py (behavior)
+  service-provider-master/  # contract.py (routes) and handlers.py (behavior)
 database/
-  <service>/001_create_schema.sql
+  <service>/NNN_*.sql     # ordered migrations, applied by the service at startup
 ```
 
-Only service boundary documents and initial database migrations are included at this stage. No runtime, API handler, container, or deployment code is scaffolded yet.
+Each service runs on the shared runtime in `fleetops_runtime/`, which provides the PostgreSQL pool, migrations, per-request transactions, idempotency keys, and the outbox. See `database/README.md`.
 
-## Suggested delivery sequence
+## Delivery status
 
-1. Provision one PostgreSQL database and credential per service.
-2. Apply each service's `001_create_schema.sql` only to its matching database.
-3. Define versioned service contracts and domain events.
-4. Implement repositories and application services inside each boundary.
-5. Add the MCP/UCP composition facade with timeouts, partial-result handling, and tracing.
-6. Add synthetic seed generation through service-owned import commands or APIs.
+1. Done: one PostgreSQL database and credential per service (`database/bootstrap/`).
+2. Done: migrations applied by each service to its own database.
+3. Done: versioned service contracts; cross-service messages go through the outbox.
+4. Done: handlers inside each boundary.
+5. Done: the vehicle context facade, with timeouts and partial results. Tracing is not yet added.
+6. Next: synthetic seed generation through the services' create APIs, which accept caller-chosen IDs for imports.
 

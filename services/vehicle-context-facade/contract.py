@@ -57,7 +57,16 @@ CONTRACT = ServiceContract(
             summary="Get composed service history",
             response={
                 "vehicleId": "{vehicle_id}",
-                "items": [{"maintenanceId": "mtn_demo_001", "status": "completed"}],
+                "items": [
+                    {
+                        "maintenanceId": "mtn_demo_001",
+                        "status": "completed",
+                        "eventType": "preventive",
+                        "openedAt": "2026-08-01T09:00:00Z",
+                        "summary": "Synthetic scheduled inspection",
+                    }
+                ],
+                "nextCursor": "",
                 "partial": False,
             },
             parameters=(Parameter("cursor"), Parameter("limit", schema_type="integer")),

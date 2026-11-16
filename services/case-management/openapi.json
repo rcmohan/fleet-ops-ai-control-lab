@@ -59,43 +59,6 @@
         "summary": "Create a service case",
         "description": "Create a service case",
         "operationId": "createServiceCase",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "vehicleId": {
-                    "type": "string",
-                    "title": "Vehicleid"
-                  },
-                  "recommendationId": {
-                    "type": "string",
-                    "title": "Recommendationid"
-                  },
-                  "summary": {
-                    "type": "string",
-                    "title": "Summary"
-                  }
-                },
-                "additionalProperties": false,
-                "type": "object",
-                "required": [
-                  "vehicleId",
-                  "recommendationId",
-                  "summary"
-                ],
-                "title": "createServiceCaseRequest"
-              },
-              "example": {
-                "vehicleId": "veh_demo_001",
-                "recommendationId": "rec_demo_001",
-                "summary": "Inspect low battery voltage"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -108,7 +71,121 @@
             }
           }
         },
-        "x-dummy-implementation": true
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "vehicleId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Vehicleid",
+                    "type": "string"
+                  },
+                  "summary": {
+                    "maxLength": 4000,
+                    "minLength": 1,
+                    "title": "Summary",
+                    "type": "string"
+                  },
+                  "recommendationId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Recommendationid"
+                  },
+                  "eventType": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[a-z][a-z0-9_]{1,47}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Eventtype"
+                  },
+                  "symptoms": {
+                    "items": {
+                      "pattern": "^[a-z][a-z0-9_]{1,63}$",
+                      "type": "string"
+                    },
+                    "maxItems": 20,
+                    "title": "Symptoms",
+                    "type": "array"
+                  },
+                  "regionCode": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[a-z0-9][a-z0-9-]{1,31}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Regioncode"
+                  },
+                  "assignedTeamId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^team_[a-z0-9_]{1,59}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Assignedteamid"
+                  },
+                  "traceId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Traceid"
+                  }
+                },
+                "required": [
+                  "vehicleId",
+                  "summary"
+                ],
+                "title": "CreateCase",
+                "type": "object"
+              },
+              "example": {
+                "vehicleId": "veh_demo_001",
+                "recommendationId": "rec_demo_001",
+                "summary": "Inspect low battery voltage"
+              }
+            }
+          }
+        }
       }
     },
     "/v1/cases/{case_id}/status": {
@@ -142,7 +219,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -151,18 +228,75 @@
                 "additionalProperties": false,
                 "properties": {
                   "status": {
+                    "enum": [
+                      "open",
+                      "in_progress",
+                      "resolved",
+                      "closed",
+                      "cancelled"
+                    ],
                     "title": "Status",
+                    "type": "string"
+                  },
+                  "comment": {
+                    "anyOf": [
+                      {
+                        "maxLength": 2000,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Comment"
+                  },
+                  "resolution": {
+                    "anyOf": [
+                      {
+                        "maxLength": 4000,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Required when resolving.",
+                    "title": "Resolution"
+                  },
+                  "rootCause": {
+                    "anyOf": [
+                      {
+                        "maxLength": 4000,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Rootcause"
+                  },
+                  "outcome": {
+                    "default": "resolved",
+                    "enum": [
+                      "resolved",
+                      "workaround",
+                      "unresolved"
+                    ],
+                    "title": "Outcome",
                     "type": "string"
                   }
                 },
                 "required": [
                   "status"
                 ],
-                "title": "updateCaseRequest",
+                "title": "StatusChange",
                 "type": "object"
               },
               "example": {
-                "status": "in_progress"
+                "status": "in_progress",
+                "comment": "Battery inspection booked"
               }
             }
           }
@@ -198,7 +332,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/cases/{case_id}/assignment": {
@@ -232,7 +366,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -241,6 +375,7 @@
                 "additionalProperties": false,
                 "properties": {
                   "teamId": {
+                    "pattern": "^team_[a-z0-9_]{1,59}$",
                     "title": "Teamid",
                     "type": "string"
                   }
@@ -248,7 +383,7 @@
                 "required": [
                   "teamId"
                 ],
-                "title": "assignCaseRequest",
+                "title": "Assignment",
                 "type": "object"
               },
               "example": {
@@ -288,9 +423,18 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -299,24 +443,40 @@
                 "additionalProperties": false,
                 "properties": {
                   "recommendationId": {
-                    "title": "Recommendationid",
-                    "type": "string"
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Recommendationid"
                   },
                   "summary": {
+                    "maxLength": 4000,
+                    "minLength": 1,
                     "title": "Summary",
                     "type": "string"
                   },
                   "traceId": {
-                    "title": "Traceid",
-                    "type": "string"
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Traceid"
                   }
                 },
                 "required": [
-                  "recommendationId",
-                  "summary",
-                  "traceId"
+                  "summary"
                 ],
-                "title": "attachAgentSummaryRequest",
+                "title": "AgentSummary",
                 "type": "object"
               },
               "example": {
@@ -359,200 +519,389 @@
         "properties": {
           "caseId": {
             "type": "string",
-            "title": "Caseid",
-            "default": "{case_id}"
+            "title": "Caseid"
           },
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "veh_demo_001"
+            "title": "Vehicleid"
           },
           "recommendationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recommendationid"
+          },
+          "summary": {
             "type": "string",
-            "title": "Recommendationid",
-            "default": "rec_demo_001"
+            "title": "Summary"
+          },
+          "eventType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eventtype"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "open"
+            "title": "Status"
           },
           "assignedTeamId": {
-            "type": "string",
-            "title": "Assignedteamid",
-            "default": "team_ops"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assignedteamid"
           },
           "workflowState": {
             "type": "string",
-            "title": "Workflowstate",
-            "default": "triage"
+            "title": "Workflowstate"
           },
           "auditTraceId": {
-            "type": "string",
-            "title": "Audittraceid",
-            "default": "trace_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audittraceid"
+          },
+          "resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution"
           },
           "createdAt": {
             "type": "string",
-            "title": "Createdat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Createdat"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "caseId",
+          "vehicleId",
+          "recommendationId",
+          "summary",
+          "eventType",
+          "status",
+          "assignedTeamId",
+          "workflowState",
+          "auditTraceId",
+          "resolution",
+          "createdAt",
+          "sourceVersion"
+        ],
         "title": "assignCaseResponse"
       },
       "attachAgentSummaryResponse": {
         "properties": {
           "attachmentId": {
             "type": "string",
-            "title": "Attachmentid",
-            "default": "attachment_demo_001"
+            "title": "Attachmentid"
           },
           "caseId": {
             "type": "string",
-            "title": "Caseid",
-            "default": "{case_id}"
+            "title": "Caseid"
           },
           "type": {
             "type": "string",
-            "title": "Type",
-            "default": "agent_summary"
+            "title": "Type"
           },
           "createdAt": {
             "type": "string",
-            "title": "Createdat",
-            "default": "2026-08-22T12:01:00Z"
+            "title": "Createdat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "attachmentId",
+          "caseId",
+          "type",
+          "createdAt"
+        ],
         "title": "attachAgentSummaryResponse"
       },
       "createServiceCaseResponse": {
         "properties": {
           "caseId": {
             "type": "string",
-            "title": "Caseid",
-            "default": "case_demo_001"
+            "title": "Caseid"
           },
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "veh_demo_001"
+            "title": "Vehicleid"
           },
           "recommendationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recommendationid"
+          },
+          "summary": {
             "type": "string",
-            "title": "Recommendationid",
-            "default": "rec_demo_001"
+            "title": "Summary"
+          },
+          "eventType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eventtype"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "open"
+            "title": "Status"
           },
           "assignedTeamId": {
-            "type": "string",
-            "title": "Assignedteamid",
-            "default": "team_ops"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assignedteamid"
           },
           "workflowState": {
             "type": "string",
-            "title": "Workflowstate",
-            "default": "triage"
+            "title": "Workflowstate"
           },
           "auditTraceId": {
-            "type": "string",
-            "title": "Audittraceid",
-            "default": "trace_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audittraceid"
+          },
+          "resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution"
           },
           "createdAt": {
             "type": "string",
-            "title": "Createdat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Createdat"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "caseId",
+          "vehicleId",
+          "recommendationId",
+          "summary",
+          "eventType",
+          "status",
+          "assignedTeamId",
+          "workflowState",
+          "auditTraceId",
+          "resolution",
+          "createdAt",
+          "sourceVersion"
+        ],
         "title": "createServiceCaseResponse"
       },
       "getCaseStatusResponse": {
         "properties": {
           "caseId": {
             "type": "string",
-            "title": "Caseid",
-            "default": "{case_id}"
+            "title": "Caseid"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "open"
+            "title": "Status"
           },
           "assignedTeamId": {
-            "type": "string",
-            "title": "Assignedteamid",
-            "default": "team_ops"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assignedteamid"
           },
           "workflowState": {
             "type": "string",
-            "title": "Workflowstate",
-            "default": "triage"
+            "title": "Workflowstate"
           },
           "auditTraceId": {
-            "type": "string",
-            "title": "Audittraceid",
-            "default": "trace_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audittraceid"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "caseId",
+          "status",
+          "assignedTeamId",
+          "workflowState",
+          "auditTraceId"
+        ],
         "title": "getCaseStatusResponse"
       },
       "updateCaseResponse": {
         "properties": {
           "caseId": {
             "type": "string",
-            "title": "Caseid",
-            "default": "{case_id}"
+            "title": "Caseid"
           },
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "veh_demo_001"
+            "title": "Vehicleid"
           },
           "recommendationId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recommendationid"
+          },
+          "summary": {
             "type": "string",
-            "title": "Recommendationid",
-            "default": "rec_demo_001"
+            "title": "Summary"
+          },
+          "eventType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eventtype"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "in_progress"
+            "title": "Status"
           },
           "assignedTeamId": {
-            "type": "string",
-            "title": "Assignedteamid",
-            "default": "team_ops"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assignedteamid"
           },
           "workflowState": {
             "type": "string",
-            "title": "Workflowstate",
-            "default": "assigned"
+            "title": "Workflowstate"
           },
           "auditTraceId": {
-            "type": "string",
-            "title": "Audittraceid",
-            "default": "trace_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audittraceid"
+          },
+          "resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution"
           },
           "createdAt": {
             "type": "string",
-            "title": "Createdat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Createdat"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "caseId",
+          "vehicleId",
+          "recommendationId",
+          "summary",
+          "eventType",
+          "status",
+          "assignedTeamId",
+          "workflowState",
+          "auditTraceId",
+          "resolution",
+          "createdAt",
+          "sourceVersion"
+        ],
         "title": "updateCaseResponse"
       }
     }

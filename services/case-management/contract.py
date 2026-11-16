@@ -5,11 +5,15 @@ CASE = {
     "caseId": "case_demo_001",
     "vehicleId": "veh_demo_001",
     "recommendationId": "rec_demo_001",
+    "summary": "Inspect low battery voltage",
+    "eventType": "battery_voltage",
     "status": "open",
     "assignedTeamId": "team_ops",
-    "workflowState": "triage",
+    "workflowState": "assigned",
     "auditTraceId": "trace_demo_001",
+    "resolution": None,
     "createdAt": "2026-08-22T12:00:00Z",
+    "sourceVersion": 1,
 }
 
 CONTRACT = ServiceContract(
@@ -39,8 +43,9 @@ CONTRACT = ServiceContract(
                 "caseId": "{case_id}",
                 "status": "in_progress",
                 "workflowState": "assigned",
+                "sourceVersion": 2,
             },
-            request={"status": "in_progress"},
+            request={"status": "in_progress", "comment": "Battery inspection booked"},
         ),
         Operation(
             method="PUT",
@@ -76,7 +81,7 @@ CONTRACT = ServiceContract(
                 "caseId": "{case_id}",
                 "status": "open",
                 "assignedTeamId": "team_ops",
-                "workflowState": "triage",
+                "workflowState": "assigned",
                 "auditTraceId": "trace_demo_001",
             },
         ),

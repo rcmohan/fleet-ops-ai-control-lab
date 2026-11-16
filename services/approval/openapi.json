@@ -71,8 +71,18 @@
             }
           }
         },
-        "parameters": [],
-        "x-dummy-implementation": true,
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -81,24 +91,41 @@
                 "additionalProperties": false,
                 "properties": {
                   "actionId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
                     "title": "Actionid",
                     "type": "string"
                   },
                   "actionType": {
+                    "pattern": "^[a-z][a-z0-9_]{1,63}$",
                     "title": "Actiontype",
                     "type": "string"
                   },
                   "riskLevel": {
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high",
+                      "critical"
+                    ],
                     "title": "Risklevel",
                     "type": "string"
                   },
                   "evidenceTraceId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
                     "title": "Evidencetraceid",
                     "type": "string"
                   },
                   "requestedReviewerRole": {
+                    "pattern": "^[a-z][a-z0-9_]{1,63}$",
                     "title": "Requestedreviewerrole",
                     "type": "string"
+                  },
+                  "expiresInSeconds": {
+                    "default": 3600,
+                    "maximum": 604800,
+                    "minimum": 60,
+                    "title": "Expiresinseconds",
+                    "type": "integer"
                   }
                 },
                 "required": [
@@ -108,7 +135,7 @@
                   "evidenceTraceId",
                   "requestedReviewerRole"
                 ],
-                "title": "requestHumanApprovalRequest",
+                "title": "ApprovalRequest",
                 "type": "object"
               },
               "example": {
@@ -116,7 +143,8 @@
                 "actionType": "fleet_notification",
                 "riskLevel": "high",
                 "evidenceTraceId": "trace_demo_001",
-                "requestedReviewerRole": "operations_manager"
+                "requestedReviewerRole": "operations_manager",
+                "expiresInSeconds": 3600
               }
             }
           }
@@ -170,7 +198,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/approvals/{approval_id}": {
@@ -204,7 +232,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/approvals/{approval_id}/decisions": {
@@ -229,6 +257,15 @@
         },
         "parameters": [
           {
+            "name": "X-Reviewer-Id",
+            "in": "header",
+            "required": true,
+            "description": "Synthetic reviewer identity; not authenticated",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "approval_id",
             "in": "path",
             "required": true,
@@ -236,9 +273,18 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -247,19 +293,30 @@
                 "additionalProperties": false,
                 "properties": {
                   "decision": {
+                    "enum": [
+                      "approved",
+                      "rejected"
+                    ],
                     "title": "Decision",
                     "type": "string"
                   },
                   "comments": {
-                    "title": "Comments",
-                    "type": "string"
+                    "anyOf": [
+                      {
+                        "maxLength": 4000,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Comments"
                   }
                 },
                 "required": [
-                  "decision",
-                  "comments"
+                  "decision"
                 ],
-                "title": "recordApprovalDecisionRequest",
+                "title": "Decision",
                 "type": "object"
               },
               "example": {
@@ -301,57 +358,90 @@
         "properties": {
           "approvalId": {
             "type": "string",
-            "title": "Approvalid",
-            "default": "{approval_id}"
+            "title": "Approvalid"
           },
           "actionId": {
             "type": "string",
-            "title": "Actionid",
-            "default": "act_demo_001"
+            "title": "Actionid"
           },
           "actionType": {
             "type": "string",
-            "title": "Actiontype",
-            "default": "fleet_notification"
+            "title": "Actiontype"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "pending"
+            "title": "Status"
           },
           "riskLevel": {
             "type": "string",
-            "title": "Risklevel",
-            "default": "high"
+            "title": "Risklevel"
           },
           "requestedReviewerRole": {
             "type": "string",
-            "title": "Requestedreviewerrole",
-            "default": "operations_manager"
+            "title": "Requestedreviewerrole"
+          },
+          "evidenceTraceId": {
+            "type": "string",
+            "title": "Evidencetraceid"
           },
           "reviewerId": {
-            "type": "string",
-            "title": "Reviewerid",
-            "default": ""
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewerid"
           },
           "comments": {
-            "type": "string",
-            "title": "Comments",
-            "default": ""
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comments"
           },
           "requestedAt": {
             "type": "string",
-            "title": "Requestedat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Requestedat"
+          },
+          "expiresAt": {
+            "type": "string",
+            "title": "Expiresat"
           },
           "decidedAt": {
-            "type": "string",
-            "title": "Decidedat",
-            "default": ""
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decidedat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "approvalId",
+          "actionId",
+          "actionType",
+          "status",
+          "riskLevel",
+          "requestedReviewerRole",
+          "evidenceTraceId",
+          "reviewerId",
+          "comments",
+          "requestedAt",
+          "expiresAt",
+          "decidedAt"
+        ],
         "title": "getApprovalStatusResponse"
       },
       "listPendingApprovalsResponse": {
@@ -359,144 +449,199 @@
           "items": {
             "items": {},
             "type": "array",
-            "title": "Items",
-            "default": [
-              {
-                "approvalId": "apr_demo_001",
-                "actionId": "act_demo_001",
-                "actionType": "fleet_notification",
-                "status": "pending",
-                "riskLevel": "high",
-                "requestedReviewerRole": "operations_manager",
-                "reviewerId": "",
-                "comments": "",
-                "requestedAt": "2026-08-22T12:00:00Z",
-                "decidedAt": ""
-              }
-            ]
+            "title": "Items"
           },
           "nextCursor": {
             "type": "string",
-            "title": "Nextcursor",
-            "default": ""
+            "title": "Nextcursor"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
         "title": "listPendingApprovalsResponse"
       },
       "recordApprovalDecisionResponse": {
         "properties": {
           "approvalId": {
             "type": "string",
-            "title": "Approvalid",
-            "default": "{approval_id}"
+            "title": "Approvalid"
           },
           "actionId": {
             "type": "string",
-            "title": "Actionid",
-            "default": "act_demo_001"
+            "title": "Actionid"
           },
           "actionType": {
             "type": "string",
-            "title": "Actiontype",
-            "default": "fleet_notification"
+            "title": "Actiontype"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "approved"
+            "title": "Status"
           },
           "riskLevel": {
             "type": "string",
-            "title": "Risklevel",
-            "default": "high"
+            "title": "Risklevel"
           },
           "requestedReviewerRole": {
             "type": "string",
-            "title": "Requestedreviewerrole",
-            "default": "operations_manager"
+            "title": "Requestedreviewerrole"
+          },
+          "evidenceTraceId": {
+            "type": "string",
+            "title": "Evidencetraceid"
           },
           "reviewerId": {
-            "type": "string",
-            "title": "Reviewerid",
-            "default": "reviewer_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewerid"
           },
           "comments": {
-            "type": "string",
-            "title": "Comments",
-            "default": "Approved for synthetic execution"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comments"
           },
           "requestedAt": {
             "type": "string",
-            "title": "Requestedat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Requestedat"
+          },
+          "expiresAt": {
+            "type": "string",
+            "title": "Expiresat"
           },
           "decidedAt": {
-            "type": "string",
-            "title": "Decidedat",
-            "default": "2026-08-22T12:05:00Z"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decidedat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "approvalId",
+          "actionId",
+          "actionType",
+          "status",
+          "riskLevel",
+          "requestedReviewerRole",
+          "evidenceTraceId",
+          "reviewerId",
+          "comments",
+          "requestedAt",
+          "expiresAt",
+          "decidedAt"
+        ],
         "title": "recordApprovalDecisionResponse"
       },
       "requestHumanApprovalResponse": {
         "properties": {
           "approvalId": {
             "type": "string",
-            "title": "Approvalid",
-            "default": "apr_demo_001"
+            "title": "Approvalid"
           },
           "actionId": {
             "type": "string",
-            "title": "Actionid",
-            "default": "act_demo_001"
+            "title": "Actionid"
           },
           "actionType": {
             "type": "string",
-            "title": "Actiontype",
-            "default": "fleet_notification"
+            "title": "Actiontype"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "pending"
+            "title": "Status"
           },
           "riskLevel": {
             "type": "string",
-            "title": "Risklevel",
-            "default": "high"
+            "title": "Risklevel"
           },
           "requestedReviewerRole": {
             "type": "string",
-            "title": "Requestedreviewerrole",
-            "default": "operations_manager"
+            "title": "Requestedreviewerrole"
+          },
+          "evidenceTraceId": {
+            "type": "string",
+            "title": "Evidencetraceid"
           },
           "reviewerId": {
-            "type": "string",
-            "title": "Reviewerid",
-            "default": ""
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewerid"
           },
           "comments": {
-            "type": "string",
-            "title": "Comments",
-            "default": ""
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comments"
           },
           "requestedAt": {
             "type": "string",
-            "title": "Requestedat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Requestedat"
+          },
+          "expiresAt": {
+            "type": "string",
+            "title": "Expiresat"
           },
           "decidedAt": {
-            "type": "string",
-            "title": "Decidedat",
-            "default": ""
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decidedat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "approvalId",
+          "actionId",
+          "actionType",
+          "status",
+          "riskLevel",
+          "requestedReviewerRole",
+          "evidenceTraceId",
+          "reviewerId",
+          "comments",
+          "requestedAt",
+          "expiresAt",
+          "decidedAt"
+        ],
         "title": "requestHumanApprovalResponse"
       }
     }

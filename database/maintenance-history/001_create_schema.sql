@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE SCHEMA IF NOT EXISTS master_data;
 
 CREATE TABLE IF NOT EXISTS master_data.maintenance_records (
@@ -37,5 +35,4 @@ CREATE INDEX IF NOT EXISTS idx_maintenance_vehicle_opened
 CREATE INDEX IF NOT EXISTS idx_maintenance_provider_opened
     ON master_data.maintenance_records (service_provider_id, opened_at DESC);
 
-COMMIT;
 

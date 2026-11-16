@@ -59,61 +59,6 @@
         "summary": "Record an agent trace event",
         "description": "Record an agent trace event",
         "operationId": "recordAgentTrace",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "eventId": {
-                    "type": "string",
-                    "title": "Eventid"
-                  },
-                  "traceId": {
-                    "type": "string",
-                    "title": "Traceid"
-                  },
-                  "agentName": {
-                    "type": "string",
-                    "title": "Agentname"
-                  },
-                  "eventType": {
-                    "type": "string",
-                    "title": "Eventtype"
-                  },
-                  "occurredAt": {
-                    "type": "string",
-                    "title": "Occurredat"
-                  },
-                  "payload": {
-                    "type": "object",
-                    "title": "Payload"
-                  }
-                },
-                "additionalProperties": false,
-                "type": "object",
-                "required": [
-                  "eventId",
-                  "traceId",
-                  "agentName",
-                  "eventType",
-                  "occurredAt",
-                  "payload"
-                ],
-                "title": "recordAgentTraceRequest"
-              },
-              "example": {
-                "eventId": "audit_demo_001",
-                "traceId": "trace_demo_001",
-                "agentName": "triage-agent",
-                "eventType": "run_completed",
-                "occurredAt": "2026-08-22T12:00:00Z",
-                "payload": {}
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -126,7 +71,77 @@
             }
           }
         },
-        "x-dummy-implementation": true
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eventId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Eventid",
+                    "type": "string"
+                  },
+                  "traceId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Traceid",
+                    "type": "string"
+                  },
+                  "occurredAt": {
+                    "format": "date-time",
+                    "title": "Occurredat",
+                    "type": "string"
+                  },
+                  "payload": {
+                    "additionalProperties": true,
+                    "title": "Payload",
+                    "type": "object"
+                  },
+                  "agentName": {
+                    "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+                    "title": "Agentname",
+                    "type": "string"
+                  },
+                  "eventType": {
+                    "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+                    "title": "Eventtype",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "eventId",
+                  "traceId",
+                  "occurredAt",
+                  "agentName",
+                  "eventType"
+                ],
+                "title": "AgentTrace",
+                "type": "object"
+              },
+              "example": {
+                "eventId": "audit_demo_001",
+                "traceId": "trace_demo_001",
+                "agentName": "triage-agent",
+                "eventType": "run_completed",
+                "occurredAt": "2026-08-22T12:00:00Z",
+                "payload": {}
+              }
+            }
+          }
+        }
       }
     },
     "/v1/audit/tool-calls": {
@@ -137,61 +152,6 @@
         "summary": "Record a tool call",
         "description": "Record a tool call",
         "operationId": "recordToolCall",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "eventId": {
-                    "type": "string",
-                    "title": "Eventid"
-                  },
-                  "traceId": {
-                    "type": "string",
-                    "title": "Traceid"
-                  },
-                  "toolName": {
-                    "type": "string",
-                    "title": "Toolname"
-                  },
-                  "status": {
-                    "type": "string",
-                    "title": "Status"
-                  },
-                  "occurredAt": {
-                    "type": "string",
-                    "title": "Occurredat"
-                  },
-                  "payload": {
-                    "type": "object",
-                    "title": "Payload"
-                  }
-                },
-                "additionalProperties": false,
-                "type": "object",
-                "required": [
-                  "eventId",
-                  "traceId",
-                  "toolName",
-                  "status",
-                  "occurredAt",
-                  "payload"
-                ],
-                "title": "recordToolCallRequest"
-              },
-              "example": {
-                "eventId": "audit_demo_002",
-                "traceId": "trace_demo_001",
-                "toolName": "get_vehicle_profile",
-                "status": "succeeded",
-                "occurredAt": "2026-08-22T12:00:00Z",
-                "payload": {}
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -204,7 +164,82 @@
             }
           }
         },
-        "x-dummy-implementation": true
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eventId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Eventid",
+                    "type": "string"
+                  },
+                  "traceId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Traceid",
+                    "type": "string"
+                  },
+                  "occurredAt": {
+                    "format": "date-time",
+                    "title": "Occurredat",
+                    "type": "string"
+                  },
+                  "payload": {
+                    "additionalProperties": true,
+                    "title": "Payload",
+                    "type": "object"
+                  },
+                  "toolName": {
+                    "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+                    "title": "Toolname",
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "succeeded",
+                      "failed",
+                      "denied",
+                      "timed_out"
+                    ],
+                    "title": "Status",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "eventId",
+                  "traceId",
+                  "occurredAt",
+                  "toolName",
+                  "status"
+                ],
+                "title": "ToolCall",
+                "type": "object"
+              },
+              "example": {
+                "eventId": "audit_demo_002",
+                "traceId": "trace_demo_001",
+                "toolName": "get_vehicle_profile",
+                "status": "succeeded",
+                "occurredAt": "2026-08-22T12:00:00Z",
+                "payload": {}
+              }
+            }
+          }
+        }
       }
     },
     "/v1/audit/policy-decisions": {
@@ -215,61 +250,6 @@
         "summary": "Record a policy decision",
         "description": "Record a policy decision",
         "operationId": "recordPolicyDecision",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "eventId": {
-                    "type": "string",
-                    "title": "Eventid"
-                  },
-                  "traceId": {
-                    "type": "string",
-                    "title": "Traceid"
-                  },
-                  "policyId": {
-                    "type": "string",
-                    "title": "Policyid"
-                  },
-                  "decision": {
-                    "type": "string",
-                    "title": "Decision"
-                  },
-                  "occurredAt": {
-                    "type": "string",
-                    "title": "Occurredat"
-                  },
-                  "payload": {
-                    "type": "object",
-                    "title": "Payload"
-                  }
-                },
-                "additionalProperties": false,
-                "type": "object",
-                "required": [
-                  "eventId",
-                  "traceId",
-                  "policyId",
-                  "decision",
-                  "occurredAt",
-                  "payload"
-                ],
-                "title": "recordPolicyDecisionRequest"
-              },
-              "example": {
-                "eventId": "audit_demo_003",
-                "traceId": "trace_demo_001",
-                "policyId": "policy_demo_001",
-                "decision": "approval_required",
-                "occurredAt": "2026-08-22T12:00:00Z",
-                "payload": {}
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -282,7 +262,81 @@
             }
           }
         },
-        "x-dummy-implementation": true
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eventId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Eventid",
+                    "type": "string"
+                  },
+                  "traceId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Traceid",
+                    "type": "string"
+                  },
+                  "occurredAt": {
+                    "format": "date-time",
+                    "title": "Occurredat",
+                    "type": "string"
+                  },
+                  "payload": {
+                    "additionalProperties": true,
+                    "title": "Payload",
+                    "type": "object"
+                  },
+                  "policyId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Policyid",
+                    "type": "string"
+                  },
+                  "decision": {
+                    "enum": [
+                      "allowed",
+                      "approval_required",
+                      "blocked"
+                    ],
+                    "title": "Decision",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "eventId",
+                  "traceId",
+                  "occurredAt",
+                  "policyId",
+                  "decision"
+                ],
+                "title": "PolicyDecision",
+                "type": "object"
+              },
+              "example": {
+                "eventId": "audit_demo_003",
+                "traceId": "trace_demo_001",
+                "policyId": "policy_demo_001",
+                "decision": "approval_required",
+                "occurredAt": "2026-08-22T12:00:00Z",
+                "payload": {}
+              }
+            }
+          }
+        }
       }
     },
     "/v1/audit/recommendations": {
@@ -293,61 +347,6 @@
         "summary": "Record a recommendation",
         "description": "Record a recommendation",
         "operationId": "recordRecommendation",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "eventId": {
-                    "type": "string",
-                    "title": "Eventid"
-                  },
-                  "traceId": {
-                    "type": "string",
-                    "title": "Traceid"
-                  },
-                  "recommendationId": {
-                    "type": "string",
-                    "title": "Recommendationid"
-                  },
-                  "actionType": {
-                    "type": "string",
-                    "title": "Actiontype"
-                  },
-                  "occurredAt": {
-                    "type": "string",
-                    "title": "Occurredat"
-                  },
-                  "payload": {
-                    "type": "object",
-                    "title": "Payload"
-                  }
-                },
-                "additionalProperties": false,
-                "type": "object",
-                "required": [
-                  "eventId",
-                  "traceId",
-                  "recommendationId",
-                  "actionType",
-                  "occurredAt",
-                  "payload"
-                ],
-                "title": "recordRecommendationRequest"
-              },
-              "example": {
-                "eventId": "audit_demo_004",
-                "traceId": "trace_demo_001",
-                "recommendationId": "rec_demo_001",
-                "actionType": "inspect_vehicle",
-                "occurredAt": "2026-08-22T12:00:00Z",
-                "payload": {}
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -360,7 +359,77 @@
             }
           }
         },
-        "x-dummy-implementation": true
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eventId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Eventid",
+                    "type": "string"
+                  },
+                  "traceId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Traceid",
+                    "type": "string"
+                  },
+                  "occurredAt": {
+                    "format": "date-time",
+                    "title": "Occurredat",
+                    "type": "string"
+                  },
+                  "payload": {
+                    "additionalProperties": true,
+                    "title": "Payload",
+                    "type": "object"
+                  },
+                  "recommendationId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Recommendationid",
+                    "type": "string"
+                  },
+                  "actionType": {
+                    "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+                    "title": "Actiontype",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "eventId",
+                  "traceId",
+                  "occurredAt",
+                  "recommendationId",
+                  "actionType"
+                ],
+                "title": "Recommendation",
+                "type": "object"
+              },
+              "example": {
+                "eventId": "audit_demo_004",
+                "traceId": "trace_demo_001",
+                "recommendationId": "rec_demo_001",
+                "actionType": "inspect_vehicle",
+                "occurredAt": "2026-08-22T12:00:00Z",
+                "payload": {}
+              }
+            }
+          }
+        }
       }
     },
     "/v1/audit/human-decisions": {
@@ -371,61 +440,6 @@
         "summary": "Record a human decision",
         "description": "Record a human decision",
         "operationId": "recordHumanDecision",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "eventId": {
-                    "type": "string",
-                    "title": "Eventid"
-                  },
-                  "traceId": {
-                    "type": "string",
-                    "title": "Traceid"
-                  },
-                  "approvalId": {
-                    "type": "string",
-                    "title": "Approvalid"
-                  },
-                  "decision": {
-                    "type": "string",
-                    "title": "Decision"
-                  },
-                  "occurredAt": {
-                    "type": "string",
-                    "title": "Occurredat"
-                  },
-                  "payload": {
-                    "type": "object",
-                    "title": "Payload"
-                  }
-                },
-                "additionalProperties": false,
-                "type": "object",
-                "required": [
-                  "eventId",
-                  "traceId",
-                  "approvalId",
-                  "decision",
-                  "occurredAt",
-                  "payload"
-                ],
-                "title": "recordHumanDecisionRequest"
-              },
-              "example": {
-                "eventId": "audit_demo_005",
-                "traceId": "trace_demo_001",
-                "approvalId": "apr_demo_001",
-                "decision": "approved",
-                "occurredAt": "2026-08-22T12:05:00Z",
-                "payload": {}
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -438,7 +452,80 @@
             }
           }
         },
-        "x-dummy-implementation": true
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eventId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Eventid",
+                    "type": "string"
+                  },
+                  "traceId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Traceid",
+                    "type": "string"
+                  },
+                  "occurredAt": {
+                    "format": "date-time",
+                    "title": "Occurredat",
+                    "type": "string"
+                  },
+                  "payload": {
+                    "additionalProperties": true,
+                    "title": "Payload",
+                    "type": "object"
+                  },
+                  "approvalId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Approvalid",
+                    "type": "string"
+                  },
+                  "decision": {
+                    "enum": [
+                      "approved",
+                      "rejected"
+                    ],
+                    "title": "Decision",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "eventId",
+                  "traceId",
+                  "occurredAt",
+                  "approvalId",
+                  "decision"
+                ],
+                "title": "HumanDecision",
+                "type": "object"
+              },
+              "example": {
+                "eventId": "audit_demo_005",
+                "traceId": "trace_demo_001",
+                "approvalId": "apr_demo_001",
+                "decision": "approved",
+                "occurredAt": "2026-08-22T12:05:00Z",
+                "payload": {}
+              }
+            }
+          }
+        }
       }
     },
     "/v1/audit/action-outcomes": {
@@ -449,61 +536,6 @@
         "summary": "Record an action outcome",
         "description": "Record an action outcome",
         "operationId": "recordActionOutcome",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "eventId": {
-                    "type": "string",
-                    "title": "Eventid"
-                  },
-                  "traceId": {
-                    "type": "string",
-                    "title": "Traceid"
-                  },
-                  "actionId": {
-                    "type": "string",
-                    "title": "Actionid"
-                  },
-                  "status": {
-                    "type": "string",
-                    "title": "Status"
-                  },
-                  "occurredAt": {
-                    "type": "string",
-                    "title": "Occurredat"
-                  },
-                  "payload": {
-                    "type": "object",
-                    "title": "Payload"
-                  }
-                },
-                "additionalProperties": false,
-                "type": "object",
-                "required": [
-                  "eventId",
-                  "traceId",
-                  "actionId",
-                  "status",
-                  "occurredAt",
-                  "payload"
-                ],
-                "title": "recordActionOutcomeRequest"
-              },
-              "example": {
-                "eventId": "audit_demo_006",
-                "traceId": "trace_demo_001",
-                "actionId": "act_demo_001",
-                "status": "succeeded",
-                "occurredAt": "2026-08-22T12:06:00Z",
-                "payload": {}
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -516,7 +548,82 @@
             }
           }
         },
-        "x-dummy-implementation": true
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eventId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Eventid",
+                    "type": "string"
+                  },
+                  "traceId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Traceid",
+                    "type": "string"
+                  },
+                  "occurredAt": {
+                    "format": "date-time",
+                    "title": "Occurredat",
+                    "type": "string"
+                  },
+                  "payload": {
+                    "additionalProperties": true,
+                    "title": "Payload",
+                    "type": "object"
+                  },
+                  "actionId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Actionid",
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "succeeded",
+                      "failed",
+                      "skipped",
+                      "blocked"
+                    ],
+                    "title": "Status",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "eventId",
+                  "traceId",
+                  "occurredAt",
+                  "actionId",
+                  "status"
+                ],
+                "title": "ActionOutcome",
+                "type": "object"
+              },
+              "example": {
+                "eventId": "audit_demo_006",
+                "traceId": "trace_demo_001",
+                "actionId": "act_demo_001",
+                "status": "succeeded",
+                "occurredAt": "2026-08-22T12:06:00Z",
+                "payload": {}
+              }
+            }
+          }
+        }
       }
     },
     "/v1/traces/{trace_id}": {
@@ -550,7 +657,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     }
   },
@@ -583,191 +690,199 @@
         "properties": {
           "traceId": {
             "type": "string",
-            "title": "Traceid",
-            "default": "{trace_id}"
+            "title": "Traceid"
           },
           "events": {
             "items": {},
             "type": "array",
-            "title": "Events",
-            "default": [
-              {
-                "eventId": "audit_demo_001",
-                "eventType": "run_completed",
-                "occurredAt": "2026-08-22T12:00:00Z"
-              }
-            ]
+            "title": "Events"
           },
           "complete": {
             "type": "boolean",
-            "title": "Complete",
-            "default": true
+            "title": "Complete"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "traceId",
+          "events",
+          "complete"
+        ],
         "title": "getTraceResponse"
       },
       "recordActionOutcomeResponse": {
         "properties": {
           "auditEventId": {
             "type": "string",
-            "title": "Auditeventid",
-            "default": "audit_demo_001"
+            "title": "Auditeventid"
           },
           "traceId": {
             "type": "string",
-            "title": "Traceid",
-            "default": "trace_demo_001"
+            "title": "Traceid"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "recorded"
+            "title": "Status"
           },
           "recordedAt": {
             "type": "string",
-            "title": "Recordedat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Recordedat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "auditEventId",
+          "traceId",
+          "status",
+          "recordedAt"
+        ],
         "title": "recordActionOutcomeResponse"
       },
       "recordAgentTraceResponse": {
         "properties": {
           "auditEventId": {
             "type": "string",
-            "title": "Auditeventid",
-            "default": "audit_demo_001"
+            "title": "Auditeventid"
           },
           "traceId": {
             "type": "string",
-            "title": "Traceid",
-            "default": "trace_demo_001"
+            "title": "Traceid"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "recorded"
+            "title": "Status"
           },
           "recordedAt": {
             "type": "string",
-            "title": "Recordedat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Recordedat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "auditEventId",
+          "traceId",
+          "status",
+          "recordedAt"
+        ],
         "title": "recordAgentTraceResponse"
       },
       "recordHumanDecisionResponse": {
         "properties": {
           "auditEventId": {
             "type": "string",
-            "title": "Auditeventid",
-            "default": "audit_demo_001"
+            "title": "Auditeventid"
           },
           "traceId": {
             "type": "string",
-            "title": "Traceid",
-            "default": "trace_demo_001"
+            "title": "Traceid"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "recorded"
+            "title": "Status"
           },
           "recordedAt": {
             "type": "string",
-            "title": "Recordedat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Recordedat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "auditEventId",
+          "traceId",
+          "status",
+          "recordedAt"
+        ],
         "title": "recordHumanDecisionResponse"
       },
       "recordPolicyDecisionResponse": {
         "properties": {
           "auditEventId": {
             "type": "string",
-            "title": "Auditeventid",
-            "default": "audit_demo_001"
+            "title": "Auditeventid"
           },
           "traceId": {
             "type": "string",
-            "title": "Traceid",
-            "default": "trace_demo_001"
+            "title": "Traceid"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "recorded"
+            "title": "Status"
           },
           "recordedAt": {
             "type": "string",
-            "title": "Recordedat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Recordedat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "auditEventId",
+          "traceId",
+          "status",
+          "recordedAt"
+        ],
         "title": "recordPolicyDecisionResponse"
       },
       "recordRecommendationResponse": {
         "properties": {
           "auditEventId": {
             "type": "string",
-            "title": "Auditeventid",
-            "default": "audit_demo_001"
+            "title": "Auditeventid"
           },
           "traceId": {
             "type": "string",
-            "title": "Traceid",
-            "default": "trace_demo_001"
+            "title": "Traceid"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "recorded"
+            "title": "Status"
           },
           "recordedAt": {
             "type": "string",
-            "title": "Recordedat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Recordedat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "auditEventId",
+          "traceId",
+          "status",
+          "recordedAt"
+        ],
         "title": "recordRecommendationResponse"
       },
       "recordToolCallResponse": {
         "properties": {
           "auditEventId": {
             "type": "string",
-            "title": "Auditeventid",
-            "default": "audit_demo_001"
+            "title": "Auditeventid"
           },
           "traceId": {
             "type": "string",
-            "title": "Traceid",
-            "default": "trace_demo_001"
+            "title": "Traceid"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "recorded"
+            "title": "Status"
           },
           "recordedAt": {
             "type": "string",
-            "title": "Recordedat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Recordedat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "auditEventId",
+          "traceId",
+          "status",
+          "recordedAt"
+        ],
         "title": "recordToolCallResponse"
       }
     }

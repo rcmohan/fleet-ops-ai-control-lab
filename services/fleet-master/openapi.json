@@ -82,7 +82,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       },
       "patch": {
         "tags": [
@@ -114,7 +114,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -122,15 +122,81 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "customerName": {
+                    "maxLength": 160,
+                    "minLength": 1,
+                    "title": "Customername",
+                    "type": "string"
+                  },
+                  "industryCode": {
+                    "pattern": "^[a-z][a-z0-9_]{1,63}$",
+                    "title": "Industrycode",
+                    "type": "string"
+                  },
+                  "declaredFleetSize": {
+                    "minimum": 0,
+                    "title": "Declaredfleetsize",
+                    "type": "integer"
+                  },
+                  "contractTier": {
+                    "enum": [
+                      "basic",
+                      "standard",
+                      "premium",
+                      "enterprise"
+                    ],
+                    "title": "Contracttier",
+                    "type": "string"
+                  },
+                  "slaLevel": {
+                    "enum": [
+                      "standard",
+                      "enhanced",
+                      "mission_critical"
+                    ],
+                    "title": "Slalevel",
+                    "type": "string"
+                  },
                   "priorityLevel": {
+                    "enum": [
+                      "low",
+                      "standard",
+                      "high",
+                      "critical"
+                    ],
                     "title": "Prioritylevel",
                     "type": "string"
+                  },
+                  "lifecycleStatus": {
+                    "enum": [
+                      "prospect",
+                      "active",
+                      "suspended",
+                      "closed"
+                    ],
+                    "title": "Lifecyclestatus",
+                    "type": "string"
+                  },
+                  "contractEffectiveDate": {
+                    "format": "date",
+                    "title": "Contracteffectivedate",
+                    "type": "string"
+                  },
+                  "preferredServiceProviderId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "null clears the preferred provider",
+                    "title": "Preferredserviceproviderid"
                   }
                 },
-                "required": [
-                  "priorityLevel"
-                ],
-                "title": "updateFleetRequest",
+                "title": "UpdateFleet",
                 "type": "object"
               },
               "example": {
@@ -172,7 +238,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/fleets/{fleet_id}/sla": {
@@ -206,7 +272,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/fleets/{fleet_id}/priority": {
@@ -240,7 +306,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/fleets": {
@@ -301,7 +367,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       },
       "post": {
         "tags": [
@@ -322,8 +388,18 @@
             }
           }
         },
-        "parameters": [],
-        "x-dummy-implementation": true,
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -331,21 +407,109 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "fleetId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^flt_[a-z0-9_]{1,60}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Optional caller-chosen ID for imports; generated when omitted.",
+                    "title": "Fleetid"
+                  },
                   "customerName": {
+                    "maxLength": 160,
+                    "minLength": 1,
                     "title": "Customername",
                     "type": "string"
                   },
                   "industryCode": {
+                    "pattern": "^[a-z][a-z0-9_]{1,63}$",
                     "title": "Industrycode",
                     "type": "string"
                   },
                   "contractTier": {
+                    "enum": [
+                      "basic",
+                      "standard",
+                      "premium",
+                      "enterprise"
+                    ],
                     "title": "Contracttier",
                     "type": "string"
                   },
                   "slaLevel": {
+                    "enum": [
+                      "standard",
+                      "enhanced",
+                      "mission_critical"
+                    ],
                     "title": "Slalevel",
                     "type": "string"
+                  },
+                  "declaredFleetSize": {
+                    "default": 0,
+                    "minimum": 0,
+                    "title": "Declaredfleetsize",
+                    "type": "integer"
+                  },
+                  "priorityLevel": {
+                    "default": "standard",
+                    "enum": [
+                      "low",
+                      "standard",
+                      "high",
+                      "critical"
+                    ],
+                    "title": "Prioritylevel",
+                    "type": "string"
+                  },
+                  "preferredServiceProviderId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Preferredserviceproviderid"
+                  },
+                  "lifecycleStatus": {
+                    "default": "active",
+                    "enum": [
+                      "prospect",
+                      "active",
+                      "suspended",
+                      "closed"
+                    ],
+                    "title": "Lifecyclestatus",
+                    "type": "string"
+                  },
+                  "contractEffectiveDate": {
+                    "anyOf": [
+                      {
+                        "format": "date",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Contracteffectivedate"
+                  },
+                  "operatingRegions": {
+                    "items": {
+                      "pattern": "^[a-z0-9][a-z0-9-]{1,31}$",
+                      "type": "string"
+                    },
+                    "maxItems": 32,
+                    "title": "Operatingregions",
+                    "type": "array"
                   }
                 },
                 "required": [
@@ -354,7 +518,7 @@
                   "contractTier",
                   "slaLevel"
                 ],
-                "title": "createFleetRequest",
+                "title": "CreateFleet",
                 "type": "object"
               },
               "example": {
@@ -399,7 +563,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -408,7 +572,11 @@
                 "additionalProperties": false,
                 "properties": {
                   "regions": {
-                    "items": {},
+                    "items": {
+                      "pattern": "^[a-z0-9][a-z0-9-]{1,31}$",
+                      "type": "string"
+                    },
+                    "maxItems": 32,
                     "title": "Regions",
                     "type": "array"
                   }
@@ -416,7 +584,7 @@
                 "required": [
                   "regions"
                 ],
-                "title": "replaceFleetOperatingRegionsRequest",
+                "title": "RegionsChange",
                 "type": "object"
               },
               "example": {
@@ -461,7 +629,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -470,7 +638,68 @@
                 "additionalProperties": false,
                 "properties": {
                   "contacts": {
-                    "items": {},
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "name": {
+                          "maxLength": 120,
+                          "minLength": 1,
+                          "title": "Name",
+                          "type": "string"
+                        },
+                        "role": {
+                          "maxLength": 80,
+                          "minLength": 1,
+                          "title": "Role",
+                          "type": "string"
+                        },
+                        "email": {
+                          "anyOf": [
+                            {
+                              "maxLength": 254,
+                              "pattern": "^[^@\\s]+@[^@\\s]+$",
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "title": "Email"
+                        },
+                        "phone": {
+                          "anyOf": [
+                            {
+                              "pattern": "^\\+?[0-9 ()-]{5,40}$",
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "title": "Phone"
+                        },
+                        "escalationRank": {
+                          "anyOf": [
+                            {
+                              "maximum": 99,
+                              "minimum": 1,
+                              "type": "integer"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "title": "Escalationrank"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "role"
+                      ],
+                      "title": "Contact",
+                      "type": "object"
+                    },
+                    "maxItems": 20,
                     "title": "Contacts",
                     "type": "array"
                   }
@@ -478,7 +707,7 @@
                 "required": [
                   "contacts"
                 ],
-                "title": "replaceFleetEscalationContactsRequest",
+                "title": "ContactsChange",
                 "type": "object"
               },
               "example": {
@@ -525,193 +754,211 @@
         "properties": {
           "fleetId": {
             "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
+            "title": "Fleetid"
           },
           "customerName": {
             "type": "string",
-            "title": "Customername",
-            "default": "Northstar Synthetic Logistics"
+            "title": "Customername"
           },
           "industryCode": {
             "type": "string",
-            "title": "Industrycode",
-            "default": "logistics"
+            "title": "Industrycode"
           },
           "declaredFleetSize": {
             "type": "integer",
-            "title": "Declaredfleetsize",
-            "default": 100
+            "title": "Declaredfleetsize"
           },
           "contractTier": {
             "type": "string",
-            "title": "Contracttier",
-            "default": "enterprise"
+            "title": "Contracttier"
           },
           "slaLevel": {
             "type": "string",
-            "title": "Slalevel",
-            "default": "mission_critical"
+            "title": "Slalevel"
           },
           "priorityLevel": {
             "type": "string",
-            "title": "Prioritylevel",
-            "default": "high"
+            "title": "Prioritylevel"
           },
           "preferredServiceProviderId": {
-            "type": "string",
-            "title": "Preferredserviceproviderid",
-            "default": "sp_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferredserviceproviderid"
           },
           "lifecycleStatus": {
             "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
+            "title": "Lifecyclestatus"
           },
           "operatingRegions": {
             "items": {},
             "type": "array",
-            "title": "Operatingregions",
-            "default": [
-              "us-east",
-              "us-central"
-            ]
+            "title": "Operatingregions"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 1
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "fleetId",
+          "customerName",
+          "industryCode",
+          "declaredFleetSize",
+          "contractTier",
+          "slaLevel",
+          "priorityLevel",
+          "preferredServiceProviderId",
+          "lifecycleStatus",
+          "operatingRegions",
+          "sourceVersion"
+        ],
         "title": "createFleetResponse"
       },
       "getFleetContractResponse": {
         "properties": {
           "fleetId": {
             "type": "string",
-            "title": "Fleetid",
-            "default": "{fleet_id}"
+            "title": "Fleetid"
           },
           "contractTier": {
             "type": "string",
-            "title": "Contracttier",
-            "default": "enterprise"
+            "title": "Contracttier"
           },
           "effectiveDate": {
             "type": "string",
-            "title": "Effectivedate",
-            "default": "2026-01-01"
+            "title": "Effectivedate"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "fleetId",
+          "contractTier",
+          "effectiveDate"
+        ],
         "title": "getFleetContractResponse"
       },
       "getFleetPriorityLevelResponse": {
         "properties": {
           "fleetId": {
             "type": "string",
-            "title": "Fleetid",
-            "default": "{fleet_id}"
+            "title": "Fleetid"
           },
           "priorityLevel": {
             "type": "string",
-            "title": "Prioritylevel",
-            "default": "high"
+            "title": "Prioritylevel"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "fleetId",
+          "priorityLevel"
+        ],
         "title": "getFleetPriorityLevelResponse"
       },
       "getFleetProfileResponse": {
         "properties": {
           "fleetId": {
             "type": "string",
-            "title": "Fleetid",
-            "default": "{fleet_id}"
+            "title": "Fleetid"
           },
           "customerName": {
             "type": "string",
-            "title": "Customername",
-            "default": "Northstar Synthetic Logistics"
+            "title": "Customername"
           },
           "industryCode": {
             "type": "string",
-            "title": "Industrycode",
-            "default": "logistics"
+            "title": "Industrycode"
           },
           "declaredFleetSize": {
             "type": "integer",
-            "title": "Declaredfleetsize",
-            "default": 100
+            "title": "Declaredfleetsize"
           },
           "contractTier": {
             "type": "string",
-            "title": "Contracttier",
-            "default": "enterprise"
+            "title": "Contracttier"
           },
           "slaLevel": {
             "type": "string",
-            "title": "Slalevel",
-            "default": "mission_critical"
+            "title": "Slalevel"
           },
           "priorityLevel": {
             "type": "string",
-            "title": "Prioritylevel",
-            "default": "high"
+            "title": "Prioritylevel"
           },
           "preferredServiceProviderId": {
-            "type": "string",
-            "title": "Preferredserviceproviderid",
-            "default": "sp_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferredserviceproviderid"
           },
           "lifecycleStatus": {
             "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
+            "title": "Lifecyclestatus"
           },
           "operatingRegions": {
             "items": {},
             "type": "array",
-            "title": "Operatingregions",
-            "default": [
-              "us-east",
-              "us-central"
-            ]
+            "title": "Operatingregions"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 1
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "fleetId",
+          "customerName",
+          "industryCode",
+          "declaredFleetSize",
+          "contractTier",
+          "slaLevel",
+          "priorityLevel",
+          "preferredServiceProviderId",
+          "lifecycleStatus",
+          "operatingRegions",
+          "sourceVersion"
+        ],
         "title": "getFleetProfileResponse"
       },
       "getFleetSlaResponse": {
         "properties": {
           "fleetId": {
             "type": "string",
-            "title": "Fleetid",
-            "default": "{fleet_id}"
+            "title": "Fleetid"
           },
           "slaLevel": {
             "type": "string",
-            "title": "Slalevel",
-            "default": "mission_critical"
+            "title": "Slalevel"
           },
           "responseTargetMinutes": {
             "type": "integer",
-            "title": "Responsetargetminutes",
-            "default": 30
+            "title": "Responsetargetminutes"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "fleetId",
+          "slaLevel",
+          "responseTargetMinutes"
+        ],
         "title": "getFleetSlaResponse"
       },
       "listFleetsResponse": {
@@ -719,155 +966,141 @@
           "items": {
             "items": {},
             "type": "array",
-            "title": "Items",
-            "default": [
-              {
-                "fleetId": "flt_demo_001",
-                "customerName": "Northstar Synthetic Logistics",
-                "industryCode": "logistics",
-                "declaredFleetSize": 100,
-                "contractTier": "enterprise",
-                "slaLevel": "mission_critical",
-                "priorityLevel": "high",
-                "preferredServiceProviderId": "sp_demo_001",
-                "lifecycleStatus": "active",
-                "operatingRegions": [
-                  "us-east",
-                  "us-central"
-                ],
-                "sourceVersion": 1
-              }
-            ]
+            "title": "Items"
           },
           "nextCursor": {
             "type": "string",
-            "title": "Nextcursor",
-            "default": ""
+            "title": "Nextcursor"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
         "title": "listFleetsResponse"
       },
       "replaceFleetEscalationContactsResponse": {
         "properties": {
           "fleetId": {
             "type": "string",
-            "title": "Fleetid",
-            "default": "{fleet_id}"
+            "title": "Fleetid"
           },
           "contacts": {
             "items": {},
             "type": "array",
-            "title": "Contacts",
-            "default": [
-              {
-                "contactId": "contact_demo_001",
-                "name": "Demo Reviewer",
-                "role": "fleet_manager"
-              }
-            ]
+            "title": "Contacts"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "fleetId",
+          "contacts",
+          "sourceVersion"
+        ],
         "title": "replaceFleetEscalationContactsResponse"
       },
       "replaceFleetOperatingRegionsResponse": {
         "properties": {
           "fleetId": {
             "type": "string",
-            "title": "Fleetid",
-            "default": "{fleet_id}"
+            "title": "Fleetid"
           },
           "regions": {
             "items": {},
             "type": "array",
-            "title": "Regions",
-            "default": [
-              "us-east",
-              "us-central"
-            ]
+            "title": "Regions"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "fleetId",
+          "regions",
+          "sourceVersion"
+        ],
         "title": "replaceFleetOperatingRegionsResponse"
       },
       "updateFleetResponse": {
         "properties": {
           "fleetId": {
             "type": "string",
-            "title": "Fleetid",
-            "default": "{fleet_id}"
+            "title": "Fleetid"
           },
           "customerName": {
             "type": "string",
-            "title": "Customername",
-            "default": "Northstar Synthetic Logistics"
+            "title": "Customername"
           },
           "industryCode": {
             "type": "string",
-            "title": "Industrycode",
-            "default": "logistics"
+            "title": "Industrycode"
           },
           "declaredFleetSize": {
             "type": "integer",
-            "title": "Declaredfleetsize",
-            "default": 100
+            "title": "Declaredfleetsize"
           },
           "contractTier": {
             "type": "string",
-            "title": "Contracttier",
-            "default": "enterprise"
+            "title": "Contracttier"
           },
           "slaLevel": {
             "type": "string",
-            "title": "Slalevel",
-            "default": "mission_critical"
+            "title": "Slalevel"
           },
           "priorityLevel": {
             "type": "string",
-            "title": "Prioritylevel",
-            "default": "high"
+            "title": "Prioritylevel"
           },
           "preferredServiceProviderId": {
-            "type": "string",
-            "title": "Preferredserviceproviderid",
-            "default": "sp_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferredserviceproviderid"
           },
           "lifecycleStatus": {
             "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
+            "title": "Lifecyclestatus"
           },
           "operatingRegions": {
             "items": {},
             "type": "array",
-            "title": "Operatingregions",
-            "default": [
-              "us-east",
-              "us-central"
-            ]
+            "title": "Operatingregions"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "fleetId",
+          "customerName",
+          "industryCode",
+          "declaredFleetSize",
+          "contractTier",
+          "slaLevel",
+          "priorityLevel",
+          "preferredServiceProviderId",
+          "lifecycleStatus",
+          "operatingRegions",
+          "sourceVersion"
+        ],
         "title": "updateFleetResponse"
       }
     }

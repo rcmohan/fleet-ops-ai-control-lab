@@ -89,9 +89,18 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -100,25 +109,36 @@
                 "additionalProperties": false,
                 "properties": {
                   "eventType": {
+                    "pattern": "^[a-z][a-z0-9_]{1,47}$",
                     "title": "Eventtype",
                     "type": "string"
                   },
                   "symptoms": {
-                    "items": {},
+                    "items": {
+                      "pattern": "^[a-z][a-z0-9_]{1,63}$",
+                      "type": "string"
+                    },
+                    "maxItems": 20,
                     "title": "Symptoms",
                     "type": "array"
                   },
                   "regionCode": {
-                    "title": "Regioncode",
-                    "type": "string"
+                    "anyOf": [
+                      {
+                        "pattern": "^[a-z0-9][a-z0-9-]{1,31}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Regioncode"
                   }
                 },
                 "required": [
-                  "eventType",
-                  "symptoms",
-                  "regionCode"
+                  "eventType"
                 ],
-                "title": "searchSimilarIncidentsRequest",
+                "title": "SearchIncidents",
                 "type": "object"
               },
               "example": {
@@ -127,6 +147,163 @@
                   "low_voltage"
                 ],
                 "regionCode": "us-east"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/incidents": {
+      "post": {
+        "tags": [
+          "Prior Incident Search Service"
+        ],
+        "summary": "Index a resolved incident (sent by Case Management or an import)",
+        "description": "Index a resolved incident (sent by Case Management or an import)",
+        "operationId": "indexResolvedIncident",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/indexResolvedIncidentResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "incidentId": {
+                    "pattern": "^inc_[A-Za-z0-9_-]{1,60}$",
+                    "title": "Incidentid",
+                    "type": "string"
+                  },
+                  "sourceCaseId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Sourcecaseid"
+                  },
+                  "vehicleId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Vehicleid",
+                    "type": "string"
+                  },
+                  "eventType": {
+                    "pattern": "^[a-z][a-z0-9_]{1,47}$",
+                    "title": "Eventtype",
+                    "type": "string"
+                  },
+                  "symptoms": {
+                    "items": {
+                      "pattern": "^[a-z][a-z0-9_]{1,63}$",
+                      "type": "string"
+                    },
+                    "maxItems": 20,
+                    "title": "Symptoms",
+                    "type": "array"
+                  },
+                  "regionCode": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[a-z0-9][a-z0-9-]{1,31}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Regioncode"
+                  },
+                  "rootCause": {
+                    "anyOf": [
+                      {
+                        "maxLength": 2000,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Rootcause"
+                  },
+                  "resolution": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "title": "Resolution",
+                    "type": "string"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "resolved",
+                      "workaround",
+                      "unresolved"
+                    ],
+                    "title": "Outcome",
+                    "type": "string"
+                  },
+                  "openedAt": {
+                    "format": "date-time",
+                    "title": "Openedat",
+                    "type": "string"
+                  },
+                  "resolvedAt": {
+                    "format": "date-time",
+                    "title": "Resolvedat",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "incidentId",
+                  "vehicleId",
+                  "eventType",
+                  "resolution",
+                  "outcome",
+                  "openedAt",
+                  "resolvedAt"
+                ],
+                "title": "IndexIncident",
+                "type": "object"
+              },
+              "example": {
+                "incidentId": "inc_demo_001",
+                "sourceCaseId": "case_demo_001",
+                "vehicleId": "veh_demo_001",
+                "eventType": "battery_voltage",
+                "symptoms": [
+                  "low_voltage"
+                ],
+                "regionCode": "us-east",
+                "rootCause": "Synthetic battery aging",
+                "resolution": "Battery inspected and replaced",
+                "outcome": "resolved",
+                "openedAt": "2026-08-22T12:00:00Z",
+                "resolvedAt": "2026-08-22T15:00:00Z"
               }
             }
           }
@@ -164,7 +341,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/incident-patterns/resolutions": {
@@ -198,7 +375,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/incident-statistics/resolution-time": {
@@ -232,7 +409,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     }
   },
@@ -265,108 +442,148 @@
         "properties": {
           "eventType": {
             "type": "string",
-            "title": "Eventtype",
-            "default": "battery_voltage"
+            "title": "Eventtype"
           },
           "patterns": {
             "items": {},
             "type": "array",
-            "title": "Patterns",
-            "default": [
-              {
-                "resolution": "Inspect battery",
-                "occurrences": 12,
-                "successRate": 0.92
-              }
-            ]
+            "title": "Patterns"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "eventType",
+          "patterns"
+        ],
         "title": "getCommonResolutionPatternsResponse"
       },
       "getHistoricalResolutionTimeResponse": {
         "properties": {
           "eventType": {
             "type": "string",
-            "title": "Eventtype",
-            "default": "battery_voltage"
+            "title": "Eventtype"
           },
           "sampleSize": {
             "type": "integer",
-            "title": "Samplesize",
-            "default": 20
+            "title": "Samplesize"
           },
           "medianMinutes": {
-            "type": "integer",
-            "title": "Medianminutes",
-            "default": 150
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medianminutes"
           },
           "p95Minutes": {
-            "type": "integer",
-            "title": "P95Minutes",
-            "default": 360
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P95Minutes"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "eventType",
+          "sampleSize",
+          "medianMinutes",
+          "p95Minutes"
+        ],
         "title": "getHistoricalResolutionTimeResponse"
       },
       "getIncidentResolutionResponse": {
         "properties": {
           "incidentId": {
             "type": "string",
-            "title": "Incidentid",
-            "default": "{incident_id}"
+            "title": "Incidentid"
           },
           "rootCause": {
-            "type": "string",
-            "title": "Rootcause",
-            "default": "Synthetic battery aging"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rootcause"
           },
           "resolution": {
             "type": "string",
-            "title": "Resolution",
-            "default": "Battery inspected and replaced"
+            "title": "Resolution"
           },
           "outcome": {
             "type": "string",
-            "title": "Outcome",
-            "default": "resolved"
+            "title": "Outcome"
           },
           "timeToResolveMinutes": {
             "type": "integer",
-            "title": "Timetoresolveminutes",
-            "default": 180
+            "title": "Timetoresolveminutes"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "incidentId",
+          "rootCause",
+          "resolution",
+          "outcome",
+          "timeToResolveMinutes"
+        ],
         "title": "getIncidentResolutionResponse"
+      },
+      "indexResolvedIncidentResponse": {
+        "properties": {
+          "incidentId": {
+            "type": "string",
+            "title": "Incidentid"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "indexedAt": {
+            "type": "string",
+            "title": "Indexedat"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "incidentId",
+          "status",
+          "indexedAt"
+        ],
+        "title": "indexResolvedIncidentResponse"
       },
       "searchSimilarIncidentsResponse": {
         "properties": {
           "items": {
             "items": {},
             "type": "array",
-            "title": "Items",
-            "default": [
-              {
-                "incidentId": "inc_demo_001",
-                "similarity": 0.88,
-                "eventType": "battery_voltage",
-                "outcome": "resolved"
-              }
-            ]
+            "title": "Items"
           },
           "nextCursor": {
             "type": "string",
-            "title": "Nextcursor",
-            "default": ""
+            "title": "Nextcursor"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
         "title": "searchSimilarIncidentsResponse"
       }
     }

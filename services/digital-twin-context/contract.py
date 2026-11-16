@@ -13,10 +13,20 @@ CONTRACT = ServiceContract(
             summary="Get vehicle operational state",
             response={
                 "vehicleId": "{vehicle_id}",
-                "healthState": "healthy",
+                "fleetId": "flt_demo_001",
+                "healthState": "warning",
                 "connectivityState": "connected",
                 "odometerKm": 15000.0,
-                "activeIncidentIds": [],
+                "batteryVoltage": 11.6,
+                "lastLocation": {"latitude": 40.71, "longitude": -74.0, "speedKph": 0},
+                "activeIssues": [
+                    {
+                        "issue": "battery",
+                        "severity": "warning",
+                        "since": "2026-08-22T12:00:00Z",
+                        "eventId": "evt_demo_001",
+                    }
+                ],
                 "observedAt": "2026-08-22T12:00:00Z",
                 "sourceVersion": 7,
             },
@@ -44,9 +54,9 @@ CONTRACT = ServiceContract(
                 "entityId": "{entity_id}",
                 "relatedEntities": [
                     {
-                        "entityId": "veh_demo_001",
-                        "entityType": "vehicle",
-                        "relationship": "member",
+                        "entityId": "flt_demo_001",
+                        "entityType": "fleet",
+                        "relationship": "member_of",
                     }
                 ],
             },
@@ -71,8 +81,13 @@ CONTRACT = ServiceContract(
             summary="Get entity dependency graph",
             response={
                 "rootEntityId": "{entity_id}",
-                "nodes": [{"entityId": "veh_demo_001", "entityType": "vehicle"}],
-                "edges": [],
+                "nodes": [
+                    {"entityId": "veh_demo_001", "entityType": "vehicle"},
+                    {"entityId": "flt_demo_001", "entityType": "fleet"},
+                ],
+                "edges": [
+                    {"from": "veh_demo_001", "to": "flt_demo_001", "relationship": "member_of"}
+                ],
             },
         ),
         Operation(
@@ -89,8 +104,9 @@ CONTRACT = ServiceContract(
                 "eventId": "evt_demo_001",
                 "vehicleId": "veh_demo_001",
                 "eventType": "battery_voltage",
+                "severity": "warning",
                 "observedAt": "2026-08-22T12:00:00Z",
-                "payload": {"voltage": 11.8},
+                "payload": {"voltage": 11.6},
             },
         ),
     ),

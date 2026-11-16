@@ -23,12 +23,14 @@ The entire project should use synthetic data only. It should not use data, code,
 
 ## Dummy application services
 
-The independently deployable FastAPI service stubs live under `services/`. Each has domain-specific routes and data objects, a generated OpenAPI 3.1 document, health endpoints, and deterministic synthetic responses.
+The 15 independently deployable FastAPI services live under `services/`. Thirteen store their data in their own PostgreSQL database; risk scoring and the vehicle context facade compute their answers from the other services. See `services/README.md` for what each one does and `database/README.md` for the databases.
 
 ```powershell
+# .env must set POSTGRES_PASSWORD (git ignores .env)
+docker compose up --build                      # PostgreSQL, the services, and the gateway
+
 python -m pip install -r requirements-dev.txt
-python -m pytest -q
-docker compose up --build
+python -m pytest -q                            # Postgres tests need FLEETOPS_TEST_DATABASE_URL
 ```
 
-Swagger UI is available on `/docs` for every running service. Compose maps the services to localhost ports `8101` through `8115`; see `services/README.md` for the catalog and local-run instructions.
+Swagger UI is available on `/docs` for every running service. Compose maps the services to localhost ports `8101` through `8115`, and a gateway on `http://127.0.0.1:8080` shows a live status page and serves each one at `/<service>/` (for example `/approval/docs`); see `services/README.md` for the catalog and local-run instructions.

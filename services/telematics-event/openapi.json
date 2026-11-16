@@ -71,8 +71,18 @@
             }
           }
         },
-        "parameters": [],
-        "x-dummy-implementation": true,
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -80,35 +90,79 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "eventId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^evt_[A-Za-z0-9_-]{1,60}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Device-assigned ID. A retry with the same ID and content is a duplicate; different content is a conflict. Generated when omitted.",
+                    "title": "Eventid"
+                  },
                   "vehicleId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
                     "title": "Vehicleid",
                     "type": "string"
                   },
                   "eventType": {
+                    "enum": [
+                      "battery_voltage",
+                      "heartbeat",
+                      "heartbeat_missed",
+                      "connectivity_lost",
+                      "connectivity_restored",
+                      "diagnostic_failure",
+                      "diagnostic_cleared",
+                      "location",
+                      "harsh_braking",
+                      "collision_detected",
+                      "firmware_update_failed",
+                      "firmware_update_succeeded",
+                      "ignition_on",
+                      "ignition_off"
+                    ],
                     "title": "Eventtype",
                     "type": "string"
                   },
                   "observedAt": {
+                    "format": "date-time",
                     "title": "Observedat",
                     "type": "string"
                   },
                   "payload": {
+                    "additionalProperties": true,
                     "title": "Payload",
                     "type": "object"
                   },
                   "synthetic": {
+                    "default": true,
                     "title": "Synthetic",
                     "type": "boolean"
+                  },
+                  "regionCode": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[a-z0-9][a-z0-9-]{1,31}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Defaults to the vehicle's region in Vehicle Master.",
+                    "title": "Regioncode"
                   }
                 },
                 "required": [
                   "vehicleId",
                   "eventType",
-                  "observedAt",
-                  "payload",
-                  "synthetic"
+                  "observedAt"
                 ],
-                "title": "ingestVehicleEventRequest",
+                "title": "IngestEvent",
                 "type": "object"
               },
               "example": {
@@ -116,7 +170,7 @@
                 "eventType": "battery_voltage",
                 "observedAt": "2026-08-22T12:00:00Z",
                 "payload": {
-                  "voltage": 11.8
+                  "voltage": 11.6
                 },
                 "synthetic": true
               }
@@ -181,7 +235,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/vehicles/{vehicle_id}/events": {
@@ -251,7 +305,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/events/{event_id}": {
@@ -285,7 +339,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/regions/{region}/events": {
@@ -346,7 +400,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/vehicles/{vehicle_id}/active-alerts": {
@@ -380,7 +434,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     }
   },
@@ -413,74 +467,75 @@
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "alerts": {
             "items": {},
             "type": "array",
-            "title": "Alerts",
-            "default": [
-              {
-                "alertId": "alert_demo_001",
-                "eventId": "evt_demo_001",
-                "severity": "warning",
-                "status": "active"
-              }
-            ]
+            "title": "Alerts"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "alerts"
+        ],
         "title": "getActiveAlertsResponse"
       },
       "getEventDetailsResponse": {
         "properties": {
           "eventId": {
             "type": "string",
-            "title": "Eventid",
-            "default": "{event_id}"
+            "title": "Eventid"
           },
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "veh_demo_001"
+            "title": "Vehicleid"
           },
           "eventType": {
             "type": "string",
-            "title": "Eventtype",
-            "default": "battery_voltage"
+            "title": "Eventtype"
           },
           "severity": {
             "type": "string",
-            "title": "Severity",
-            "default": "warning"
+            "title": "Severity"
           },
           "regionCode": {
             "type": "string",
-            "title": "Regioncode",
-            "default": "us-east"
+            "title": "Regioncode"
           },
           "observedAt": {
             "type": "string",
-            "title": "Observedat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Observedat"
+          },
+          "receivedAt": {
+            "type": "string",
+            "title": "Receivedat"
           },
           "payload": {
+            "additionalProperties": true,
             "type": "object",
-            "title": "Payload",
-            "default": {
-              "voltage": 11.8
-            }
+            "title": "Payload"
           },
           "synthetic": {
             "type": "boolean",
-            "title": "Synthetic",
-            "default": true
+            "title": "Synthetic"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "eventId",
+          "vehicleId",
+          "eventType",
+          "severity",
+          "regionCode",
+          "observedAt",
+          "receivedAt",
+          "payload",
+          "synthetic"
+        ],
         "title": "getEventDetailsResponse"
       },
       "getRecentVehicleEventsResponse": {
@@ -488,52 +543,43 @@
           "items": {
             "items": {},
             "type": "array",
-            "title": "Items",
-            "default": [
-              {
-                "eventId": "evt_demo_001",
-                "vehicleId": "{vehicle_id}",
-                "eventType": "battery_voltage",
-                "severity": "warning",
-                "regionCode": "us-east",
-                "observedAt": "2026-08-22T12:00:00Z",
-                "payload": {
-                  "voltage": 11.8
-                },
-                "synthetic": true
-              }
-            ]
+            "title": "Items"
           },
           "nextCursor": {
             "type": "string",
-            "title": "Nextcursor",
-            "default": ""
+            "title": "Nextcursor"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
         "title": "getRecentVehicleEventsResponse"
       },
       "ingestVehicleEventResponse": {
         "properties": {
           "eventId": {
             "type": "string",
-            "title": "Eventid",
-            "default": "evt_demo_001"
+            "title": "Eventid"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "accepted"
+            "title": "Status"
           },
           "acceptedAt": {
             "type": "string",
-            "title": "Acceptedat",
-            "default": "2026-08-22T12:00:01Z"
+            "title": "Acceptedat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "eventId",
+          "status",
+          "acceptedAt"
+        ],
         "title": "ingestVehicleEventResponse"
       },
       "searchEventsByRegionResponse": {
@@ -541,30 +587,19 @@
           "items": {
             "items": {},
             "type": "array",
-            "title": "Items",
-            "default": [
-              {
-                "eventId": "evt_demo_001",
-                "vehicleId": "veh_demo_001",
-                "eventType": "battery_voltage",
-                "severity": "warning",
-                "regionCode": "us-east",
-                "observedAt": "2026-08-22T12:00:00Z",
-                "payload": {
-                  "voltage": 11.8
-                },
-                "synthetic": true
-              }
-            ]
+            "title": "Items"
           },
           "nextCursor": {
             "type": "string",
-            "title": "Nextcursor",
-            "default": ""
+            "title": "Nextcursor"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
         "title": "searchEventsByRegionResponse"
       },
       "searchEventsByTypeResponse": {
@@ -572,30 +607,19 @@
           "items": {
             "items": {},
             "type": "array",
-            "title": "Items",
-            "default": [
-              {
-                "eventId": "evt_demo_001",
-                "vehicleId": "veh_demo_001",
-                "eventType": "battery_voltage",
-                "severity": "warning",
-                "regionCode": "us-east",
-                "observedAt": "2026-08-22T12:00:00Z",
-                "payload": {
-                  "voltage": 11.8
-                },
-                "synthetic": true
-              }
-            ]
+            "title": "Items"
           },
           "nextCursor": {
             "type": "string",
-            "title": "Nextcursor",
-            "default": ""
+            "title": "Nextcursor"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
         "title": "searchEventsByTypeResponse"
       }
     }

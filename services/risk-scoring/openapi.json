@@ -82,7 +82,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/risk/vehicles/{vehicle_id}/fleets/{fleet_id}/sla": {
@@ -125,7 +125,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/risk/events/{event_id}/safety": {
@@ -159,7 +159,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/risk/events/{event_id}/customer-impact": {
@@ -193,7 +193,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/risk/events/{event_id}/composite-priority": {
@@ -227,7 +227,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     }
   },
@@ -260,231 +260,216 @@
         "properties": {
           "eventId": {
             "type": "string",
-            "title": "Eventid",
-            "default": "{event_id}"
+            "title": "Eventid"
           },
           "priorityScore": {
             "type": "number",
-            "title": "Priorityscore",
-            "default": 54.0
+            "title": "Priorityscore"
           },
           "urgency": {
             "type": "string",
-            "title": "Urgency",
-            "default": "medium"
+            "title": "Urgency"
           },
           "confidence": {
             "type": "number",
-            "title": "Confidence",
-            "default": 0.84
+            "title": "Confidence"
           },
           "componentScores": {
+            "additionalProperties": true,
             "type": "object",
-            "title": "Componentscores",
-            "default": {
-              "event": 42.0,
-              "safety": 20.0,
-              "sla": 65.0
-            }
+            "title": "Componentscores"
           },
           "scoringPolicyVersion": {
             "type": "string",
-            "title": "Scoringpolicyversion",
-            "default": "1.0"
+            "title": "Scoringpolicyversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "eventId",
+          "priorityScore",
+          "urgency",
+          "confidence",
+          "componentScores",
+          "scoringPolicyVersion"
+        ],
         "title": "calculateCompositePriorityResponse"
       },
       "calculateCustomerImpactResponse": {
         "properties": {
           "eventId": {
             "type": "string",
-            "title": "Eventid",
-            "default": "{event_id}"
+            "title": "Eventid"
           },
           "affectedFleetIds": {
             "items": {},
             "type": "array",
-            "title": "Affectedfleetids",
-            "default": [
-              "flt_demo_001"
-            ]
+            "title": "Affectedfleetids"
           },
           "affectedVehicleCount": {
             "type": "integer",
-            "title": "Affectedvehiclecount",
-            "default": 1
+            "title": "Affectedvehiclecount"
           },
           "score": {
             "type": "number",
-            "title": "Score",
-            "default": 42.0
+            "title": "Score"
           },
           "level": {
             "type": "string",
-            "title": "Level",
-            "default": "medium"
+            "title": "Level"
           },
           "confidence": {
             "type": "number",
-            "title": "Confidence",
-            "default": 0.84
+            "title": "Confidence"
           },
           "factors": {
             "items": {},
             "type": "array",
-            "title": "Factors",
-            "default": [
-              {
-                "name": "severity",
-                "contribution": 20.0
-              }
-            ]
+            "title": "Factors"
           },
           "scoringPolicyVersion": {
             "type": "string",
-            "title": "Scoringpolicyversion",
-            "default": "1.0"
+            "title": "Scoringpolicyversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "eventId",
+          "affectedFleetIds",
+          "affectedVehicleCount",
+          "score",
+          "level",
+          "confidence",
+          "factors",
+          "scoringPolicyVersion"
+        ],
         "title": "calculateCustomerImpactResponse"
       },
       "calculateEventRiskResponse": {
         "properties": {
           "eventId": {
             "type": "string",
-            "title": "Eventid",
-            "default": "{event_id}"
+            "title": "Eventid"
           },
           "score": {
             "type": "number",
-            "title": "Score",
-            "default": 42.0
+            "title": "Score"
           },
           "level": {
             "type": "string",
-            "title": "Level",
-            "default": "medium"
+            "title": "Level"
           },
           "confidence": {
             "type": "number",
-            "title": "Confidence",
-            "default": 0.84
+            "title": "Confidence"
           },
           "factors": {
             "items": {},
             "type": "array",
-            "title": "Factors",
-            "default": [
-              {
-                "name": "severity",
-                "contribution": 20.0
-              }
-            ]
+            "title": "Factors"
           },
           "scoringPolicyVersion": {
             "type": "string",
-            "title": "Scoringpolicyversion",
-            "default": "1.0"
+            "title": "Scoringpolicyversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "eventId",
+          "score",
+          "level",
+          "confidence",
+          "factors",
+          "scoringPolicyVersion"
+        ],
         "title": "calculateEventRiskResponse"
       },
       "calculateSafetyRiskResponse": {
         "properties": {
           "eventId": {
             "type": "string",
-            "title": "Eventid",
-            "default": "{event_id}"
+            "title": "Eventid"
           },
           "score": {
             "type": "number",
-            "title": "Score",
-            "default": 42.0
+            "title": "Score"
           },
           "level": {
             "type": "string",
-            "title": "Level",
-            "default": "medium"
+            "title": "Level"
           },
           "confidence": {
             "type": "number",
-            "title": "Confidence",
-            "default": 0.84
+            "title": "Confidence"
           },
           "factors": {
             "items": {},
             "type": "array",
-            "title": "Factors",
-            "default": [
-              {
-                "name": "severity",
-                "contribution": 20.0
-              }
-            ]
+            "title": "Factors"
           },
           "scoringPolicyVersion": {
             "type": "string",
-            "title": "Scoringpolicyversion",
-            "default": "1.0"
+            "title": "Scoringpolicyversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "eventId",
+          "score",
+          "level",
+          "confidence",
+          "factors",
+          "scoringPolicyVersion"
+        ],
         "title": "calculateSafetyRiskResponse"
       },
       "calculateSlaRiskResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "fleetId": {
             "type": "string",
-            "title": "Fleetid",
-            "default": "{fleet_id}"
+            "title": "Fleetid"
           },
           "score": {
             "type": "number",
-            "title": "Score",
-            "default": 42.0
+            "title": "Score"
           },
           "level": {
             "type": "string",
-            "title": "Level",
-            "default": "medium"
+            "title": "Level"
           },
           "confidence": {
             "type": "number",
-            "title": "Confidence",
-            "default": 0.84
+            "title": "Confidence"
           },
           "factors": {
             "items": {},
             "type": "array",
-            "title": "Factors",
-            "default": [
-              {
-                "name": "severity",
-                "contribution": 20.0
-              }
-            ]
+            "title": "Factors"
           },
           "scoringPolicyVersion": {
             "type": "string",
-            "title": "Scoringpolicyversion",
-            "default": "1.0"
+            "title": "Scoringpolicyversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "fleetId",
+          "score",
+          "level",
+          "confidence",
+          "factors",
+          "scoringPolicyVersion"
+        ],
         "title": "calculateSlaRiskResponse"
       }
     }

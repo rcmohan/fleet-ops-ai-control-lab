@@ -1,33 +1,21 @@
-import importlib.util
 import json
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SERVICES = ROOT / "services"
 sys.path.insert(0, str(ROOT))
 
-from fleetops_runtime import build_app
-
-
-def load_contract(contract_file: Path):
-    module_name = f"contract_{contract_file.parent.name.replace('-', '_')}"
-    spec = importlib.util.spec_from_file_location(module_name, contract_file)
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f"Unable to load {contract_file}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module.CONTRACT
+from fleetops_runtime import build_app  # noqa: E402
+from fleetops_runtime.loader import load_service  # noqa: E402
 
 
 def main() -> None:
-    for contract_file in sorted(SERVICES.glob("*/contract.py")):
-        contract = load_contract(contract_file)
+    for contract_file in sorted((ROOT / "services").glob("*/contract.py")):
+        service = load_service(contract_file.parent, ROOT / "database")
         output = contract_file.parent / "openapi.json"
-        output.write_text(
-            json.dumps(build_app(contract).openapi(), indent=2) + "\n",
-            encoding="utf-8",
-        )
+        # Building the app does not connect to a database; only the schema is generated.
+        spec = build_app(service.contract, service.handlers).openapi()
+        output.write_text(json.dumps(spec, indent=2) + "\n", encoding="utf-8")
         print(f"wrote {output.relative_to(ROOT)}")
 
 

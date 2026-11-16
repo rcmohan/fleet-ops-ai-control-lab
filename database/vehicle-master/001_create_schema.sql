@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE SCHEMA IF NOT EXISTS master_data;
 
 CREATE TABLE IF NOT EXISTS master_data.vehicles (
@@ -45,5 +43,4 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_vehicles_telematics_unit_id
 CREATE INDEX IF NOT EXISTS idx_vehicles_region_status
     ON master_data.vehicles (region_code, lifecycle_status);
 
-COMMIT;
 

@@ -82,7 +82,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/vehicle-context/{vehicle_id}/telematics-unit": {
@@ -116,7 +116,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/vehicle-context/{vehicle_id}/fleet-assignment": {
@@ -150,7 +150,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/vehicle-context/{vehicle_id}/service-history": {
@@ -202,7 +202,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/vehicle-context/{vehicle_id}/current-state": {
@@ -236,7 +236,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/vehicle-context/{vehicle_id}": {
@@ -279,7 +279,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     }
   },
@@ -312,207 +312,294 @@
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "profile": {
-            "type": "object",
-            "title": "Profile",
-            "default": {
-              "vehicleId": "veh_demo_001",
-              "make": "Nova",
-              "model": "Transit-E",
-              "modelYear": 2026,
-              "fleetId": "flt_demo_001",
-              "telematicsUnitId": "tcu_demo_001"
-            }
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile"
           },
           "fleet": {
-            "type": "object",
-            "title": "Fleet",
-            "default": {
-              "fleetId": "flt_demo_001"
-            }
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fleet"
           },
           "telematicsUnit": {
-            "type": "object",
-            "title": "Telematicsunit",
-            "default": {
-              "unitId": "tcu_demo_001"
-            }
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telematicsunit"
           },
           "operationalState": {
-            "type": "object",
-            "title": "Operationalstate",
-            "default": {
-              "healthState": "healthy"
-            }
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operationalstate"
           },
           "unavailableDependencies": {
             "items": {},
             "type": "array",
-            "title": "Unavailabledependencies",
-            "default": []
+            "title": "Unavailabledependencies"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "profile",
+          "fleet",
+          "telematicsUnit",
+          "operationalState",
+          "unavailableDependencies"
+        ],
         "title": "getVehicleContextResponse"
       },
       "getVehicleCurrentStateResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "healthState": {
             "type": "string",
-            "title": "Healthstate",
-            "default": "healthy"
+            "title": "Healthstate"
           },
           "odometerKm": {
-            "type": "number",
-            "title": "Odometerkm",
-            "default": 15000.0
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Odometerkm"
           },
           "observedAt": {
-            "type": "string",
-            "title": "Observedat",
-            "default": "2026-08-22T12:00:00Z"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observedat"
           },
           "source": {
             "type": "string",
-            "title": "Source",
-            "default": "digital-twin-context"
+            "title": "Source"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "healthState",
+          "odometerKm",
+          "observedAt",
+          "source"
+        ],
         "title": "getVehicleCurrentStateResponse"
       },
       "getVehicleFleetAssignmentResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fleetid"
           },
           "customerName": {
-            "type": "string",
-            "title": "Customername",
-            "default": "Northstar Synthetic Logistics"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customername"
           },
           "source": {
             "type": "string",
-            "title": "Source",
-            "default": "fleet-master"
+            "title": "Source"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "fleetId",
+          "customerName",
+          "source"
+        ],
         "title": "getVehicleFleetAssignmentResponse"
       },
       "getVehicleProfileResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "make": {
             "type": "string",
-            "title": "Make",
-            "default": "Nova"
+            "title": "Make"
           },
           "model": {
             "type": "string",
-            "title": "Model",
-            "default": "Transit-E"
+            "title": "Model"
           },
           "modelYear": {
             "type": "integer",
-            "title": "Modelyear",
-            "default": 2026
+            "title": "Modelyear"
           },
           "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fleetid"
           },
           "telematicsUnitId": {
-            "type": "string",
-            "title": "Telematicsunitid",
-            "default": "tcu_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telematicsunitid"
           },
           "source": {
             "type": "string",
-            "title": "Source",
-            "default": "vehicle-master"
+            "title": "Source"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "make",
+          "model",
+          "modelYear",
+          "fleetId",
+          "telematicsUnitId",
+          "source"
+        ],
         "title": "getVehicleProfileResponse"
       },
       "getVehicleServiceHistoryResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "items": {
             "items": {},
             "type": "array",
-            "title": "Items",
-            "default": [
-              {
-                "maintenanceId": "mtn_demo_001",
-                "status": "completed"
-              }
-            ]
+            "title": "Items"
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor"
           },
           "partial": {
             "type": "boolean",
-            "title": "Partial",
-            "default": false
+            "title": "Partial"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "items",
+          "nextCursor",
+          "partial"
+        ],
         "title": "getVehicleServiceHistoryResponse"
       },
       "getVehicleTelematicsUnitResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "unitId": {
-            "type": "string",
-            "title": "Unitid",
-            "default": "tcu_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unitid"
           },
           "firmwareVersion": {
-            "type": "string",
-            "title": "Firmwareversion",
-            "default": "3.4.1"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firmwareversion"
           },
           "source": {
             "type": "string",
-            "title": "Source",
-            "default": "telematics-unit-master"
+            "title": "Source"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "unitId",
+          "firmwareVersion",
+          "source"
+        ],
         "title": "getVehicleTelematicsUnitResponse"
       }
     }

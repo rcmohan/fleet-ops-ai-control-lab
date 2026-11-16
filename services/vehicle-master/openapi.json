@@ -82,7 +82,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       },
       "patch": {
         "tags": [
@@ -114,7 +114,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -122,20 +122,73 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "make": {
+                    "maxLength": 80,
+                    "minLength": 1,
+                    "title": "Make",
+                    "type": "string"
+                  },
+                  "model": {
+                    "maxLength": 80,
+                    "minLength": 1,
+                    "title": "Model",
+                    "type": "string"
+                  },
+                  "modelYear": {
+                    "maximum": 2200,
+                    "minimum": 1980,
+                    "title": "Modelyear",
+                    "type": "integer"
+                  },
+                  "powertrainType": {
+                    "enum": [
+                      "gasoline",
+                      "diesel",
+                      "hybrid",
+                      "plug_in_hybrid",
+                      "battery_electric",
+                      "hydrogen",
+                      "other"
+                    ],
+                    "title": "Powertraintype",
+                    "type": "string"
+                  },
                   "regionCode": {
+                    "pattern": "^[a-z0-9][a-z0-9-]{1,31}$",
                     "title": "Regioncode",
                     "type": "string"
                   },
+                  "serviceStatus": {
+                    "enum": [
+                      "in_service",
+                      "maintenance",
+                      "out_of_service",
+                      "retired"
+                    ],
+                    "title": "Servicestatus",
+                    "type": "string"
+                  },
+                  "warrantyStatus": {
+                    "enum": [
+                      "active",
+                      "expired",
+                      "unknown"
+                    ],
+                    "title": "Warrantystatus",
+                    "type": "string"
+                  },
                   "priorityLevel": {
+                    "enum": [
+                      "low",
+                      "standard",
+                      "high",
+                      "critical"
+                    ],
                     "title": "Prioritylevel",
                     "type": "string"
                   }
                 },
-                "required": [
-                  "regionCode",
-                  "priorityLevel"
-                ],
-                "title": "updateVehicleProfileRequest",
+                "title": "UpdateVehicle",
                 "type": "object"
               },
               "example": {
@@ -167,8 +220,18 @@
             }
           }
         },
-        "parameters": [],
-        "x-dummy-implementation": true,
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -176,29 +239,126 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "vehicleId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^veh_[a-z0-9_]{1,60}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Optional caller-chosen ID for imports; generated when omitted.",
+                    "title": "Vehicleid"
+                  },
                   "syntheticVin": {
+                    "pattern": "^[A-Z0-9]{11,17}$",
                     "title": "Syntheticvin",
                     "type": "string"
                   },
                   "make": {
+                    "maxLength": 80,
+                    "minLength": 1,
                     "title": "Make",
                     "type": "string"
                   },
                   "model": {
+                    "maxLength": 80,
+                    "minLength": 1,
                     "title": "Model",
                     "type": "string"
                   },
                   "modelYear": {
+                    "maximum": 2200,
+                    "minimum": 1980,
                     "title": "Modelyear",
                     "type": "integer"
                   },
                   "powertrainType": {
+                    "enum": [
+                      "gasoline",
+                      "diesel",
+                      "hybrid",
+                      "plug_in_hybrid",
+                      "battery_electric",
+                      "hydrogen",
+                      "other"
+                    ],
                     "title": "Powertraintype",
                     "type": "string"
                   },
                   "regionCode": {
+                    "pattern": "^[a-z0-9][a-z0-9-]{1,31}$",
                     "title": "Regioncode",
                     "type": "string"
+                  },
+                  "lifecycleStatus": {
+                    "default": "active",
+                    "enum": [
+                      "ordered",
+                      "active",
+                      "inactive",
+                      "retired"
+                    ],
+                    "title": "Lifecyclestatus",
+                    "type": "string"
+                  },
+                  "serviceStatus": {
+                    "default": "in_service",
+                    "enum": [
+                      "in_service",
+                      "maintenance",
+                      "out_of_service",
+                      "retired"
+                    ],
+                    "title": "Servicestatus",
+                    "type": "string"
+                  },
+                  "warrantyStatus": {
+                    "default": "unknown",
+                    "enum": [
+                      "active",
+                      "expired",
+                      "unknown"
+                    ],
+                    "title": "Warrantystatus",
+                    "type": "string"
+                  },
+                  "priorityLevel": {
+                    "default": "standard",
+                    "enum": [
+                      "low",
+                      "standard",
+                      "high",
+                      "critical"
+                    ],
+                    "title": "Prioritylevel",
+                    "type": "string"
+                  },
+                  "fleetId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Fleetid"
+                  },
+                  "telematicsUnitId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Telematicsunitid"
                   }
                 },
                 "required": [
@@ -209,7 +369,7 @@
                   "powertrainType",
                   "regionCode"
                 ],
-                "title": "createVehicleRequest",
+                "title": "CreateVehicle",
                 "type": "object"
               },
               "example": {
@@ -272,7 +432,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/vehicles/{vehicle_id}/lifecycle-status": {
@@ -306,7 +466,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -315,6 +475,12 @@
                 "additionalProperties": false,
                 "properties": {
                   "status": {
+                    "enum": [
+                      "ordered",
+                      "active",
+                      "inactive",
+                      "retired"
+                    ],
                     "title": "Status",
                     "type": "string"
                   }
@@ -322,7 +488,7 @@
                 "required": [
                   "status"
                 ],
-                "title": "setVehicleLifecycleStatusRequest",
+                "title": "LifecycleChange",
                 "type": "object"
               },
               "example": {
@@ -364,7 +530,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -373,14 +539,23 @@
                 "additionalProperties": false,
                 "properties": {
                   "fleetId": {
-                    "title": "Fleetid",
-                    "type": "string"
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "null removes the assignment",
+                    "title": "Fleetid"
                   }
                 },
                 "required": [
                   "fleetId"
                 ],
-                "title": "assignVehicleToFleetRequest",
+                "title": "FleetAssignment",
                 "type": "object"
               },
               "example": {
@@ -422,7 +597,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -431,14 +606,23 @@
                 "additionalProperties": false,
                 "properties": {
                   "telematicsUnitId": {
-                    "title": "Telematicsunitid",
-                    "type": "string"
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "null removes the assignment",
+                    "title": "Telematicsunitid"
                   }
                 },
                 "required": [
                   "telematicsUnitId"
                 ],
-                "title": "assignTelematicsUnitRequest",
+                "title": "UnitAssignment",
                 "type": "object"
               },
               "example": {
@@ -479,198 +663,248 @@
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "telematicsUnitId": {
-            "type": "string",
-            "title": "Telematicsunitid",
-            "default": "tcu_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telematicsunitid"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "telematicsUnitId",
+          "sourceVersion"
+        ],
         "title": "assignTelematicsUnitResponse"
       },
       "assignVehicleToFleetResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fleetid"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "fleetId",
+          "sourceVersion"
+        ],
         "title": "assignVehicleToFleetResponse"
       },
       "createVehicleResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "veh_demo_001"
+            "title": "Vehicleid"
           },
           "syntheticVin": {
             "type": "string",
-            "title": "Syntheticvin",
-            "default": "SYNTH000000000001"
+            "title": "Syntheticvin"
           },
           "make": {
             "type": "string",
-            "title": "Make",
-            "default": "Nova"
+            "title": "Make"
           },
           "model": {
             "type": "string",
-            "title": "Model",
-            "default": "Transit-E"
+            "title": "Model"
           },
           "modelYear": {
             "type": "integer",
-            "title": "Modelyear",
-            "default": 2026
+            "title": "Modelyear"
           },
           "powertrainType": {
             "type": "string",
-            "title": "Powertraintype",
-            "default": "battery_electric"
+            "title": "Powertraintype"
           },
           "regionCode": {
             "type": "string",
-            "title": "Regioncode",
-            "default": "us-east"
+            "title": "Regioncode"
           },
           "lifecycleStatus": {
             "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
+            "title": "Lifecyclestatus"
           },
           "serviceStatus": {
             "type": "string",
-            "title": "Servicestatus",
-            "default": "in_service"
+            "title": "Servicestatus"
           },
           "warrantyStatus": {
             "type": "string",
-            "title": "Warrantystatus",
-            "default": "active"
+            "title": "Warrantystatus"
           },
           "priorityLevel": {
             "type": "string",
-            "title": "Prioritylevel",
-            "default": "standard"
+            "title": "Prioritylevel"
           },
           "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fleetid"
           },
           "telematicsUnitId": {
-            "type": "string",
-            "title": "Telematicsunitid",
-            "default": "tcu_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telematicsunitid"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 1
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "syntheticVin",
+          "make",
+          "model",
+          "modelYear",
+          "powertrainType",
+          "regionCode",
+          "lifecycleStatus",
+          "serviceStatus",
+          "warrantyStatus",
+          "priorityLevel",
+          "fleetId",
+          "telematicsUnitId",
+          "sourceVersion"
+        ],
         "title": "createVehicleResponse"
       },
       "getVehicleProfileResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "syntheticVin": {
             "type": "string",
-            "title": "Syntheticvin",
-            "default": "SYNTH000000000001"
+            "title": "Syntheticvin"
           },
           "make": {
             "type": "string",
-            "title": "Make",
-            "default": "Nova"
+            "title": "Make"
           },
           "model": {
             "type": "string",
-            "title": "Model",
-            "default": "Transit-E"
+            "title": "Model"
           },
           "modelYear": {
             "type": "integer",
-            "title": "Modelyear",
-            "default": 2026
+            "title": "Modelyear"
           },
           "powertrainType": {
             "type": "string",
-            "title": "Powertraintype",
-            "default": "battery_electric"
+            "title": "Powertraintype"
           },
           "regionCode": {
             "type": "string",
-            "title": "Regioncode",
-            "default": "us-east"
+            "title": "Regioncode"
           },
           "lifecycleStatus": {
             "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
+            "title": "Lifecyclestatus"
           },
           "serviceStatus": {
             "type": "string",
-            "title": "Servicestatus",
-            "default": "in_service"
+            "title": "Servicestatus"
           },
           "warrantyStatus": {
             "type": "string",
-            "title": "Warrantystatus",
-            "default": "active"
+            "title": "Warrantystatus"
           },
           "priorityLevel": {
             "type": "string",
-            "title": "Prioritylevel",
-            "default": "standard"
+            "title": "Prioritylevel"
           },
           "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fleetid"
           },
           "telematicsUnitId": {
-            "type": "string",
-            "title": "Telematicsunitid",
-            "default": "tcu_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telematicsunitid"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 1
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "syntheticVin",
+          "make",
+          "model",
+          "modelYear",
+          "powertrainType",
+          "regionCode",
+          "lifecycleStatus",
+          "serviceStatus",
+          "warrantyStatus",
+          "priorityLevel",
+          "fleetId",
+          "telematicsUnitId",
+          "sourceVersion"
+        ],
         "title": "getVehicleProfileResponse"
       },
       "listVehiclesByFleetResponse": {
@@ -678,188 +912,205 @@
           "items": {
             "items": {},
             "type": "array",
-            "title": "Items",
-            "default": [
-              {
-                "vehicleId": "veh_demo_001",
-                "syntheticVin": "SYNTH000000000001",
-                "make": "Nova",
-                "model": "Transit-E",
-                "modelYear": 2026,
-                "powertrainType": "battery_electric",
-                "regionCode": "us-east",
-                "lifecycleStatus": "active",
-                "serviceStatus": "in_service",
-                "warrantyStatus": "active",
-                "priorityLevel": "standard",
-                "fleetId": "flt_demo_001",
-                "telematicsUnitId": "tcu_demo_001",
-                "sourceVersion": 1
-              }
-            ]
+            "title": "Items"
           },
           "nextCursor": {
             "type": "string",
-            "title": "Nextcursor",
-            "default": ""
+            "title": "Nextcursor"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
         "title": "listVehiclesByFleetResponse"
       },
       "setVehicleLifecycleStatusResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "syntheticVin": {
             "type": "string",
-            "title": "Syntheticvin",
-            "default": "SYNTH000000000001"
+            "title": "Syntheticvin"
           },
           "make": {
             "type": "string",
-            "title": "Make",
-            "default": "Nova"
+            "title": "Make"
           },
           "model": {
             "type": "string",
-            "title": "Model",
-            "default": "Transit-E"
+            "title": "Model"
           },
           "modelYear": {
             "type": "integer",
-            "title": "Modelyear",
-            "default": 2026
+            "title": "Modelyear"
           },
           "powertrainType": {
             "type": "string",
-            "title": "Powertraintype",
-            "default": "battery_electric"
+            "title": "Powertraintype"
           },
           "regionCode": {
             "type": "string",
-            "title": "Regioncode",
-            "default": "us-east"
+            "title": "Regioncode"
           },
           "lifecycleStatus": {
             "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "inactive"
+            "title": "Lifecyclestatus"
           },
           "serviceStatus": {
             "type": "string",
-            "title": "Servicestatus",
-            "default": "in_service"
+            "title": "Servicestatus"
           },
           "warrantyStatus": {
             "type": "string",
-            "title": "Warrantystatus",
-            "default": "active"
+            "title": "Warrantystatus"
           },
           "priorityLevel": {
             "type": "string",
-            "title": "Prioritylevel",
-            "default": "standard"
+            "title": "Prioritylevel"
           },
           "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fleetid"
           },
           "telematicsUnitId": {
-            "type": "string",
-            "title": "Telematicsunitid",
-            "default": "tcu_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telematicsunitid"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "syntheticVin",
+          "make",
+          "model",
+          "modelYear",
+          "powertrainType",
+          "regionCode",
+          "lifecycleStatus",
+          "serviceStatus",
+          "warrantyStatus",
+          "priorityLevel",
+          "fleetId",
+          "telematicsUnitId",
+          "sourceVersion"
+        ],
         "title": "setVehicleLifecycleStatusResponse"
       },
       "updateVehicleProfileResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
           },
           "syntheticVin": {
             "type": "string",
-            "title": "Syntheticvin",
-            "default": "SYNTH000000000001"
+            "title": "Syntheticvin"
           },
           "make": {
             "type": "string",
-            "title": "Make",
-            "default": "Nova"
+            "title": "Make"
           },
           "model": {
             "type": "string",
-            "title": "Model",
-            "default": "Transit-E"
+            "title": "Model"
           },
           "modelYear": {
             "type": "integer",
-            "title": "Modelyear",
-            "default": 2026
+            "title": "Modelyear"
           },
           "powertrainType": {
             "type": "string",
-            "title": "Powertraintype",
-            "default": "battery_electric"
+            "title": "Powertraintype"
           },
           "regionCode": {
             "type": "string",
-            "title": "Regioncode",
-            "default": "us-east"
+            "title": "Regioncode"
           },
           "lifecycleStatus": {
             "type": "string",
-            "title": "Lifecyclestatus",
-            "default": "active"
+            "title": "Lifecyclestatus"
           },
           "serviceStatus": {
             "type": "string",
-            "title": "Servicestatus",
-            "default": "in_service"
+            "title": "Servicestatus"
           },
           "warrantyStatus": {
             "type": "string",
-            "title": "Warrantystatus",
-            "default": "active"
+            "title": "Warrantystatus"
           },
           "priorityLevel": {
             "type": "string",
-            "title": "Prioritylevel",
-            "default": "standard"
+            "title": "Prioritylevel"
           },
           "fleetId": {
-            "type": "string",
-            "title": "Fleetid",
-            "default": "flt_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fleetid"
           },
           "telematicsUnitId": {
-            "type": "string",
-            "title": "Telematicsunitid",
-            "default": "tcu_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telematicsunitid"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "syntheticVin",
+          "make",
+          "model",
+          "modelYear",
+          "powertrainType",
+          "regionCode",
+          "lifecycleStatus",
+          "serviceStatus",
+          "warrantyStatus",
+          "priorityLevel",
+          "fleetId",
+          "telematicsUnitId",
+          "sourceVersion"
+        ],
         "title": "updateVehicleProfileResponse"
       }
     }

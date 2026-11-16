@@ -8,7 +8,8 @@ EVENT = {
     "severity": "warning",
     "regionCode": "us-east",
     "observedAt": "2026-08-22T12:00:00Z",
-    "payload": {"voltage": 11.8},
+    "receivedAt": "2026-08-22T12:00:01Z",
+    "payload": {"voltage": 11.6},
     "synthetic": True,
 }
 
@@ -31,7 +32,7 @@ CONTRACT = ServiceContract(
                 "vehicleId": "veh_demo_001",
                 "eventType": "battery_voltage",
                 "observedAt": "2026-08-22T12:00:00Z",
-                "payload": {"voltage": 11.8},
+                "payload": {"voltage": 11.6},
                 "synthetic": True,
             },
         ),
@@ -93,9 +94,13 @@ CONTRACT = ServiceContract(
                 "alerts": [
                     {
                         "alertId": "alert_demo_001",
+                        "alertType": "battery_voltage",
                         "eventId": "evt_demo_001",
+                        "firstEventId": "evt_demo_001",
                         "severity": "warning",
                         "status": "active",
+                        "raisedAt": "2026-08-22T12:00:00Z",
+                        "lastObservedAt": "2026-08-22T12:00:00Z",
                     }
                 ],
             },

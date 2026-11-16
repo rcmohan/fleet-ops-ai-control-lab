@@ -113,8 +113,12 @@ CONTRACT = ServiceContract(
                 "events": [
                     {
                         "eventId": "audit_demo_001",
+                        "category": "agent_trace",
                         "eventType": "run_completed",
                         "occurredAt": "2026-08-22T12:00:00Z",
+                        "recordedAt": "2026-08-22T12:00:01Z",
+                        "attributes": {"agentName": "triage-agent"},
+                        "payload": {},
                     }
                 ],
                 "complete": True,

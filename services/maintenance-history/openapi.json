@@ -82,7 +82,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/vehicles/{vehicle_id}/maintenance-records": {
@@ -134,7 +134,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/maintenance-records": {
@@ -145,61 +145,6 @@
         "summary": "Record a maintenance event",
         "description": "Record a maintenance event",
         "operationId": "recordMaintenanceEvent",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "vehicleId": {
-                    "type": "string",
-                    "title": "Vehicleid"
-                  },
-                  "serviceProviderId": {
-                    "type": "string",
-                    "title": "Serviceproviderid"
-                  },
-                  "eventType": {
-                    "type": "string",
-                    "title": "Eventtype"
-                  },
-                  "serviceStatus": {
-                    "type": "string",
-                    "title": "Servicestatus"
-                  },
-                  "openedAt": {
-                    "type": "string",
-                    "title": "Openedat"
-                  },
-                  "summary": {
-                    "type": "string",
-                    "title": "Summary"
-                  }
-                },
-                "additionalProperties": false,
-                "type": "object",
-                "required": [
-                  "vehicleId",
-                  "serviceProviderId",
-                  "eventType",
-                  "serviceStatus",
-                  "openedAt",
-                  "summary"
-                ],
-                "title": "recordMaintenanceEventRequest"
-              },
-              "example": {
-                "vehicleId": "veh_demo_001",
-                "serviceProviderId": "sp_demo_001",
-                "eventType": "preventive",
-                "serviceStatus": "completed",
-                "openedAt": "2026-08-01T09:00:00Z",
-                "summary": "Synthetic scheduled inspection"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -212,7 +157,159 @@
             }
           }
         },
-        "x-dummy-implementation": true
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "maintenanceId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^mtn_[a-z0-9_]{1,60}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Optional caller-chosen ID for imports; generated when omitted.",
+                    "title": "Maintenanceid"
+                  },
+                  "vehicleId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Vehicleid",
+                    "type": "string"
+                  },
+                  "serviceProviderId": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Serviceproviderid"
+                  },
+                  "eventType": {
+                    "enum": [
+                      "inspection",
+                      "preventive",
+                      "repair",
+                      "recall",
+                      "diagnostic",
+                      "other"
+                    ],
+                    "title": "Eventtype",
+                    "type": "string"
+                  },
+                  "serviceStatus": {
+                    "enum": [
+                      "scheduled",
+                      "in_progress",
+                      "completed",
+                      "cancelled"
+                    ],
+                    "title": "Servicestatus",
+                    "type": "string"
+                  },
+                  "openedAt": {
+                    "format": "date-time",
+                    "title": "Openedat",
+                    "type": "string"
+                  },
+                  "completedAt": {
+                    "anyOf": [
+                      {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Completedat"
+                  },
+                  "odometerKm": {
+                    "anyOf": [
+                      {
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Odometerkm"
+                  },
+                  "summary": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "title": "Summary",
+                    "type": "string"
+                  },
+                  "resolution": {
+                    "anyOf": [
+                      {
+                        "maxLength": 2000,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Resolution"
+                  },
+                  "sourceReference": {
+                    "anyOf": [
+                      {
+                        "maxLength": 128,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Sourcereference"
+                  }
+                },
+                "required": [
+                  "vehicleId",
+                  "eventType",
+                  "serviceStatus",
+                  "openedAt",
+                  "summary"
+                ],
+                "title": "RecordEvent",
+                "type": "object"
+              },
+              "example": {
+                "vehicleId": "veh_demo_001",
+                "serviceProviderId": "sp_demo_001",
+                "eventType": "preventive",
+                "serviceStatus": "completed",
+                "openedAt": "2026-08-01T09:00:00Z",
+                "summary": "Synthetic scheduled inspection"
+              }
+            }
+          }
+        }
       }
     },
     "/v1/maintenance-records/{maintenance_id}/corrections": {
@@ -244,9 +341,18 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
-        "x-dummy-implementation": true,
+        "x-dummy-implementation": false,
         "requestBody": {
           "required": true,
           "content": {
@@ -255,11 +361,98 @@
                 "additionalProperties": false,
                 "properties": {
                   "reason": {
+                    "maxLength": 1000,
+                    "minLength": 1,
                     "title": "Reason",
                     "type": "string"
                   },
                   "changes": {
-                    "title": "Changes",
+                    "additionalProperties": false,
+                    "properties": {
+                      "serviceProviderId": {
+                        "anyOf": [
+                          {
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "title": "Serviceproviderid"
+                      },
+                      "eventType": {
+                        "enum": [
+                          "inspection",
+                          "preventive",
+                          "repair",
+                          "recall",
+                          "diagnostic",
+                          "other"
+                        ],
+                        "title": "Eventtype",
+                        "type": "string"
+                      },
+                      "serviceStatus": {
+                        "enum": [
+                          "scheduled",
+                          "in_progress",
+                          "completed",
+                          "cancelled"
+                        ],
+                        "title": "Servicestatus",
+                        "type": "string"
+                      },
+                      "openedAt": {
+                        "format": "date-time",
+                        "title": "Openedat",
+                        "type": "string"
+                      },
+                      "completedAt": {
+                        "anyOf": [
+                          {
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "title": "Completedat"
+                      },
+                      "odometerKm": {
+                        "anyOf": [
+                          {
+                            "minimum": 0,
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "title": "Odometerkm"
+                      },
+                      "summary": {
+                        "maxLength": 2000,
+                        "minLength": 1,
+                        "title": "Summary",
+                        "type": "string"
+                      },
+                      "resolution": {
+                        "anyOf": [
+                          {
+                            "maxLength": 2000,
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "title": "Resolution"
+                      }
+                    },
+                    "title": "CorrectionChanges",
                     "type": "object"
                   }
                 },
@@ -267,7 +460,7 @@
                   "reason",
                   "changes"
                 ],
-                "title": "correctMaintenanceRecordRequest",
+                "title": "Correction",
                 "type": "object"
               },
               "example": {
@@ -311,124 +504,184 @@
         "properties": {
           "maintenanceId": {
             "type": "string",
-            "title": "Maintenanceid",
-            "default": "{maintenance_id}"
+            "title": "Maintenanceid"
           },
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "veh_demo_001"
+            "title": "Vehicleid"
           },
           "serviceProviderId": {
-            "type": "string",
-            "title": "Serviceproviderid",
-            "default": "sp_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Serviceproviderid"
           },
           "eventType": {
             "type": "string",
-            "title": "Eventtype",
-            "default": "preventive"
+            "title": "Eventtype"
           },
           "serviceStatus": {
             "type": "string",
-            "title": "Servicestatus",
-            "default": "completed"
+            "title": "Servicestatus"
           },
           "openedAt": {
             "type": "string",
-            "title": "Openedat",
-            "default": "2026-08-01T09:00:00Z"
+            "title": "Openedat"
           },
           "completedAt": {
-            "type": "string",
-            "title": "Completedat",
-            "default": "2026-08-01T11:00:00Z"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completedat"
           },
           "odometerKm": {
-            "type": "number",
-            "title": "Odometerkm",
-            "default": 15000.0
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Odometerkm"
           },
           "summary": {
             "type": "string",
-            "title": "Summary",
-            "default": "Synthetic scheduled inspection"
+            "title": "Summary"
           },
           "resolution": {
-            "type": "string",
-            "title": "Resolution",
-            "default": "No defects found"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 2
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "maintenanceId",
+          "vehicleId",
+          "serviceProviderId",
+          "eventType",
+          "serviceStatus",
+          "openedAt",
+          "completedAt",
+          "odometerKm",
+          "summary",
+          "resolution",
+          "sourceVersion"
+        ],
         "title": "correctMaintenanceRecordResponse"
       },
       "getMaintenanceRecordResponse": {
         "properties": {
           "maintenanceId": {
             "type": "string",
-            "title": "Maintenanceid",
-            "default": "{maintenance_id}"
+            "title": "Maintenanceid"
           },
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "veh_demo_001"
+            "title": "Vehicleid"
           },
           "serviceProviderId": {
-            "type": "string",
-            "title": "Serviceproviderid",
-            "default": "sp_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Serviceproviderid"
           },
           "eventType": {
             "type": "string",
-            "title": "Eventtype",
-            "default": "preventive"
+            "title": "Eventtype"
           },
           "serviceStatus": {
             "type": "string",
-            "title": "Servicestatus",
-            "default": "completed"
+            "title": "Servicestatus"
           },
           "openedAt": {
             "type": "string",
-            "title": "Openedat",
-            "default": "2026-08-01T09:00:00Z"
+            "title": "Openedat"
           },
           "completedAt": {
-            "type": "string",
-            "title": "Completedat",
-            "default": "2026-08-01T11:00:00Z"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completedat"
           },
           "odometerKm": {
-            "type": "number",
-            "title": "Odometerkm",
-            "default": 15000.0
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Odometerkm"
           },
           "summary": {
             "type": "string",
-            "title": "Summary",
-            "default": "Synthetic scheduled inspection"
+            "title": "Summary"
           },
           "resolution": {
-            "type": "string",
-            "title": "Resolution",
-            "default": "No defects found"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 1
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "maintenanceId",
+          "vehicleId",
+          "serviceProviderId",
+          "eventType",
+          "serviceStatus",
+          "openedAt",
+          "completedAt",
+          "odometerKm",
+          "summary",
+          "resolution",
+          "sourceVersion"
+        ],
         "title": "getMaintenanceRecordResponse"
       },
       "getVehicleServiceHistoryResponse": {
@@ -436,93 +689,111 @@
           "items": {
             "items": {},
             "type": "array",
-            "title": "Items",
-            "default": [
-              {
-                "maintenanceId": "mtn_demo_001",
-                "vehicleId": "{vehicle_id}",
-                "serviceProviderId": "sp_demo_001",
-                "eventType": "preventive",
-                "serviceStatus": "completed",
-                "openedAt": "2026-08-01T09:00:00Z",
-                "completedAt": "2026-08-01T11:00:00Z",
-                "odometerKm": 15000.0,
-                "summary": "Synthetic scheduled inspection",
-                "resolution": "No defects found",
-                "sourceVersion": 1
-              }
-            ]
+            "title": "Items"
           },
           "nextCursor": {
             "type": "string",
-            "title": "Nextcursor",
-            "default": ""
+            "title": "Nextcursor"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
         "title": "getVehicleServiceHistoryResponse"
       },
       "recordMaintenanceEventResponse": {
         "properties": {
           "maintenanceId": {
             "type": "string",
-            "title": "Maintenanceid",
-            "default": "mtn_demo_001"
+            "title": "Maintenanceid"
           },
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "veh_demo_001"
+            "title": "Vehicleid"
           },
           "serviceProviderId": {
-            "type": "string",
-            "title": "Serviceproviderid",
-            "default": "sp_demo_001"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Serviceproviderid"
           },
           "eventType": {
             "type": "string",
-            "title": "Eventtype",
-            "default": "preventive"
+            "title": "Eventtype"
           },
           "serviceStatus": {
             "type": "string",
-            "title": "Servicestatus",
-            "default": "completed"
+            "title": "Servicestatus"
           },
           "openedAt": {
             "type": "string",
-            "title": "Openedat",
-            "default": "2026-08-01T09:00:00Z"
+            "title": "Openedat"
           },
           "completedAt": {
-            "type": "string",
-            "title": "Completedat",
-            "default": "2026-08-01T11:00:00Z"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completedat"
           },
           "odometerKm": {
-            "type": "number",
-            "title": "Odometerkm",
-            "default": 15000.0
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Odometerkm"
           },
           "summary": {
             "type": "string",
-            "title": "Summary",
-            "default": "Synthetic scheduled inspection"
+            "title": "Summary"
           },
           "resolution": {
-            "type": "string",
-            "title": "Resolution",
-            "default": "No defects found"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 1
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "maintenanceId",
+          "vehicleId",
+          "serviceProviderId",
+          "eventType",
+          "serviceStatus",
+          "openedAt",
+          "completedAt",
+          "odometerKm",
+          "summary",
+          "resolution",
+          "sourceVersion"
+        ],
         "title": "recordMaintenanceEventResponse"
       }
     }

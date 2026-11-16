@@ -8,10 +8,12 @@ APPROVAL = {
     "status": "pending",
     "riskLevel": "high",
     "requestedReviewerRole": "operations_manager",
-    "reviewerId": "",
-    "comments": "",
+    "evidenceTraceId": "trace_demo_001",
+    "reviewerId": None,
+    "comments": None,
     "requestedAt": "2026-08-22T12:00:00Z",
-    "decidedAt": "",
+    "expiresAt": "2026-08-22T13:00:00Z",
+    "decidedAt": None,
 }
 
 CONTRACT = ServiceContract(
@@ -31,6 +33,7 @@ CONTRACT = ServiceContract(
                 "riskLevel": "high",
                 "evidenceTraceId": "trace_demo_001",
                 "requestedReviewerRole": "operations_manager",
+                "expiresInSeconds": 3600,
             },
         ),
         Operation(
@@ -45,11 +48,19 @@ CONTRACT = ServiceContract(
             path="/v1/approvals/{approval_id}/decisions",
             operation_id="recordApprovalDecision",
             summary="Record an approval decision",
+            parameters=(
+                Parameter(
+                    "X-Reviewer-Id",
+                    location="header",
+                    required=True,
+                    description="Synthetic reviewer identity; not authenticated",
+                ),
+            ),
             response={
                 **APPROVAL,
                 "approvalId": "{approval_id}",
                 "status": "approved",
-                "reviewerId": "reviewer_demo_001",
+                "reviewerId": "reviewer_ops_001",
                 "comments": "Approved for synthetic execution",
                 "decidedAt": "2026-08-22T12:05:00Z",
             },

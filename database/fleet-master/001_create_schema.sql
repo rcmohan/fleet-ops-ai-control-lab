@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE SCHEMA IF NOT EXISTS master_data;
 
 CREATE TABLE IF NOT EXISTS master_data.fleets (
@@ -61,5 +59,4 @@ CREATE INDEX IF NOT EXISTS idx_fleets_provider_id
 CREATE INDEX IF NOT EXISTS idx_fleet_contacts_fleet_rank
     ON master_data.fleet_escalation_contacts (fleet_id, escalation_rank);
 
-COMMIT;
 

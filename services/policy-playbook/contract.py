@@ -54,6 +54,8 @@ CONTRACT = ServiceContract(
                         "eventType": "battery_voltage",
                         "severity": "critical",
                         "targetTeam": "safety_ops",
+                        "responseTargetMinutes": 30,
+                        "policyId": "policy_escalation",
                     }
                 ]
             },
@@ -71,6 +73,8 @@ CONTRACT = ServiceContract(
                 "eligible": False,
                 "riskLevel": "high",
                 "reason": "Human approval required",
+                "approvalRequired": True,
+                "requiredReviewerRole": "operations_manager",
                 "policyId": "policy_demo_001",
                 "policyVersion": "1.0",
             },
@@ -86,7 +90,9 @@ CONTRACT = ServiceContract(
             summary="Get required approval for an action",
             response={
                 "actionType": "{action_type}",
+                "approvalMode": "required",
                 "approvalRequired": True,
+                "maxAutonomousRisk": "medium",
                 "requiredReviewerRole": "operations_manager",
                 "policyId": "policy_demo_001",
             },

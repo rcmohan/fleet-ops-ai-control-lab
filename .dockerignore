@@ -3,7 +3,9 @@
 __pycache__
 *.pyc
 .pytest_cache
-database
+database/bootstrap
 docs
 tests
-
+temp
+gateway
+database/docker-init

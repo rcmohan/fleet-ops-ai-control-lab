@@ -82,7 +82,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/digital-twins/fleets/{fleet_id}": {
@@ -116,7 +116,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/digital-twins/entities/{entity_id}/related": {
@@ -150,7 +150,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/digital-twins/events/{event_id}/downstream-impact": {
@@ -184,7 +184,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/digital-twins/entities/{entity_id}/dependency-graph": {
@@ -218,7 +218,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/digital-twins/events": {
@@ -229,57 +229,6 @@
         "summary": "Apply an event to the digital twin",
         "description": "Apply an event to the digital twin",
         "operationId": "applyOperationalEvent",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "eventId": {
-                    "type": "string",
-                    "title": "Eventid"
-                  },
-                  "vehicleId": {
-                    "type": "string",
-                    "title": "Vehicleid"
-                  },
-                  "eventType": {
-                    "type": "string",
-                    "title": "Eventtype"
-                  },
-                  "observedAt": {
-                    "type": "string",
-                    "title": "Observedat"
-                  },
-                  "payload": {
-                    "type": "object",
-                    "title": "Payload"
-                  }
-                },
-                "additionalProperties": false,
-                "type": "object",
-                "required": [
-                  "eventId",
-                  "vehicleId",
-                  "eventType",
-                  "observedAt",
-                  "payload"
-                ],
-                "title": "applyOperationalEventRequest"
-              },
-              "example": {
-                "eventId": "evt_demo_001",
-                "vehicleId": "veh_demo_001",
-                "eventType": "battery_voltage",
-                "observedAt": "2026-08-22T12:00:00Z",
-                "payload": {
-                  "voltage": 11.8
-                }
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -292,7 +241,83 @@
             }
           }
         },
-        "x-dummy-implementation": true
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eventId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Eventid",
+                    "type": "string"
+                  },
+                  "vehicleId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Vehicleid",
+                    "type": "string"
+                  },
+                  "eventType": {
+                    "pattern": "^[a-z][a-z0-9_]{1,47}$",
+                    "title": "Eventtype",
+                    "type": "string"
+                  },
+                  "severity": {
+                    "enum": [
+                      "info",
+                      "warning",
+                      "critical"
+                    ],
+                    "title": "Severity",
+                    "type": "string"
+                  },
+                  "observedAt": {
+                    "format": "date-time",
+                    "title": "Observedat",
+                    "type": "string"
+                  },
+                  "payload": {
+                    "additionalProperties": true,
+                    "title": "Payload",
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "eventId",
+                  "vehicleId",
+                  "eventType",
+                  "severity",
+                  "observedAt"
+                ],
+                "title": "ApplyEvent",
+                "type": "object"
+              },
+              "example": {
+                "eventId": "evt_demo_001",
+                "vehicleId": "veh_demo_001",
+                "eventType": "battery_voltage",
+                "severity": "warning",
+                "observedAt": "2026-08-22T12:00:00Z",
+                "payload": {
+                  "voltage": 11.6
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -325,193 +350,241 @@
         "properties": {
           "eventId": {
             "type": "string",
-            "title": "Eventid",
-            "default": "evt_demo_001"
+            "title": "Eventid"
           },
           "stateVersion": {
             "type": "integer",
-            "title": "Stateversion",
-            "default": 8
+            "title": "Stateversion"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "applied"
+            "title": "Status"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "eventId",
+          "stateVersion",
+          "status"
+        ],
         "title": "applyOperationalEventResponse"
       },
       "getDependencyGraphResponse": {
         "properties": {
           "rootEntityId": {
             "type": "string",
-            "title": "Rootentityid",
-            "default": "{entity_id}"
+            "title": "Rootentityid"
           },
           "nodes": {
             "items": {},
             "type": "array",
-            "title": "Nodes",
-            "default": [
-              {
-                "entityId": "veh_demo_001",
-                "entityType": "vehicle"
-              }
-            ]
+            "title": "Nodes"
           },
           "edges": {
             "items": {},
             "type": "array",
-            "title": "Edges",
-            "default": []
+            "title": "Edges"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "rootEntityId",
+          "nodes",
+          "edges"
+        ],
         "title": "getDependencyGraphResponse"
       },
       "getDownstreamImpactResponse": {
         "properties": {
           "eventId": {
             "type": "string",
-            "title": "Eventid",
-            "default": "{event_id}"
+            "title": "Eventid"
           },
           "affectedVehicleIds": {
             "items": {},
             "type": "array",
-            "title": "Affectedvehicleids",
-            "default": [
-              "veh_demo_001"
-            ]
+            "title": "Affectedvehicleids"
           },
           "affectedFleetIds": {
             "items": {},
             "type": "array",
-            "title": "Affectedfleetids",
-            "default": [
-              "flt_demo_001"
-            ]
+            "title": "Affectedfleetids"
           },
           "riskLevel": {
             "type": "string",
-            "title": "Risklevel",
-            "default": "low"
+            "title": "Risklevel"
           },
           "summary": {
             "type": "string",
-            "title": "Summary",
-            "default": "Synthetic limited impact"
+            "title": "Summary"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "eventId",
+          "affectedVehicleIds",
+          "affectedFleetIds",
+          "riskLevel",
+          "summary"
+        ],
         "title": "getDownstreamImpactResponse"
       },
       "getFleetOperationalStateResponse": {
         "properties": {
           "fleetId": {
             "type": "string",
-            "title": "Fleetid",
-            "default": "{fleet_id}"
+            "title": "Fleetid"
           },
           "vehicleCount": {
             "type": "integer",
-            "title": "Vehiclecount",
-            "default": 100
+            "title": "Vehiclecount"
           },
           "healthyVehicleCount": {
             "type": "integer",
-            "title": "Healthyvehiclecount",
-            "default": 96
+            "title": "Healthyvehiclecount"
           },
           "warningVehicleCount": {
             "type": "integer",
-            "title": "Warningvehiclecount",
-            "default": 4
+            "title": "Warningvehiclecount"
           },
           "criticalVehicleCount": {
             "type": "integer",
-            "title": "Criticalvehiclecount",
-            "default": 0
+            "title": "Criticalvehiclecount"
           },
           "observedAt": {
-            "type": "string",
-            "title": "Observedat",
-            "default": "2026-08-22T12:00:00Z"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observedat"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "fleetId",
+          "vehicleCount",
+          "healthyVehicleCount",
+          "warningVehicleCount",
+          "criticalVehicleCount",
+          "observedAt"
+        ],
         "title": "getFleetOperationalStateResponse"
       },
       "getRelatedEntitiesResponse": {
         "properties": {
           "entityId": {
             "type": "string",
-            "title": "Entityid",
-            "default": "{entity_id}"
+            "title": "Entityid"
           },
           "relatedEntities": {
             "items": {},
             "type": "array",
-            "title": "Relatedentities",
-            "default": [
-              {
-                "entityId": "veh_demo_001",
-                "entityType": "vehicle",
-                "relationship": "member"
-              }
-            ]
+            "title": "Relatedentities"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "entityId",
+          "relatedEntities"
+        ],
         "title": "getRelatedEntitiesResponse"
       },
       "getVehicleOperationalStateResponse": {
         "properties": {
           "vehicleId": {
             "type": "string",
-            "title": "Vehicleid",
-            "default": "{vehicle_id}"
+            "title": "Vehicleid"
+          },
+          "fleetId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fleetid"
           },
           "healthState": {
             "type": "string",
-            "title": "Healthstate",
-            "default": "healthy"
+            "title": "Healthstate"
           },
           "connectivityState": {
             "type": "string",
-            "title": "Connectivitystate",
-            "default": "connected"
+            "title": "Connectivitystate"
           },
           "odometerKm": {
-            "type": "number",
-            "title": "Odometerkm",
-            "default": 15000.0
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Odometerkm"
           },
-          "activeIncidentIds": {
+          "batteryVoltage": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Batteryvoltage"
+          },
+          "lastLocation": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastlocation"
+          },
+          "activeIssues": {
             "items": {},
             "type": "array",
-            "title": "Activeincidentids",
-            "default": []
+            "title": "Activeissues"
           },
           "observedAt": {
             "type": "string",
-            "title": "Observedat",
-            "default": "2026-08-22T12:00:00Z"
+            "title": "Observedat"
           },
           "sourceVersion": {
             "type": "integer",
-            "title": "Sourceversion",
-            "default": 7
+            "title": "Sourceversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "vehicleId",
+          "fleetId",
+          "healthState",
+          "connectivityState",
+          "odometerKm",
+          "batteryVoltage",
+          "lastLocation",
+          "activeIssues",
+          "observedAt",
+          "sourceVersion"
+        ],
         "title": "getVehicleOperationalStateResponse"
       }
     }

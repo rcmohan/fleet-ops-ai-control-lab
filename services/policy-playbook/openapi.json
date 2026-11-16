@@ -100,7 +100,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/policies/{policy_id}": {
@@ -143,7 +143,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/escalation-rules": {
@@ -186,7 +186,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/action-eligibility": {
@@ -229,7 +229,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     },
     "/v1/actions/{action_type}/approval-requirement": {
@@ -263,7 +263,7 @@
             }
           }
         ],
-        "x-dummy-implementation": true
+        "x-dummy-implementation": false
       }
     }
   },
@@ -296,32 +296,51 @@
         "properties": {
           "eligible": {
             "type": "boolean",
-            "title": "Eligible",
-            "default": false
+            "title": "Eligible"
           },
           "riskLevel": {
             "type": "string",
-            "title": "Risklevel",
-            "default": "high"
+            "title": "Risklevel"
           },
           "reason": {
             "type": "string",
-            "title": "Reason",
-            "default": "Human approval required"
+            "title": "Reason"
+          },
+          "approvalRequired": {
+            "type": "boolean",
+            "title": "Approvalrequired"
+          },
+          "requiredReviewerRole": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requiredreviewerrole"
           },
           "policyId": {
             "type": "string",
-            "title": "Policyid",
-            "default": "policy_demo_001"
+            "title": "Policyid"
           },
           "policyVersion": {
             "type": "string",
-            "title": "Policyversion",
-            "default": "1.0"
+            "title": "Policyversion"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "eligible",
+          "riskLevel",
+          "reason",
+          "approvalRequired",
+          "requiredReviewerRole",
+          "policyId",
+          "policyVersion"
+        ],
         "title": "getActionEligibilityResponse"
       },
       "getEscalationRulesResponse": {
@@ -329,78 +348,101 @@
           "rules": {
             "items": {},
             "type": "array",
-            "title": "Rules",
-            "default": [
-              {
-                "ruleId": "rule_demo_001",
-                "eventType": "battery_voltage",
-                "severity": "critical",
-                "targetTeam": "safety_ops"
-              }
-            ]
+            "title": "Rules"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "rules"
+        ],
         "title": "getEscalationRulesResponse"
       },
       "getPolicyResponse": {
         "properties": {
           "policyId": {
             "type": "string",
-            "title": "Policyid",
-            "default": "{policy_id}"
+            "title": "Policyid"
           },
           "title": {
             "type": "string",
-            "title": "Title",
-            "default": "Synthetic Remote Action Policy"
+            "title": "Title"
           },
           "version": {
             "type": "string",
-            "title": "Version",
-            "default": "1.0"
+            "title": "Version"
           },
           "status": {
             "type": "string",
-            "title": "Status",
-            "default": "active"
+            "title": "Status"
           },
           "content": {
             "type": "string",
-            "title": "Content",
-            "default": "Dummy policy content"
+            "title": "Content"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "policyId",
+          "title",
+          "version",
+          "status",
+          "content"
+        ],
         "title": "getPolicyResponse"
       },
       "getRequiredApprovalResponse": {
         "properties": {
           "actionType": {
             "type": "string",
-            "title": "Actiontype",
-            "default": "{action_type}"
+            "title": "Actiontype"
+          },
+          "approvalMode": {
+            "type": "string",
+            "title": "Approvalmode"
           },
           "approvalRequired": {
             "type": "boolean",
-            "title": "Approvalrequired",
-            "default": true
+            "title": "Approvalrequired"
+          },
+          "maxAutonomousRisk": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maxautonomousrisk"
           },
           "requiredReviewerRole": {
-            "type": "string",
-            "title": "Requiredreviewerrole",
-            "default": "operations_manager"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requiredreviewerrole"
           },
           "policyId": {
             "type": "string",
-            "title": "Policyid",
-            "default": "policy_demo_001"
+            "title": "Policyid"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "actionType",
+          "approvalMode",
+          "approvalRequired",
+          "maxAutonomousRisk",
+          "requiredReviewerRole",
+          "policyId"
+        ],
         "title": "getRequiredApprovalResponse"
       },
       "searchPlaybooksResponse": {
@@ -408,24 +450,19 @@
           "items": {
             "items": {},
             "type": "array",
-            "title": "Items",
-            "default": [
-              {
-                "playbookId": "pb_demo_001",
-                "title": "Battery Voltage Triage",
-                "score": 0.91,
-                "version": "1.0"
-              }
-            ]
+            "title": "Items"
           },
           "nextCursor": {
             "type": "string",
-            "title": "Nextcursor",
-            "default": ""
+            "title": "Nextcursor"
           }
         },
         "additionalProperties": false,
         "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
         "title": "searchPlaybooksResponse"
       }
     }

@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY fleetops_runtime ./fleetops_runtime
 COPY service_app.py ./service_app.py
+COPY database ./database
 COPY ${SERVICE_PATH} ./service
 
 EXPOSE 8080

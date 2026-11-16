@@ -1,20 +1,18 @@
-import importlib.util
 import os
 from pathlib import Path
 
-from fleetops_runtime import build_app
+from fleetops_runtime import Database, build_app, database_url_for
+from fleetops_runtime.loader import load_service
 
+ROOT = Path(__file__).resolve().parent
 
-def _load_contract():
-    service_path = Path(os.environ.get("FLEETOPS_SERVICE_PATH", "/app/service"))
-    contract_file = service_path / "contract.py"
-    spec = importlib.util.spec_from_file_location("fleetops_service_contract", contract_file)
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f"Unable to load service contract: {contract_file}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module.CONTRACT
-
-
-app = build_app(_load_contract())
-
+service = load_service(
+    Path(os.environ.get("FLEETOPS_SERVICE_PATH", "/app/service")),
+    Path(os.environ.get("FLEETOPS_MIGRATIONS_ROOT", ROOT / "database")),
+)
+database = (
+    Database(database_url_for(service.contract.slug), service.migrations_dir)
+    if service.migrations_dir is not None
+    else None
+)
+app = build_app(service.contract, service.handlers, database=database)

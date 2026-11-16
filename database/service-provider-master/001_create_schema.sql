@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE SCHEMA IF NOT EXISTS master_data;
 
 CREATE TABLE IF NOT EXISTS master_data.service_providers (
@@ -38,5 +36,4 @@ CREATE TABLE IF NOT EXISTS master_data.service_provider_capabilities (
 CREATE INDEX IF NOT EXISTS idx_service_providers_status
     ON master_data.service_providers (lifecycle_status);
 
-COMMIT;
 
