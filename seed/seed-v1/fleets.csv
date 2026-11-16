@@ -1,0 +1,22 @@
+fleetId,customerName,industryCode,contractTier,slaLevel,priorityLevel,preferredServiceProviderId,lifecycleStatus,contractEffectiveDate,operatingRegions,declaredFleetSize
+flt_golden,Northstar Synthetic Logistics,logistics,enterprise,mission_critical,high,sp_golden_east,active,2026-01-01,us-east;us-central,1
+flt_001,Lakeshore Freight,field_service,standard,standard,critical,sp_012,active,2024-06-20,eu-west;us-east,23
+flt_002,Prairie Transit,public_transit,premium,enhanced,standard,sp_010,active,2025-10-09,ca-west;us-east,24
+flt_003,Ironleaf Distribution,utilities,enterprise,enhanced,critical,sp_009,active,2025-01-01,us-east;us-west,42
+flt_004,Prairie Services,rental,standard,standard,standard,sp_010,active,2025-06-26,ca-west,35
+flt_005,Silverline Utilities,logistics,standard,standard,standard,sp_012,active,2024-04-08,us-south,19
+flt_006,Bluepeak Logistics,rental,standard,standard,standard,sp_001,active,2025-06-06,ca-east,12
+flt_007,Prairie Freight,field_service,premium,enhanced,standard,sp_001,active,2024-08-12,ca-east,23
+flt_008,Summit Logistics,utilities,standard,standard,critical,sp_007,active,2024-04-08,eu-west,51
+flt_009,Coastal Services,utilities,standard,standard,standard,sp_005,active,2024-02-20,ca-east;eu-central;eu-west,22
+flt_010,Granite Logistics,public_transit,standard,standard,standard,sp_008,active,2024-01-27,eu-central;us-south,42
+flt_011,Evergreen Services,logistics,standard,standard,high,sp_006,active,2025-04-24,eu-west;us-south,28
+flt_012,Northwind Transit,utilities,enterprise,mission_critical,standard,sp_010,active,2024-09-11,ca-west;eu-west,40
+flt_013,Prairie Logistics,rental,enterprise,mission_critical,standard,sp_002,active,2024-05-13,eu-central;us-west,15
+flt_014,Harbor Freight,construction,standard,standard,standard,sp_010,active,2024-02-22,us-central;us-west,21
+flt_015,Summit Transit,food_distribution,standard,standard,standard,sp_002,active,2025-10-31,us-central,16
+flt_016,Pinecrest Utilities,rental,standard,standard,high,sp_002,active,2025-11-10,us-central;us-south,31
+flt_017,Cedar Distribution,construction,standard,standard,standard,sp_010,active,2024-04-06,us-central;us-south,24
+flt_018,Harbor Services,public_transit,standard,standard,standard,sp_007,active,2024-07-15,eu-west;us-central;us-south,22
+flt_019,Pinecrest Logistics,logistics,basic,standard,standard,sp_010,active,2026-02-28,ca-west;us-central;us-east,6
+flt_020,Summit Utilities,construction,basic,standard,low,sp_005,active,2024-12-08,ca-west,4

@@ -1,0 +1,103 @@
+incidentId,vehicleId,eventType,symptoms,regionCode,rootCause,resolution,outcome,openedAt,resolvedAt
+inc_golden_001,veh_golden_001,battery_voltage,low_voltage;missed_heartbeat,us-east,Battery aging,Battery inspected and replaced,resolved,2026-03-10T08:15:00Z,2026-03-10T11:05:00Z
+inc_golden_002,veh_golden_001,diagnostic_failure,dtc_p0562;low_voltage,us-east,Alternator undercharging,Charging system repaired,resolved,2026-06-02T14:00:00Z,2026-06-02T19:30:00Z
+inc_hist_0001,veh_0443,battery_voltage,low_voltage;missed_heartbeat;slow_crank,eu-west,Parasitic drain from aftermarket equipment,Charging system repaired,resolved,2026-04-19T10:09:00Z,2026-04-19T12:46:00Z
+inc_hist_0002,veh_0004,diagnostic_failure,engine_light,us-south,Ignition misfire,Ignition components replaced,resolved,2026-05-01T18:36:00Z,2026-05-02T00:28:00Z
+inc_hist_0003,veh_0313,battery_voltage,missed_heartbeat,ca-west,Battery aging,Battery inspected and replaced,resolved,2026-07-01T00:36:00Z,2026-07-01T02:18:00Z
+inc_hist_0004,veh_0009,battery_voltage,missed_heartbeat,us-central,Battery aging,Battery inspected and replaced,workaround,2026-03-15T02:24:00Z,2026-03-15T06:02:00Z
+inc_hist_0005,veh_0327,diagnostic_failure,dtc_p0300,eu-central,Wiring harness damage,Harness repaired,workaround,2026-07-03T11:01:00Z,2026-07-03T22:01:00Z
+inc_hist_0006,veh_0437,diagnostic_failure,dtc_p0300,us-east,Sensor fault,Sensor replaced,resolved,2025-12-25T16:59:00Z,2025-12-26T00:16:00Z
+inc_hist_0007,veh_0312,diagnostic_failure,dtc_p0300;dtc_p0562;engine_light,us-west,Ignition misfire,Ignition components replaced,resolved,2026-06-29T11:50:00Z,2026-06-29T18:29:00Z
+inc_hist_0008,veh_0262,firmware_update_failed,missed_heartbeat,us-south,Interrupted download,Update retried while parked,resolved,2025-11-26T04:14:00Z,2025-11-26T07:08:00Z
+inc_hist_0009,veh_0410,battery_voltage,diagnostic_failure;low_voltage;slow_crank,us-south,Alternator undercharging,Aftermarket device rewired,resolved,2026-08-26T19:50:00Z,2026-08-26T23:02:00Z
+inc_hist_0010,veh_0496,connectivity_lost,no_signal,us-east,SIM deactivated,SIM reactivated,resolved,2025-12-22T03:23:00Z,2025-12-22T07:56:00Z
+inc_hist_0011,veh_0115,firmware_update_failed,update_rollback,ca-east,Interrupted download,Update retried while parked,resolved,2026-03-05T17:12:00Z,2026-03-05T18:31:00Z
+inc_hist_0012,veh_0065,battery_voltage,missed_heartbeat,us-south,Battery aging,Battery inspected and replaced,resolved,2026-03-18T17:04:00Z,2026-03-18T19:17:00Z
+inc_hist_0013,veh_0396,battery_voltage,diagnostic_failure;low_voltage;missed_heartbeat,us-central,Battery aging,Battery inspected and replaced,resolved,2025-12-14T06:40:00Z,2025-12-14T09:37:00Z
+inc_hist_0014,veh_0276,firmware_update_failed,update_rollback,us-east,Insufficient storage on unit,Unit storage cleared and update retried,resolved,2025-10-31T13:37:00Z,2025-10-31T19:28:00Z
+inc_hist_0015,veh_0273,diagnostic_failure,dtc_p0300,us-west,Wiring harness damage,Harness repaired,resolved,2026-09-17T08:57:00Z,2026-09-17T14:16:00Z
+inc_hist_0016,veh_0228,diagnostic_failure,dtc_p0562;engine_light;reduced_power,us-central,Ignition misfire,Ignition components replaced,resolved,2026-09-06T04:48:00Z,2026-09-06T08:37:00Z
+inc_hist_0017,veh_0438,heartbeat_missed,low_voltage;missed_heartbeat;stale_location,eu-west,Telematics unit power loss,Unit power lead reseated,resolved,2026-03-10T04:57:00Z,2026-03-10T06:36:00Z
+inc_hist_0018,veh_0201,connectivity_lost,stale_location,us-east,Regional carrier outage,Recovered after carrier outage,resolved,2025-11-01T14:08:00Z,2025-11-01T19:24:00Z
+inc_hist_0019,veh_0029,battery_voltage,diagnostic_failure;low_voltage;slow_crank,eu-west,Battery aging,Battery inspected and replaced,resolved,2026-05-09T17:02:00Z,2026-05-09T20:07:00Z
+inc_hist_0020,veh_0183,diagnostic_failure,dtc_p0562;reduced_power,ca-east,Ignition misfire,Ignition components replaced,resolved,2026-09-21T16:32:00Z,2026-09-22T03:15:00Z
+inc_hist_0021,veh_0244,battery_voltage,missed_heartbeat,us-central,Parasitic drain from aftermarket equipment,Charging system repaired,resolved,2026-10-06T18:59:00Z,2026-10-06T21:22:00Z
+inc_hist_0022,veh_0383,battery_voltage,diagnostic_failure;low_voltage;slow_crank,us-south,Alternator undercharging,Aftermarket device rewired,resolved,2026-07-16T13:22:00Z,2026-07-16T16:15:00Z
+inc_hist_0023,veh_0323,firmware_update_failed,update_rollback,us-south,Interrupted download,Update retried while parked,resolved,2026-04-27T16:10:00Z,2026-04-27T18:57:00Z
+inc_hist_0024,veh_0040,diagnostic_failure,dtc_p0300;dtc_p0562;engine_light,eu-west,Wiring harness damage,Harness repaired,resolved,2026-07-25T15:30:00Z,2026-07-25T20:10:00Z
+inc_hist_0025,veh_0137,battery_voltage,low_voltage,us-south,Parasitic drain from aftermarket equipment,Charging system repaired,resolved,2026-05-03T05:59:00Z,2026-05-03T08:55:00Z
+inc_hist_0026,veh_0351,heartbeat_missed,missed_heartbeat;stale_location,eu-west,Firmware watchdog reset,Firmware updated,workaround,2026-07-13T22:28:00Z,2026-07-14T01:27:00Z
+inc_hist_0027,veh_0255,connectivity_lost,missed_heartbeat;stale_location,us-central,SIM deactivated,SIM reactivated,resolved,2026-03-20T08:31:00Z,2026-03-20T11:38:00Z
+inc_hist_0028,veh_0254,battery_voltage,diagnostic_failure;missed_heartbeat,us-south,Alternator undercharging,Aftermarket device rewired,resolved,2026-04-16T17:13:00Z,2026-04-16T20:35:00Z
+inc_hist_0029,veh_0415,heartbeat_missed,missed_heartbeat,us-east,Telematics unit power loss,Unit power lead reseated,resolved,2026-06-05T08:28:00Z,2026-06-05T10:48:00Z
+inc_hist_0030,veh_0062,heartbeat_missed,low_voltage;missed_heartbeat;stale_location,eu-west,Telematics unit power loss,Unit power lead reseated,unresolved,2026-06-13T20:51:00Z,2026-06-13T21:40:00Z
+inc_hist_0031,veh_0366,battery_voltage,diagnostic_failure;low_voltage,ca-east,Battery aging,Battery inspected and replaced,resolved,2026-08-10T00:44:00Z,2026-08-10T04:48:00Z
+inc_hist_0032,veh_0093,collision_detected,harsh_braking;impact_detected,eu-west,Low-speed collision,Vehicle inspected and body repair scheduled,resolved,2026-03-31T07:05:00Z,2026-03-31T14:09:00Z
+inc_hist_0033,veh_0435,battery_voltage,diagnostic_failure;missed_heartbeat;slow_crank,eu-west,Battery aging,Battery inspected and replaced,resolved,2025-11-11T07:25:00Z,2025-11-11T10:13:00Z
+inc_hist_0034,veh_0063,connectivity_lost,stale_location,us-south,Antenna damage,Antenna replaced,resolved,2026-10-13T01:45:00Z,2026-10-13T07:40:00Z
+inc_hist_0035,veh_0087,battery_voltage,diagnostic_failure,eu-central,Alternator undercharging,Aftermarket device rewired,resolved,2025-11-14T12:55:00Z,2025-11-14T16:36:00Z
+inc_hist_0036,veh_0172,battery_voltage,diagnostic_failure;low_voltage;missed_heartbeat,eu-west,Alternator undercharging,Aftermarket device rewired,resolved,2026-01-13T08:14:00Z,2026-01-13T11:42:00Z
+inc_hist_0037,veh_0201,diagnostic_failure,dtc_p0300;engine_light;reduced_power,us-east,Sensor fault,Sensor replaced,resolved,2026-05-03T05:57:00Z,2026-05-03T15:35:00Z
+inc_hist_0038,veh_0242,connectivity_lost,stale_location,us-central,SIM deactivated,SIM reactivated,workaround,2025-11-29T21:12:00Z,2025-11-30T00:55:00Z
+inc_hist_0039,veh_0132,diagnostic_failure,dtc_p0300;dtc_p0562,ca-west,Sensor fault,Sensor replaced,resolved,2025-12-28T09:16:00Z,2025-12-28T14:33:00Z
+inc_hist_0040,veh_0275,connectivity_lost,missed_heartbeat,eu-west,Regional carrier outage,Recovered after carrier outage,resolved,2026-08-17T13:10:00Z,2026-08-17T14:36:00Z
+inc_hist_0041,veh_0494,diagnostic_failure,dtc_p0300;reduced_power,eu-west,Ignition misfire,Ignition components replaced,resolved,2026-02-26T17:51:00Z,2026-02-27T01:55:00Z
+inc_hist_0042,veh_0397,connectivity_lost,missed_heartbeat;no_signal;stale_location,us-central,Regional carrier outage,Recovered after carrier outage,resolved,2026-06-09T11:32:00Z,2026-06-09T13:45:00Z
+inc_hist_0043,veh_0482,diagnostic_failure,dtc_p0562;reduced_power,us-south,Sensor fault,Sensor replaced,resolved,2026-05-28T11:08:00Z,2026-05-28T16:20:00Z
+inc_hist_0044,veh_0183,diagnostic_failure,dtc_p0300;engine_light,ca-east,Ignition misfire,Ignition components replaced,resolved,2026-01-27T21:45:00Z,2026-01-28T01:27:00Z
+inc_hist_0045,veh_0179,battery_voltage,low_voltage,eu-west,Parasitic drain from aftermarket equipment,Charging system repaired,resolved,2026-03-16T00:38:00Z,2026-03-16T04:37:00Z
+inc_hist_0046,veh_0154,diagnostic_failure,dtc_p0562;reduced_power,us-south,Sensor fault,Sensor replaced,workaround,2026-02-14T23:08:00Z,2026-02-15T01:46:00Z
+inc_hist_0047,veh_0085,battery_voltage,slow_crank,ca-east,Battery aging,Battery inspected and replaced,resolved,2026-01-14T13:23:00Z,2026-01-14T18:06:00Z
+inc_hist_0048,veh_0350,diagnostic_failure,dtc_p0300,eu-west,Sensor fault,Sensor replaced,resolved,2025-12-19T21:29:00Z,2025-12-20T00:58:00Z
+inc_hist_0049,veh_0160,diagnostic_failure,dtc_p0300;engine_light;reduced_power,us-central,Ignition misfire,Ignition components replaced,resolved,2026-02-27T17:20:00Z,2026-02-27T20:26:00Z
+inc_hist_0050,veh_0187,battery_voltage,diagnostic_failure;slow_crank,eu-west,Alternator undercharging,Aftermarket device rewired,resolved,2026-03-19T06:38:00Z,2026-03-19T09:23:00Z
+inc_hist_0051,veh_0430,collision_detected,harsh_braking,ca-west,False positive from pothole impact,Inspection found no damage; sensor recalibrated,resolved,2026-02-27T09:37:00Z,2026-02-28T03:39:00Z
+inc_hist_0052,veh_0140,diagnostic_failure,dtc_p0300;dtc_p0562;reduced_power,eu-west,Wiring harness damage,Harness repaired,resolved,2025-11-13T07:42:00Z,2025-11-13T09:52:00Z
+inc_hist_0053,veh_0389,diagnostic_failure,dtc_p0300;reduced_power,us-south,Ignition misfire,Ignition components replaced,resolved,2026-06-30T11:19:00Z,2026-06-30T22:36:00Z
+inc_hist_0054,veh_0317,collision_detected,harsh_braking;impact_detected,us-south,False positive from pothole impact,Inspection found no damage; sensor recalibrated,resolved,2026-08-15T06:08:00Z,2026-08-15T20:37:00Z
+inc_hist_0055,veh_0213,collision_detected,airbag_signal;harsh_braking;impact_detected,us-south,Low-speed collision,Vehicle inspected and body repair scheduled,workaround,2026-05-19T02:42:00Z,2026-05-19T16:12:00Z
+inc_hist_0056,veh_0071,firmware_update_failed,missed_heartbeat;update_rollback,eu-west,Insufficient storage on unit,Unit storage cleared and update retried,unresolved,2026-07-12T15:26:00Z,2026-07-12T16:56:00Z
+inc_hist_0057,veh_0466,heartbeat_missed,low_voltage;missed_heartbeat;stale_location,us-south,Telematics unit power loss,Unit power lead reseated,resolved,2026-01-14T22:08:00Z,2026-01-14T23:56:00Z
+inc_hist_0058,veh_0220,diagnostic_failure,dtc_p0300;engine_light;reduced_power,ca-west,Ignition misfire,Ignition components replaced,workaround,2026-09-21T16:49:00Z,2026-09-21T21:56:00Z
+inc_hist_0059,veh_0127,heartbeat_missed,low_voltage,ca-east,Telematics unit power loss,Unit power lead reseated,workaround,2025-11-07T09:10:00Z,2025-11-07T10:03:00Z
+inc_hist_0060,veh_0356,battery_voltage,diagnostic_failure;low_voltage;missed_heartbeat,us-west,Battery aging,Battery inspected and replaced,resolved,2026-06-08T04:19:00Z,2026-06-08T08:01:00Z
+inc_hist_0061,veh_0248,collision_detected,airbag_signal;harsh_braking;impact_detected,eu-west,False positive from pothole impact,Inspection found no damage; sensor recalibrated,resolved,2025-11-11T15:40:00Z,2025-11-12T22:37:00Z
+inc_hist_0062,veh_0328,battery_voltage,diagnostic_failure;missed_heartbeat,us-central,Battery aging,Battery inspected and replaced,resolved,2026-06-15T04:38:00Z,2026-06-15T08:41:00Z
+inc_hist_0063,veh_0321,diagnostic_failure,dtc_p0300;dtc_p0562;engine_light,us-west,Ignition misfire,Ignition components replaced,resolved,2026-01-06T10:22:00Z,2026-01-06T18:58:00Z
+inc_hist_0064,veh_0357,firmware_update_failed,missed_heartbeat,eu-central,Interrupted download,Update retried while parked,resolved,2026-03-16T00:33:00Z,2026-03-16T02:04:00Z
+inc_hist_0065,veh_0236,diagnostic_failure,dtc_p0562;engine_light,ca-west,Ignition misfire,Ignition components replaced,resolved,2026-08-22T12:48:00Z,2026-08-22T19:41:00Z
+inc_hist_0066,veh_0030,battery_voltage,low_voltage;slow_crank,us-south,Alternator undercharging,Aftermarket device rewired,resolved,2026-09-22T01:54:00Z,2026-09-22T04:24:00Z
+inc_hist_0067,veh_0485,battery_voltage,diagnostic_failure;low_voltage;slow_crank,eu-central,Parasitic drain from aftermarket equipment,Charging system repaired,resolved,2026-04-08T12:22:00Z,2026-04-08T15:02:00Z
+inc_hist_0068,veh_0495,heartbeat_missed,low_voltage;stale_location,us-south,Telematics unit power loss,Unit power lead reseated,resolved,2025-12-22T21:22:00Z,2025-12-22T23:00:00Z
+inc_hist_0069,veh_0110,collision_detected,airbag_signal;harsh_braking,ca-east,False positive from pothole impact,Inspection found no damage; sensor recalibrated,resolved,2026-07-15T00:05:00Z,2026-07-15T08:38:00Z
+inc_hist_0070,veh_0157,battery_voltage,missed_heartbeat,ca-west,Battery aging,Battery inspected and replaced,resolved,2026-10-16T07:58:00Z,2026-10-16T11:25:00Z
+inc_hist_0071,veh_0373,heartbeat_missed,low_voltage;missed_heartbeat;stale_location,us-south,Telematics unit power loss,Unit power lead reseated,resolved,2026-07-08T01:41:00Z,2026-07-08T03:02:00Z
+inc_hist_0072,veh_0129,firmware_update_failed,update_rollback,us-central,Insufficient storage on unit,Unit storage cleared and update retried,resolved,2026-03-20T07:07:00Z,2026-03-20T14:14:00Z
+inc_hist_0073,veh_0289,connectivity_lost,stale_location,eu-central,Antenna damage,Antenna replaced,resolved,2025-12-24T06:26:00Z,2025-12-24T11:52:00Z
+inc_hist_0074,veh_0007,diagnostic_failure,dtc_p0300;dtc_p0562,us-south,Sensor fault,Sensor replaced,resolved,2025-11-24T11:25:00Z,2025-11-24T16:54:00Z
+inc_hist_0075,veh_0294,diagnostic_failure,dtc_p0300;dtc_p0562;reduced_power,us-west,Wiring harness damage,Harness repaired,resolved,2026-06-09T16:44:00Z,2026-06-10T00:49:00Z
+inc_hist_0076,veh_0061,firmware_update_failed,missed_heartbeat;update_rollback,ca-west,Insufficient storage on unit,Unit storage cleared and update retried,resolved,2026-08-01T08:26:00Z,2026-08-01T11:35:00Z
+inc_hist_0077,veh_0146,battery_voltage,slow_crank,us-south,Parasitic drain from aftermarket equipment,Charging system repaired,resolved,2026-06-04T14:25:00Z,2026-06-04T16:43:00Z
+inc_hist_0078,veh_0210,battery_voltage,low_voltage;missed_heartbeat,us-south,Parasitic drain from aftermarket equipment,Charging system repaired,resolved,2026-06-05T05:44:00Z,2026-06-05T09:21:00Z
+inc_hist_0079,veh_0426,battery_voltage,diagnostic_failure;low_voltage;missed_heartbeat,eu-central,Alternator undercharging,Aftermarket device rewired,resolved,2026-06-24T21:20:00Z,2026-06-25T01:56:00Z
+inc_hist_0080,veh_0314,battery_voltage,diagnostic_failure;slow_crank,eu-west,Battery aging,Battery inspected and replaced,resolved,2026-03-14T12:00:00Z,2026-03-14T15:27:00Z
+inc_hist_0081,veh_0490,diagnostic_failure,dtc_p0562,eu-west,Sensor fault,Sensor replaced,resolved,2026-07-10T08:38:00Z,2026-07-10T11:52:00Z
+inc_hist_0082,veh_0198,battery_voltage,diagnostic_failure;missed_heartbeat;slow_crank,ca-west,Parasitic drain from aftermarket equipment,Charging system repaired,workaround,2026-06-29T16:32:00Z,2026-06-29T19:31:00Z
+inc_hist_0083,veh_0034,heartbeat_missed,low_voltage;missed_heartbeat;stale_location,us-east,Telematics unit power loss,Unit power lead reseated,resolved,2026-01-28T14:26:00Z,2026-01-28T17:34:00Z
+inc_hist_0084,veh_0433,battery_voltage,slow_crank,eu-west,Alternator undercharging,Aftermarket device rewired,resolved,2026-02-06T00:25:00Z,2026-02-06T03:12:00Z
+inc_hist_0085,veh_0068,diagnostic_failure,engine_light;reduced_power,us-east,Sensor fault,Sensor replaced,resolved,2025-11-13T14:42:00Z,2025-11-13T19:34:00Z
+inc_hist_0086,veh_0271,connectivity_lost,missed_heartbeat;no_signal;stale_location,ca-west,SIM deactivated,SIM reactivated,resolved,2026-04-06T08:53:00Z,2026-04-06T14:12:00Z
+inc_hist_0087,veh_0023,battery_voltage,low_voltage,ca-west,Parasitic drain from aftermarket equipment,Charging system repaired,resolved,2026-06-01T06:16:00Z,2026-06-01T09:08:00Z
+inc_hist_0088,veh_0464,firmware_update_failed,update_rollback,us-south,Interrupted download,Update retried while parked,workaround,2026-04-21T21:35:00Z,2026-04-22T01:34:00Z
+inc_hist_0089,veh_0348,battery_voltage,diagnostic_failure;missed_heartbeat,ca-east,Battery aging,Battery inspected and replaced,resolved,2026-06-22T06:01:00Z,2026-06-22T08:33:00Z
+inc_hist_0090,veh_0265,battery_voltage,diagnostic_failure;missed_heartbeat;slow_crank,ca-west,Parasitic drain from aftermarket equipment,Charging system repaired,resolved,2025-11-24T11:28:00Z,2025-11-24T15:53:00Z
+inc_hist_0091,veh_0292,battery_voltage,low_voltage,us-east,Battery aging,Battery inspected and replaced,resolved,2026-04-07T06:24:00Z,2026-04-07T09:11:00Z
+inc_hist_0092,veh_0237,heartbeat_missed,low_voltage;missed_heartbeat;stale_location,us-south,Telematics unit power loss,Unit power lead reseated,resolved,2026-06-30T05:52:00Z,2026-06-30T07:19:00Z
+inc_hist_0093,veh_0113,firmware_update_failed,missed_heartbeat;update_rollback,eu-west,Insufficient storage on unit,Unit storage cleared and update retried,resolved,2026-10-04T20:07:00Z,2026-10-04T23:21:00Z
+inc_hist_0094,veh_0195,battery_voltage,diagnostic_failure;low_voltage;slow_crank,us-south,Battery aging,Battery inspected and replaced,resolved,2026-10-12T15:23:00Z,2026-10-12T18:42:00Z
+inc_hist_0095,veh_0018,firmware_update_failed,missed_heartbeat;update_rollback,eu-central,Insufficient storage on unit,Unit storage cleared and update retried,resolved,2026-04-04T02:18:00Z,2026-04-04T06:37:00Z
+inc_hist_0096,veh_0397,firmware_update_failed,update_rollback,us-central,Insufficient storage on unit,Unit storage cleared and update retried,resolved,2026-01-27T00:59:00Z,2026-01-27T05:46:00Z
+inc_hist_0097,veh_0186,connectivity_lost,no_signal;stale_location,eu-central,SIM deactivated,SIM reactivated,resolved,2026-02-26T11:25:00Z,2026-02-26T13:05:00Z
+inc_hist_0098,veh_0139,collision_detected,airbag_signal;harsh_braking;impact_detected,us-central,Low-speed collision,Vehicle inspected and body repair scheduled,resolved,2026-09-30T00:38:00Z,2026-09-30T11:52:00Z
+inc_hist_0099,veh_0071,heartbeat_missed,low_voltage,eu-west,Telematics unit power loss,Unit power lead reseated,resolved,2026-02-18T07:47:00Z,2026-02-18T08:29:00Z
+inc_hist_0100,veh_0017,diagnostic_failure,dtc_p0562;reduced_power,eu-west,Ignition misfire,Ignition components replaced,resolved,2026-04-01T14:17:00Z,2026-04-01T20:59:00Z

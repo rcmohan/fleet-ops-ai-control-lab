@@ -1,0 +1,745 @@
+maintenanceId,vehicleId,serviceProviderId,eventType,serviceStatus,openedAt,completedAt,odometerKm,summary,resolution,sourceReference
+mtn_golden_001_1,veh_golden_001,sp_001,inspection,completed,2025-09-14T16:00:00Z,2025-09-14T23:00:00Z,33736.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_golden_001_2,veh_golden_001,sp_009,diagnostic,completed,2026-01-29T07:00:00Z,2026-01-29T14:00:00Z,49155.2,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0001_1,veh_0001,sp_011,inspection,completed,2025-09-29T08:00:00Z,2025-09-29T16:00:00Z,25463.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0001_2,veh_0001,sp_003,preventive,completed,2025-12-26T23:00:00Z,2025-12-27T07:00:00Z,44311.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0002_1,veh_0002,sp_012,preventive,completed,2025-11-22T15:00:00Z,2025-11-22T18:00:00Z,30057.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0002_2,veh_0002,sp_012,preventive,completed,2026-03-21T01:00:00Z,2026-03-21T06:00:00Z,44035.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0002_3,veh_0002,sp_012,preventive,completed,2026-07-26T09:00:00Z,2026-07-26T17:00:00Z,55732.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0003_1,veh_0003,sp_006,inspection,completed,2025-09-19T11:00:00Z,2025-09-19T17:00:00Z,27016.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0003_2,veh_0003,sp_012,inspection,completed,2025-12-05T03:00:00Z,2025-12-05T09:00:00Z,34637.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0004_1,veh_0004,sp_012,inspection,completed,2025-09-24T07:00:00Z,2025-09-24T11:00:00Z,27250.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0006_1,veh_0006,sp_004,preventive,completed,2025-10-14T14:00:00Z,2025-10-14T19:00:00Z,23489.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0008_1,veh_0008,sp_010,preventive,completed,2025-09-27T13:00:00Z,2025-09-27T19:00:00Z,17421.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0008_2,veh_0008,sp_008,inspection,completed,2026-01-06T04:00:00Z,2026-01-06T05:00:00Z,30379.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0009_1,veh_0009,sp_002,preventive,completed,2025-09-24T13:00:00Z,2025-09-24T18:00:00Z,11526.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0009_2,veh_0009,sp_008,repair,completed,2025-12-10T01:00:00Z,2025-12-10T07:00:00Z,20509.2,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0011_1,veh_0011,sp_010,preventive,completed,2025-08-18T15:00:00Z,2025-08-18T18:00:00Z,16319.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0011_2,veh_0011,sp_010,preventive,completed,2025-12-30T00:00:00Z,2025-12-30T03:00:00Z,30633.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0012_1,veh_0012,sp_002,inspection,completed,2026-02-02T07:00:00Z,2026-02-02T14:00:00Z,21991.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0013_1,veh_0013,sp_012,preventive,completed,2025-10-13T07:00:00Z,2025-10-13T12:00:00Z,19506.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0013_2,veh_0013,sp_004,inspection,completed,2026-02-17T19:00:00Z,2026-02-17T23:00:00Z,25753.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0014_1,veh_0014,sp_002,preventive,completed,2025-12-22T10:00:00Z,2025-12-22T17:00:00Z,25455.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0014_2,veh_0014,sp_007,preventive,completed,2026-04-07T02:00:00Z,2026-04-07T08:00:00Z,31185.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0014_3,veh_0014,sp_002,inspection,completed,2026-08-05T11:00:00Z,2026-08-05T19:00:00Z,35207.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0015_1,veh_0015,sp_006,repair,completed,2025-12-30T07:00:00Z,2025-12-30T09:00:00Z,23396.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0015_2,veh_0015,sp_005,preventive,completed,2026-04-20T14:00:00Z,2026-04-20T19:00:00Z,38987.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0016_1,veh_0016,sp_008,preventive,completed,2025-09-11T13:00:00Z,2025-09-11T15:00:00Z,21151.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0017_1,veh_0017,sp_007,preventive,completed,2025-08-20T13:00:00Z,2025-08-20T19:00:00Z,32799.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0017_2,veh_0017,sp_002,inspection,completed,2025-12-10T00:00:00Z,2025-12-10T04:00:00Z,48819.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0020_1,veh_0020,sp_010,preventive,completed,2026-01-03T10:00:00Z,2026-01-03T14:00:00Z,16655.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0021_1,veh_0021,sp_005,diagnostic,completed,2025-11-13T10:00:00Z,2025-11-13T16:00:00Z,15365.0,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0022_1,veh_0022,sp_007,preventive,completed,2025-12-14T08:00:00Z,2025-12-14T10:00:00Z,18564.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0022_2,veh_0022,sp_006,preventive,completed,2026-04-27T20:00:00Z,2026-04-28T03:00:00Z,32828.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0022_3,veh_0022,sp_006,preventive,completed,2026-07-16T06:00:00Z,2026-07-16T14:00:00Z,40483.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0023_1,veh_0023,sp_010,preventive,completed,2025-10-17T12:00:00Z,2025-10-17T19:00:00Z,18648.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0023_2,veh_0023,sp_005,preventive,completed,2025-12-18T03:00:00Z,2025-12-18T06:00:00Z,24326.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0023_3,veh_0023,sp_005,inspection,completed,2026-05-08T15:00:00Z,2026-05-08T19:00:00Z,29748.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0024_1,veh_0024,sp_010,preventive,completed,2025-11-08T16:00:00Z,2025-11-08T21:00:00Z,10269.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0024_2,veh_0024,sp_006,preventive,completed,2026-01-22T08:00:00Z,2026-01-22T11:00:00Z,24895.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0024_3,veh_0024,sp_005,preventive,completed,2026-05-28T00:00:00Z,2026-05-28T02:00:00Z,35670.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0025_1,veh_0025,sp_006,inspection,completed,2025-11-24T15:00:00Z,2025-11-24T21:00:00Z,30802.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0025_2,veh_0025,sp_002,preventive,completed,2026-03-23T02:00:00Z,2026-03-23T05:00:00Z,42548.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0026_1,veh_0026,sp_005,preventive,completed,2025-10-31T10:00:00Z,2025-10-31T15:00:00Z,13521.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0026_2,veh_0026,sp_010,inspection,completed,2026-02-26T22:00:00Z,2026-02-27T05:00:00Z,30781.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0027_1,veh_0027,sp_004,diagnostic,completed,2025-11-15T12:00:00Z,2025-11-15T15:00:00Z,21683.1,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0027_2,veh_0027,sp_004,repair,completed,2026-02-04T22:00:00Z,2026-02-05T04:00:00Z,36777.8,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0028_1,veh_0028,sp_012,preventive,completed,2025-08-15T15:00:00Z,2025-08-15T17:00:00Z,12738.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0029_1,veh_0029,sp_012,recall,completed,2025-08-15T16:00:00Z,2025-08-16T00:00:00Z,20061.0,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0029_2,veh_0029,sp_007,preventive,completed,2025-12-01T06:00:00Z,2025-12-01T09:00:00Z,28252.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0029_3,veh_0029,sp_012,inspection,completed,2026-04-13T13:00:00Z,2026-04-13T20:00:00Z,36926.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0031_1,veh_0031,sp_006,repair,completed,2026-01-01T11:00:00Z,2026-01-01T12:00:00Z,22550.8,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0031_2,veh_0031,sp_006,inspection,completed,2026-03-26T20:00:00Z,2026-03-27T00:00:00Z,37943.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0031_3,veh_0031,sp_006,preventive,completed,2026-06-05T05:00:00Z,2026-06-05T11:00:00Z,52988.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0037_1,veh_0037,sp_005,repair,completed,2025-11-27T12:00:00Z,2025-11-27T18:00:00Z,28814.2,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0038_1,veh_0038,sp_012,inspection,completed,2025-11-03T11:00:00Z,2025-11-03T17:00:00Z,17341.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0038_2,veh_0038,sp_004,inspection,completed,2026-01-25T02:00:00Z,2026-01-25T10:00:00Z,30301.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0038_3,veh_0038,sp_012,preventive,completed,2026-05-16T13:00:00Z,2026-05-16T19:00:00Z,42566.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0039_1,veh_0039,sp_005,inspection,completed,2025-09-04T14:00:00Z,2025-09-04T18:00:00Z,21410.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0039_2,veh_0039,sp_005,inspection,completed,2026-01-25T03:00:00Z,2026-01-25T05:00:00Z,29547.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0040_1,veh_0040,sp_012,repair,completed,2025-12-22T11:00:00Z,2025-12-22T15:00:00Z,18574.2,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0041_1,veh_0041,sp_010,preventive,completed,2025-08-15T08:00:00Z,2025-08-15T15:00:00Z,16506.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0041_2,veh_0041,sp_010,inspection,completed,2025-12-03T16:00:00Z,2025-12-03T19:00:00Z,29312.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0041_3,veh_0041,sp_005,preventive,completed,2026-02-27T01:00:00Z,2026-02-27T06:00:00Z,37514.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0042_1,veh_0042,sp_002,preventive,completed,2025-11-05T12:00:00Z,2025-11-05T13:00:00Z,20506.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0042_2,veh_0042,sp_002,repair,completed,2026-03-22T21:00:00Z,2026-03-23T03:00:00Z,26698.6,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0042_3,veh_0042,sp_010,inspection,completed,2026-07-12T05:00:00Z,2026-07-12T10:00:00Z,37256.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0043_1,veh_0043,sp_005,preventive,completed,2025-09-16T11:00:00Z,2025-09-16T15:00:00Z,7463.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0043_2,veh_0043,sp_010,inspection,completed,2025-12-30T00:00:00Z,2025-12-30T01:00:00Z,26538.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0044_1,veh_0044,sp_001,preventive,completed,2025-12-18T12:00:00Z,2025-12-18T20:00:00Z,31262.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0044_2,veh_0044,sp_001,inspection,completed,2026-05-01T20:00:00Z,2026-05-02T01:00:00Z,41486.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0045_1,veh_0045,sp_012,preventive,completed,2025-09-01T08:00:00Z,2025-09-01T15:00:00Z,15991.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0046_1,veh_0046,sp_006,preventive,completed,2025-07-20T16:00:00Z,2025-07-20T23:00:00Z,14883.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0046_2,veh_0046,sp_011,preventive,completed,2025-10-17T04:00:00Z,2025-10-17T10:00:00Z,24445.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0048_1,veh_0048,sp_010,preventive,completed,2025-08-31T14:00:00Z,2025-08-31T16:00:00Z,25185.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0048_2,veh_0048,sp_010,preventive,completed,2026-01-07T04:00:00Z,2026-01-07T06:00:00Z,41093.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0049_1,veh_0049,sp_009,inspection,completed,2025-12-17T11:00:00Z,2025-12-17T18:00:00Z,25650.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0049_2,veh_0049,sp_009,preventive,completed,2026-04-29T20:00:00Z,2026-04-30T01:00:00Z,43939.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0050_1,veh_0050,sp_005,preventive,completed,2025-08-30T11:00:00Z,2025-08-30T16:00:00Z,32523.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0050_2,veh_0050,sp_005,inspection,completed,2026-01-18T18:00:00Z,2026-01-18T23:00:00Z,45581.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0051_1,veh_0051,sp_008,inspection,completed,2025-09-16T15:00:00Z,2025-09-16T22:00:00Z,27096.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0051_2,veh_0051,sp_002,preventive,completed,2025-12-15T04:00:00Z,2025-12-15T09:00:00Z,45781.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0052_1,veh_0052,sp_004,preventive,completed,2026-01-12T11:00:00Z,2026-01-12T17:00:00Z,20137.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0052_2,veh_0052,sp_004,repair,completed,2026-04-07T19:00:00Z,2026-04-07T23:00:00Z,31396.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0053_1,veh_0053,sp_012,inspection,completed,2025-10-31T07:00:00Z,2025-10-31T15:00:00Z,23176.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0053_2,veh_0053,sp_002,inspection,completed,2026-03-30T18:00:00Z,2026-03-31T02:00:00Z,31031.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0054_1,veh_0054,sp_008,repair,completed,2025-12-18T12:00:00Z,2025-12-18T17:00:00Z,24162.2,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0054_2,veh_0054,sp_008,preventive,completed,2026-03-03T02:00:00Z,2026-03-03T06:00:00Z,42949.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0055_1,veh_0055,sp_009,preventive,completed,2025-11-14T14:00:00Z,2025-11-14T20:00:00Z,23519.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0056_1,veh_0056,sp_001,preventive,completed,2025-10-15T16:00:00Z,2025-10-16T00:00:00Z,13043.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0056_2,veh_0056,sp_008,preventive,completed,2026-03-13T06:00:00Z,2026-03-13T13:00:00Z,25373.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0056_3,veh_0056,sp_001,inspection,completed,2026-07-28T13:00:00Z,2026-07-28T20:00:00Z,44558.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0058_1,veh_0058,sp_002,preventive,completed,2025-12-07T12:00:00Z,2025-12-07T13:00:00Z,27784.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0059_1,veh_0059,sp_002,inspection,completed,2026-02-06T09:00:00Z,2026-02-06T10:00:00Z,21122.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0060_1,veh_0060,sp_012,preventive,completed,2025-12-06T15:00:00Z,2025-12-06T19:00:00Z,9567.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0060_2,veh_0060,sp_011,diagnostic,completed,2026-02-07T05:00:00Z,2026-02-07T13:00:00Z,15772.6,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0061_1,veh_0061,sp_006,diagnostic,completed,2025-08-17T13:00:00Z,2025-08-17T17:00:00Z,18032.5,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0062_1,veh_0062,sp_002,preventive,completed,2025-11-05T12:00:00Z,2025-11-05T16:00:00Z,21863.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0062_2,veh_0062,sp_012,inspection,completed,2026-03-10T01:00:00Z,2026-03-10T09:00:00Z,34694.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0063_1,veh_0063,sp_004,preventive,completed,2026-01-06T16:00:00Z,2026-01-06T21:00:00Z,31734.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0063_2,veh_0063,sp_004,recall,completed,2026-04-07T07:00:00Z,2026-04-07T13:00:00Z,44012.1,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0064_1,veh_0064,sp_005,preventive,completed,2026-01-04T16:00:00Z,2026-01-04T19:00:00Z,23797.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0064_2,veh_0064,sp_008,inspection,completed,2026-05-04T04:00:00Z,2026-05-04T09:00:00Z,30599.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0065_1,veh_0065,sp_012,preventive,completed,2025-10-29T16:00:00Z,2025-10-29T21:00:00Z,27754.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0066_1,veh_0066,sp_006,preventive,completed,2025-12-22T13:00:00Z,2025-12-22T18:00:00Z,26628.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0066_2,veh_0066,sp_010,preventive,completed,2026-05-18T20:00:00Z,2026-05-18T22:00:00Z,37054.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0066_3,veh_0066,sp_010,repair,completed,2026-10-08T07:00:00Z,2026-10-08T15:00:00Z,46482.6,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0067_1,veh_0067,sp_008,preventive,completed,2025-08-16T09:00:00Z,2025-08-16T15:00:00Z,14570.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0068_1,veh_0068,sp_005,repair,completed,2025-10-12T14:00:00Z,2025-10-12T18:00:00Z,26058.1,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0069_1,veh_0069,sp_002,preventive,completed,2025-09-21T07:00:00Z,2025-09-21T12:00:00Z,25267.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0069_2,veh_0069,sp_007,recall,completed,2026-01-12T23:00:00Z,2026-01-13T04:00:00Z,42116.0,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0069_3,veh_0069,sp_002,repair,completed,2026-05-06T09:00:00Z,2026-05-06T17:00:00Z,46507.8,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0070_1,veh_0070,sp_006,repair,completed,2025-10-04T07:00:00Z,2025-10-04T08:00:00Z,20096.8,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0070_2,veh_0070,sp_007,repair,completed,2025-12-28T16:00:00Z,2025-12-28T19:00:00Z,26800.3,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0071_1,veh_0071,sp_006,preventive,completed,2025-09-04T15:00:00Z,2025-09-04T16:00:00Z,24510.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0071_2,veh_0071,sp_007,preventive,completed,2025-11-10T22:00:00Z,2025-11-11T01:00:00Z,41292.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0071_3,veh_0071,sp_002,inspection,completed,2026-03-02T14:00:00Z,2026-03-02T18:00:00Z,47154.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0072_1,veh_0072,sp_005,inspection,completed,2025-11-29T10:00:00Z,2025-11-29T16:00:00Z,17248.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0072_2,veh_0072,sp_008,repair,completed,2026-03-17T17:00:00Z,2026-03-17T19:00:00Z,33900.0,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0074_1,veh_0074,sp_005,repair,completed,2025-12-31T15:00:00Z,2025-12-31T16:00:00Z,29347.0,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0074_2,veh_0074,sp_001,preventive,completed,2026-05-01T22:00:00Z,2026-05-02T01:00:00Z,43567.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0074_3,veh_0074,sp_001,repair,completed,2026-07-03T05:00:00Z,2026-07-03T12:00:00Z,51405.4,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0075_1,veh_0075,sp_012,inspection,completed,2025-09-01T12:00:00Z,2025-09-01T13:00:00Z,21155.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0075_2,veh_0075,sp_012,repair,completed,2025-12-05T02:00:00Z,2025-12-05T03:00:00Z,30982.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0075_3,veh_0075,sp_004,preventive,completed,2026-02-13T16:00:00Z,2026-02-13T21:00:00Z,37073.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0076_1,veh_0076,sp_005,preventive,completed,2025-11-04T12:00:00Z,2025-11-04T16:00:00Z,20386.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0076_2,veh_0076,sp_010,repair,completed,2026-03-12T01:00:00Z,2026-03-12T06:00:00Z,31012.9,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0077_1,veh_0077,sp_007,inspection,completed,2025-11-20T10:00:00Z,2025-11-20T16:00:00Z,19573.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0079_1,veh_0079,sp_005,preventive,completed,2026-02-05T14:00:00Z,2026-02-05T19:00:00Z,27487.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0079_2,veh_0079,sp_005,preventive,completed,2026-06-24T21:00:00Z,2026-06-25T02:00:00Z,46325.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0080_1,veh_0080,sp_008,repair,completed,2025-09-07T15:00:00Z,2025-09-07T19:00:00Z,19749.5,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0080_2,veh_0080,sp_010,repair,completed,2025-11-15T00:00:00Z,2025-11-15T01:00:00Z,28041.6,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0081_1,veh_0081,sp_005,repair,completed,2025-09-20T07:00:00Z,2025-09-20T11:00:00Z,15377.4,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0081_2,veh_0081,sp_005,repair,completed,2025-12-15T15:00:00Z,2025-12-15T22:00:00Z,27193.8,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0081_3,veh_0081,sp_005,repair,completed,2026-05-11T01:00:00Z,2026-05-11T03:00:00Z,34952.9,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0082_1,veh_0082,sp_002,repair,completed,2025-12-31T11:00:00Z,2025-12-31T18:00:00Z,9181.3,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0082_2,veh_0082,sp_002,preventive,completed,2026-04-26T01:00:00Z,2026-04-26T07:00:00Z,15247.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0082_3,veh_0082,sp_008,inspection,completed,2026-06-29T10:00:00Z,2026-06-29T12:00:00Z,20419.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0083_1,veh_0083,sp_012,preventive,completed,2026-01-03T07:00:00Z,2026-01-03T09:00:00Z,20688.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0084_1,veh_0084,sp_007,preventive,completed,2025-10-31T07:00:00Z,2025-10-31T09:00:00Z,23959.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0084_2,veh_0084,sp_006,preventive,completed,2026-03-11T23:00:00Z,2026-03-12T04:00:00Z,41026.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0085_1,veh_0085,sp_008,preventive,completed,2025-08-07T07:00:00Z,2025-08-07T13:00:00Z,28976.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0086_1,veh_0086,sp_010,recall,completed,2025-11-27T16:00:00Z,2025-11-27T19:00:00Z,18544.0,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0086_2,veh_0086,sp_002,preventive,completed,2026-03-28T08:00:00Z,2026-03-28T14:00:00Z,29776.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0087_1,veh_0087,sp_008,recall,completed,2025-11-27T15:00:00Z,2025-11-27T22:00:00Z,15724.8,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0087_2,veh_0087,sp_008,recall,completed,2026-02-08T03:00:00Z,2026-02-08T05:00:00Z,23139.1,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0088_1,veh_0088,sp_010,repair,completed,2025-11-24T11:00:00Z,2025-11-24T12:00:00Z,23969.6,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0089_1,veh_0089,sp_004,preventive,completed,2026-01-05T15:00:00Z,2026-01-05T21:00:00Z,21989.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0090_1,veh_0090,sp_008,diagnostic,completed,2026-01-06T15:00:00Z,2026-01-06T19:00:00Z,22686.0,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0091_1,veh_0091,sp_golden_east,repair,completed,2025-11-19T13:00:00Z,2025-11-19T18:00:00Z,20357.6,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0091_2,veh_0091,sp_005,preventive,completed,2026-01-27T21:00:00Z,2026-01-28T00:00:00Z,31191.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0092_1,veh_0092,sp_005,inspection,completed,2025-08-18T08:00:00Z,2025-08-18T09:00:00Z,19759.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0092_2,veh_0092,sp_009,preventive,completed,2026-01-06T17:00:00Z,2026-01-06T19:00:00Z,36537.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0093_1,veh_0093,sp_007,repair,completed,2025-08-13T15:00:00Z,2025-08-13T23:00:00Z,13895.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0093_2,veh_0093,sp_002,repair,completed,2025-11-30T07:00:00Z,2025-11-30T08:00:00Z,19944.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0093_3,veh_0093,sp_002,preventive,completed,2026-03-24T14:00:00Z,2026-03-24T15:00:00Z,29890.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0094_1,veh_0094,sp_010,preventive,completed,2025-08-29T07:00:00Z,2025-08-29T08:00:00Z,12107.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0094_2,veh_0094,sp_005,preventive,completed,2025-11-10T18:00:00Z,2025-11-11T01:00:00Z,17009.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0094_3,veh_0094,sp_005,repair,completed,2026-01-25T05:00:00Z,2026-01-25T11:00:00Z,23197.0,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0095_1,veh_0095,sp_006,repair,completed,2025-09-05T10:00:00Z,2025-09-05T18:00:00Z,20292.0,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0095_2,veh_0095,sp_006,preventive,completed,2025-12-28T18:00:00Z,2025-12-29T00:00:00Z,28783.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0096_1,veh_0096,sp_010,inspection,completed,2026-01-19T12:00:00Z,2026-01-19T15:00:00Z,30460.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0099_1,veh_0099,sp_golden_east,preventive,completed,2025-10-21T09:00:00Z,2025-10-21T16:00:00Z,11087.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0099_2,veh_0099,sp_009,repair,completed,2026-02-20T18:00:00Z,2026-02-21T00:00:00Z,23052.9,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0100_1,veh_0100,sp_010,repair,completed,2025-12-12T16:00:00Z,2025-12-12T18:00:00Z,21507.1,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0102_1,veh_0102,sp_009,inspection,completed,2025-11-20T12:00:00Z,2025-11-20T20:00:00Z,26161.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0104_1,veh_0104,sp_003,preventive,completed,2025-11-13T08:00:00Z,2025-11-13T09:00:00Z,24925.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0105_1,veh_0105,sp_005,inspection,completed,2025-09-06T11:00:00Z,2025-09-06T15:00:00Z,21676.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0105_2,veh_0105,sp_golden_east,inspection,completed,2025-12-08T20:00:00Z,2025-12-08T21:00:00Z,33757.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0105_3,veh_0105,sp_005,repair,completed,2026-03-24T11:00:00Z,2026-03-24T16:00:00Z,39861.1,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0107_1,veh_0107,sp_006,repair,completed,2025-10-10T14:00:00Z,2025-10-10T22:00:00Z,22804.1,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0107_2,veh_0107,sp_006,repair,completed,2026-02-10T01:00:00Z,2026-02-10T03:00:00Z,34064.6,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0108_1,veh_0108,sp_010,preventive,completed,2025-10-19T08:00:00Z,2025-10-19T09:00:00Z,18869.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0108_2,veh_0108,sp_008,preventive,completed,2026-01-13T17:00:00Z,2026-01-13T18:00:00Z,37625.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0109_1,veh_0109,sp_002,diagnostic,completed,2025-10-31T07:00:00Z,2025-10-31T13:00:00Z,7466.4,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0109_2,veh_0109,sp_008,preventive,completed,2026-03-16T21:00:00Z,2026-03-16T22:00:00Z,24666.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0110_1,veh_0110,sp_005,inspection,completed,2025-10-31T16:00:00Z,2025-10-31T19:00:00Z,31227.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0110_2,veh_0110,sp_008,repair,completed,2026-03-11T03:00:00Z,2026-03-11T05:00:00Z,42468.7,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0110_3,veh_0110,sp_008,repair,completed,2026-08-04T13:00:00Z,2026-08-04T20:00:00Z,54469.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0111_1,veh_0111,sp_004,repair,completed,2025-11-18T09:00:00Z,2025-11-18T17:00:00Z,31426.6,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0111_2,veh_0111,sp_004,preventive,completed,2026-03-27T18:00:00Z,2026-03-27T21:00:00Z,50210.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0111_3,veh_0111,sp_012,diagnostic,completed,2026-07-01T05:00:00Z,2026-07-01T08:00:00Z,67486.4,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0112_1,veh_0112,sp_006,recall,completed,2025-09-23T11:00:00Z,2025-09-23T12:00:00Z,21463.9,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0112_2,veh_0112,sp_007,repair,completed,2026-01-04T02:00:00Z,2026-01-04T03:00:00Z,36936.1,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0112_3,veh_0112,sp_002,preventive,completed,2026-03-25T11:00:00Z,2026-03-25T15:00:00Z,46715.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0113_1,veh_0113,sp_012,inspection,completed,2025-09-24T16:00:00Z,2025-09-24T18:00:00Z,21468.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0113_2,veh_0113,sp_006,repair,completed,2025-11-24T02:00:00Z,2025-11-24T10:00:00Z,34756.6,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0114_1,veh_0114,sp_004,inspection,completed,2025-08-11T09:00:00Z,2025-08-11T13:00:00Z,28003.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0115_1,veh_0115,sp_005,preventive,completed,2025-12-25T07:00:00Z,2025-12-25T09:00:00Z,21507.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0115_2,veh_0115,sp_008,preventive,completed,2026-03-20T17:00:00Z,2026-03-20T21:00:00Z,37228.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0116_1,veh_0116,sp_007,preventive,completed,2025-10-23T12:00:00Z,2025-10-23T15:00:00Z,20711.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0119_1,veh_0119,sp_004,repair,completed,2025-11-14T08:00:00Z,2025-11-14T14:00:00Z,16840.4,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0122_1,veh_0122,sp_010,inspection,completed,2025-11-24T08:00:00Z,2025-11-24T12:00:00Z,13623.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0123_1,veh_0123,sp_001,preventive,completed,2025-10-08T16:00:00Z,2025-10-08T20:00:00Z,25918.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0123_2,veh_0123,sp_009,inspection,completed,2026-02-12T03:00:00Z,2026-02-12T06:00:00Z,39295.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0123_3,veh_0123,sp_golden_east,inspection,completed,2026-06-07T13:00:00Z,2026-06-07T19:00:00Z,44707.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0124_1,veh_0124,sp_004,preventive,completed,2025-12-15T12:00:00Z,2025-12-15T13:00:00Z,28332.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0124_2,veh_0124,sp_004,diagnostic,completed,2026-04-01T19:00:00Z,2026-04-01T22:00:00Z,35304.8,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0125_1,veh_0125,sp_010,preventive,completed,2025-08-15T12:00:00Z,2025-08-15T13:00:00Z,18475.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0125_2,veh_0125,sp_005,repair,completed,2025-10-27T19:00:00Z,2025-10-28T02:00:00Z,31896.0,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0128_1,veh_0128,sp_011,preventive,completed,2025-10-19T08:00:00Z,2025-10-19T14:00:00Z,18160.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0128_2,veh_0128,sp_003,preventive,completed,2026-02-14T19:00:00Z,2026-02-15T01:00:00Z,27097.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0129_1,veh_0129,sp_002,inspection,completed,2025-10-26T14:00:00Z,2025-10-26T18:00:00Z,19847.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0130_1,veh_0130,sp_golden_east,inspection,completed,2025-09-15T11:00:00Z,2025-09-15T12:00:00Z,14260.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0130_2,veh_0130,sp_005,inspection,completed,2026-01-15T20:00:00Z,2026-01-16T03:00:00Z,19412.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0132_1,veh_0132,sp_005,inspection,completed,2025-11-17T09:00:00Z,2025-11-17T10:00:00Z,22978.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0133_1,veh_0133,sp_007,preventive,completed,2025-12-26T16:00:00Z,2025-12-26T22:00:00Z,18295.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0134_1,veh_0134,sp_005,preventive,completed,2025-10-14T13:00:00Z,2025-10-14T18:00:00Z,20170.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0134_2,veh_0134,sp_010,diagnostic,completed,2025-12-16T02:00:00Z,2025-12-16T09:00:00Z,36249.9,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0134_3,veh_0134,sp_005,preventive,completed,2026-04-28T11:00:00Z,2026-04-28T17:00:00Z,46517.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0135_1,veh_0135,sp_006,preventive,completed,2025-08-28T13:00:00Z,2025-08-28T16:00:00Z,16239.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0137_1,veh_0137,sp_012,preventive,completed,2026-01-18T09:00:00Z,2026-01-18T16:00:00Z,28913.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0138_1,veh_0138,sp_005,repair,completed,2025-09-09T14:00:00Z,2025-09-09T15:00:00Z,18261.4,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0139_1,veh_0139,sp_008,preventive,completed,2025-09-10T13:00:00Z,2025-09-10T15:00:00Z,25581.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0140_1,veh_0140,sp_006,preventive,completed,2025-09-06T10:00:00Z,2025-09-06T15:00:00Z,22052.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0140_2,veh_0140,sp_002,inspection,completed,2025-12-13T18:00:00Z,2025-12-13T19:00:00Z,26455.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0141_1,veh_0141,sp_007,inspection,completed,2025-09-19T16:00:00Z,2025-09-19T17:00:00Z,15440.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0142_1,veh_0142,sp_005,inspection,completed,2025-10-13T16:00:00Z,2025-10-13T20:00:00Z,16045.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0142_2,veh_0142,sp_010,inspection,completed,2026-01-30T07:00:00Z,2026-01-30T14:00:00Z,26749.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0143_1,veh_0143,sp_012,preventive,completed,2025-08-22T07:00:00Z,2025-08-22T13:00:00Z,26588.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0143_2,veh_0143,sp_004,repair,completed,2025-12-04T19:00:00Z,2025-12-04T21:00:00Z,42355.3,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0144_1,veh_0144,sp_002,preventive,completed,2025-09-26T07:00:00Z,2025-09-26T15:00:00Z,26423.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0145_1,veh_0145,sp_007,repair,completed,2025-09-20T07:00:00Z,2025-09-20T10:00:00Z,20585.6,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0145_2,veh_0145,sp_012,recall,completed,2026-01-27T14:00:00Z,2026-01-27T20:00:00Z,35838.6,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0146_1,veh_0146,sp_012,preventive,completed,2025-10-02T09:00:00Z,2025-10-02T13:00:00Z,23191.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0147_1,veh_0147,sp_008,preventive,completed,2025-09-27T14:00:00Z,2025-09-27T19:00:00Z,33016.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0149_1,veh_0149,sp_004,diagnostic,completed,2025-08-30T08:00:00Z,2025-08-30T09:00:00Z,10400.6,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0149_2,veh_0149,sp_012,repair,completed,2025-11-30T21:00:00Z,2025-12-01T00:00:00Z,21614.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0150_1,veh_0150,sp_008,preventive,completed,2025-08-17T11:00:00Z,2025-08-17T17:00:00Z,21476.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0150_2,veh_0150,sp_008,diagnostic,completed,2025-11-19T02:00:00Z,2025-11-19T06:00:00Z,40846.0,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0150_3,veh_0150,sp_008,repair,completed,2026-03-30T09:00:00Z,2026-03-30T17:00:00Z,55014.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0151_1,veh_0151,sp_006,preventive,completed,2025-08-05T14:00:00Z,2025-08-05T15:00:00Z,16213.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0152_1,veh_0152,sp_012,preventive,completed,2025-10-07T13:00:00Z,2025-10-07T17:00:00Z,18451.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0152_2,veh_0152,sp_004,preventive,completed,2026-02-04T00:00:00Z,2026-02-04T04:00:00Z,25474.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0154_1,veh_0154,sp_012,repair,completed,2025-10-06T07:00:00Z,2025-10-06T12:00:00Z,21344.2,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0154_2,veh_0154,sp_012,preventive,completed,2025-12-30T23:00:00Z,2025-12-31T07:00:00Z,34666.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0154_3,veh_0154,sp_012,repair,completed,2026-05-01T07:00:00Z,2026-05-01T09:00:00Z,41869.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0155_1,veh_0155,sp_001,repair,completed,2025-11-29T16:00:00Z,2025-11-29T17:00:00Z,22425.3,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0155_2,veh_0155,sp_golden_east,preventive,completed,2026-02-10T03:00:00Z,2026-02-10T04:00:00Z,29932.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0156_1,veh_0156,sp_008,preventive,completed,2025-09-14T15:00:00Z,2025-09-14T21:00:00Z,18127.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0156_2,veh_0156,sp_008,preventive,completed,2025-12-03T00:00:00Z,2025-12-03T03:00:00Z,27546.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0156_3,veh_0156,sp_008,preventive,completed,2026-03-11T07:00:00Z,2026-03-11T14:00:00Z,36955.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0157_1,veh_0157,sp_005,inspection,completed,2025-11-09T13:00:00Z,2025-11-09T20:00:00Z,11871.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0157_2,veh_0157,sp_005,preventive,completed,2026-02-16T22:00:00Z,2026-02-17T00:00:00Z,23679.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0157_3,veh_0157,sp_006,recall,completed,2026-04-30T05:00:00Z,2026-04-30T10:00:00Z,36617.0,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0159_1,veh_0159,sp_007,repair,completed,2025-08-13T08:00:00Z,2025-08-13T13:00:00Z,24633.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0159_2,veh_0159,sp_006,preventive,completed,2025-11-06T15:00:00Z,2025-11-06T18:00:00Z,43976.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0160_1,veh_0160,sp_008,recall,completed,2025-11-03T11:00:00Z,2025-11-03T15:00:00Z,29550.0,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0161_1,veh_0161,sp_008,inspection,completed,2025-10-11T14:00:00Z,2025-10-11T22:00:00Z,16926.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0162_1,veh_0162,sp_002,preventive,completed,2025-10-06T09:00:00Z,2025-10-06T12:00:00Z,14670.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0162_2,veh_0162,sp_002,preventive,completed,2026-02-19T00:00:00Z,2026-02-19T04:00:00Z,30125.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0162_3,veh_0162,sp_007,repair,completed,2026-05-12T13:00:00Z,2026-05-12T16:00:00Z,34217.4,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0163_1,veh_0163,sp_011,diagnostic,completed,2026-01-16T09:00:00Z,2026-01-16T12:00:00Z,23571.2,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0163_2,veh_0163,sp_006,inspection,completed,2026-04-18T16:00:00Z,2026-04-18T18:00:00Z,32511.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0164_1,veh_0164,sp_golden_east,preventive,completed,2025-09-23T09:00:00Z,2025-09-23T10:00:00Z,16882.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0164_2,veh_0164,sp_009,diagnostic,completed,2025-12-02T20:00:00Z,2025-12-03T00:00:00Z,28161.1,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0165_1,veh_0165,sp_008,preventive,completed,2025-11-17T16:00:00Z,2025-11-17T20:00:00Z,18153.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0165_2,veh_0165,sp_008,repair,completed,2026-02-15T03:00:00Z,2026-02-15T05:00:00Z,29767.2,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0167_1,veh_0167,sp_008,preventive,completed,2025-10-16T09:00:00Z,2025-10-16T10:00:00Z,24166.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0167_2,veh_0167,sp_002,diagnostic,completed,2025-12-29T21:00:00Z,2025-12-30T00:00:00Z,34702.5,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0167_3,veh_0167,sp_002,repair,completed,2026-03-05T11:00:00Z,2026-03-05T18:00:00Z,52319.2,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0169_1,veh_0169,sp_004,repair,completed,2025-07-30T13:00:00Z,2025-07-30T15:00:00Z,19912.7,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0170_1,veh_0170,sp_004,repair,completed,2025-10-09T11:00:00Z,2025-10-09T15:00:00Z,14570.9,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0170_2,veh_0170,sp_012,preventive,completed,2025-12-13T03:00:00Z,2025-12-13T05:00:00Z,22157.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0171_1,veh_0171,sp_004,preventive,completed,2025-10-19T11:00:00Z,2025-10-19T17:00:00Z,18271.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0171_2,veh_0171,sp_004,recall,completed,2026-01-24T03:00:00Z,2026-01-24T09:00:00Z,25207.0,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0171_3,veh_0171,sp_012,preventive,completed,2026-05-12T16:00:00Z,2026-05-12T20:00:00Z,30620.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0172_1,veh_0172,sp_006,recall,completed,2025-09-25T08:00:00Z,2025-09-25T09:00:00Z,18921.5,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0172_2,veh_0172,sp_007,preventive,completed,2025-11-28T18:00:00Z,2025-11-28T22:00:00Z,29645.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0173_1,veh_0173,sp_005,inspection,completed,2026-01-11T14:00:00Z,2026-01-11T15:00:00Z,12046.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0173_2,veh_0173,sp_008,preventive,completed,2026-04-26T03:00:00Z,2026-04-26T09:00:00Z,19071.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0174_1,veh_0174,sp_001,diagnostic,completed,2025-11-22T16:00:00Z,2025-11-22T20:00:00Z,15861.1,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0174_2,veh_0174,sp_005,repair,completed,2026-04-16T03:00:00Z,2026-04-16T11:00:00Z,20523.0,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0174_3,veh_0174,sp_008,preventive,completed,2026-08-15T15:00:00Z,2026-08-15T20:00:00Z,38397.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0175_1,veh_0175,sp_002,inspection,completed,2025-09-12T15:00:00Z,2025-09-12T20:00:00Z,22860.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0177_1,veh_0177,sp_008,preventive,completed,2025-10-16T13:00:00Z,2025-10-16T17:00:00Z,11307.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0179_1,veh_0179,sp_012,preventive,completed,2025-11-02T13:00:00Z,2025-11-02T21:00:00Z,16811.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0179_2,veh_0179,sp_002,preventive,completed,2026-04-02T05:00:00Z,2026-04-02T11:00:00Z,27866.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0179_3,veh_0179,sp_012,repair,completed,2026-06-11T17:00:00Z,2026-06-11T18:00:00Z,44301.3,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0180_1,veh_0180,sp_005,preventive,completed,2025-12-21T13:00:00Z,2025-12-21T17:00:00Z,24474.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0181_1,veh_0181,sp_001,repair,completed,2025-10-28T10:00:00Z,2025-10-28T11:00:00Z,27338.8,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0181_2,veh_0181,sp_009,inspection,completed,2026-02-20T00:00:00Z,2026-02-20T02:00:00Z,33561.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0183_1,veh_0183,sp_008,diagnostic,completed,2025-10-02T07:00:00Z,2025-10-02T09:00:00Z,7626.8,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0183_2,veh_0183,sp_008,preventive,completed,2025-12-02T22:00:00Z,2025-12-03T02:00:00Z,12065.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0185_1,veh_0185,sp_012,repair,completed,2025-11-24T15:00:00Z,2025-11-24T16:00:00Z,21383.7,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0185_2,veh_0185,sp_007,recall,completed,2026-03-25T01:00:00Z,2026-03-25T08:00:00Z,36585.7,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0185_3,veh_0185,sp_007,repair,completed,2026-07-11T14:00:00Z,2026-07-11T15:00:00Z,51722.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0186_1,veh_0186,sp_008,preventive,completed,2025-09-16T15:00:00Z,2025-09-16T21:00:00Z,24253.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0186_2,veh_0186,sp_008,inspection,completed,2025-12-28T23:00:00Z,2025-12-29T04:00:00Z,40181.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0186_3,veh_0186,sp_008,preventive,completed,2026-05-19T07:00:00Z,2026-05-19T09:00:00Z,45754.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0187_1,veh_0187,sp_012,preventive,completed,2025-08-29T07:00:00Z,2025-08-29T15:00:00Z,16911.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0187_2,veh_0187,sp_006,inspection,completed,2025-11-18T14:00:00Z,2025-11-18T19:00:00Z,24734.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0188_1,veh_0188,sp_005,inspection,completed,2025-10-07T11:00:00Z,2025-10-07T19:00:00Z,19906.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0188_2,veh_0188,sp_006,inspection,completed,2026-01-20T20:00:00Z,2026-01-21T02:00:00Z,26901.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0189_1,veh_0189,sp_008,inspection,completed,2025-12-27T15:00:00Z,2025-12-27T21:00:00Z,26988.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0190_1,veh_0190,sp_001,inspection,completed,2025-11-22T13:00:00Z,2025-11-22T15:00:00Z,25597.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0191_1,veh_0191,sp_002,diagnostic,completed,2025-08-25T11:00:00Z,2025-08-25T12:00:00Z,17587.2,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0191_2,veh_0191,sp_007,inspection,completed,2025-12-03T02:00:00Z,2025-12-03T09:00:00Z,24886.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0191_3,veh_0191,sp_012,diagnostic,completed,2026-03-31T11:00:00Z,2026-03-31T17:00:00Z,40777.7,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0192_1,veh_0192,sp_005,preventive,completed,2025-10-07T10:00:00Z,2025-10-07T16:00:00Z,22472.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0192_2,veh_0192,sp_005,inspection,completed,2025-12-30T21:00:00Z,2025-12-31T04:00:00Z,32497.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0192_3,veh_0192,sp_001,preventive,completed,2026-05-25T06:00:00Z,2026-05-25T12:00:00Z,37080.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0193_1,veh_0193,sp_008,inspection,completed,2025-09-11T15:00:00Z,2025-09-11T21:00:00Z,12084.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0194_1,veh_0194,sp_006,preventive,completed,2025-10-24T11:00:00Z,2025-10-24T12:00:00Z,22074.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0195_1,veh_0195,sp_004,preventive,completed,2025-10-03T09:00:00Z,2025-10-03T14:00:00Z,19504.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0196_1,veh_0196,sp_005,preventive,completed,2025-12-07T12:00:00Z,2025-12-07T20:00:00Z,25070.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0196_2,veh_0196,sp_008,preventive,completed,2026-04-27T23:00:00Z,2026-04-28T03:00:00Z,37834.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0197_1,veh_0197,sp_008,inspection,completed,2025-10-30T07:00:00Z,2025-10-30T15:00:00Z,19297.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0197_2,veh_0197,sp_001,preventive,completed,2026-03-01T17:00:00Z,2026-03-01T19:00:00Z,29856.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0198_1,veh_0198,sp_010,inspection,completed,2025-09-07T11:00:00Z,2025-09-07T18:00:00Z,29260.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0198_2,veh_0198,sp_006,preventive,completed,2026-01-18T19:00:00Z,2026-01-19T03:00:00Z,41487.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0199_1,veh_0199,sp_012,repair,completed,2026-01-04T11:00:00Z,2026-01-04T14:00:00Z,16203.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0199_2,veh_0199,sp_012,repair,completed,2026-05-24T02:00:00Z,2026-05-24T03:00:00Z,35835.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0200_1,veh_0200,sp_003,inspection,completed,2025-09-11T13:00:00Z,2025-09-11T20:00:00Z,11111.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0200_2,veh_0200,sp_006,diagnostic,completed,2026-01-30T20:00:00Z,2026-01-31T03:00:00Z,25164.3,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0200_3,veh_0200,sp_011,inspection,completed,2026-06-28T04:00:00Z,2026-06-28T08:00:00Z,39437.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0201_1,veh_0201,sp_009,repair,completed,2025-11-12T16:00:00Z,2025-11-12T20:00:00Z,13429.6,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0201_2,veh_0201,sp_005,preventive,completed,2026-03-26T06:00:00Z,2026-03-26T09:00:00Z,24634.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0203_1,veh_0203,sp_012,preventive,completed,2025-12-04T10:00:00Z,2025-12-04T17:00:00Z,31826.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0203_2,veh_0203,sp_012,preventive,completed,2026-03-26T23:00:00Z,2026-03-27T03:00:00Z,47113.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0204_1,veh_0204,sp_010,repair,completed,2025-09-12T16:00:00Z,2025-09-12T22:00:00Z,13423.0,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0204_2,veh_0204,sp_002,diagnostic,completed,2025-11-19T05:00:00Z,2025-11-19T06:00:00Z,28268.1,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0205_1,veh_0205,sp_golden_east,repair,completed,2025-12-24T11:00:00Z,2025-12-24T18:00:00Z,28515.0,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0205_2,veh_0205,sp_golden_east,preventive,completed,2026-03-29T18:00:00Z,2026-03-29T23:00:00Z,40736.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0207_1,veh_0207,sp_008,repair,completed,2025-10-05T12:00:00Z,2025-10-05T13:00:00Z,22035.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0208_1,veh_0208,sp_006,repair,completed,2026-01-06T07:00:00Z,2026-01-06T10:00:00Z,22510.0,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0208_2,veh_0208,sp_011,preventive,completed,2026-05-06T18:00:00Z,2026-05-06T19:00:00Z,38599.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0208_3,veh_0208,sp_011,repair,completed,2026-07-30T06:00:00Z,2026-07-30T08:00:00Z,48190.9,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0211_1,veh_0211,sp_012,preventive,completed,2025-12-31T10:00:00Z,2025-12-31T12:00:00Z,13319.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0211_2,veh_0211,sp_004,inspection,completed,2026-05-17T01:00:00Z,2026-05-17T07:00:00Z,24878.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0212_1,veh_0212,sp_010,inspection,completed,2025-11-15T08:00:00Z,2025-11-15T09:00:00Z,15703.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0212_2,veh_0212,sp_008,repair,completed,2026-02-03T23:00:00Z,2026-02-04T00:00:00Z,35450.2,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0213_1,veh_0213,sp_012,preventive,completed,2025-10-27T12:00:00Z,2025-10-27T13:00:00Z,10418.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0214_1,veh_0214,sp_004,inspection,completed,2025-08-22T13:00:00Z,2025-08-22T15:00:00Z,16522.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0214_2,veh_0214,sp_004,preventive,completed,2025-12-16T22:00:00Z,2025-12-17T00:00:00Z,35356.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0216_1,veh_0216,sp_012,preventive,completed,2025-09-12T08:00:00Z,2025-09-12T16:00:00Z,12203.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0217_1,veh_0217,sp_012,repair,completed,2025-09-20T15:00:00Z,2025-09-20T19:00:00Z,21953.1,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0219_1,veh_0219,sp_golden_east,inspection,completed,2025-09-19T07:00:00Z,2025-09-19T08:00:00Z,14844.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0220_1,veh_0220,sp_010,preventive,completed,2025-12-07T09:00:00Z,2025-12-07T11:00:00Z,23133.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0220_2,veh_0220,sp_005,inspection,completed,2026-02-14T18:00:00Z,2026-02-14T22:00:00Z,32374.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0221_1,veh_0221,sp_001,preventive,completed,2025-12-21T12:00:00Z,2025-12-21T16:00:00Z,25046.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0222_1,veh_0222,sp_005,preventive,completed,2026-01-10T10:00:00Z,2026-01-10T15:00:00Z,17696.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0222_2,veh_0222,sp_008,preventive,completed,2026-04-12T22:00:00Z,2026-04-13T02:00:00Z,25201.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0222_3,veh_0222,sp_005,preventive,completed,2026-06-18T13:00:00Z,2026-06-18T16:00:00Z,29522.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0223_1,veh_0223,sp_golden_east,preventive,completed,2025-11-24T13:00:00Z,2025-11-24T14:00:00Z,22573.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0223_2,veh_0223,sp_009,preventive,completed,2026-03-31T05:00:00Z,2026-03-31T10:00:00Z,41456.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0224_1,veh_0224,sp_008,repair,completed,2025-09-04T14:00:00Z,2025-09-04T15:00:00Z,22662.9,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0225_1,veh_0225,sp_golden_east,repair,completed,2025-11-07T15:00:00Z,2025-11-07T16:00:00Z,26952.8,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0225_2,veh_0225,sp_golden_east,preventive,completed,2026-03-06T03:00:00Z,2026-03-06T05:00:00Z,43090.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0227_1,veh_0227,sp_004,preventive,completed,2026-01-15T11:00:00Z,2026-01-15T12:00:00Z,21497.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0229_1,veh_0229,sp_004,repair,completed,2025-08-02T16:00:00Z,2025-08-02T21:00:00Z,18354.4,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0229_2,veh_0229,sp_004,diagnostic,completed,2025-11-06T23:00:00Z,2025-11-07T05:00:00Z,30600.1,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0230_1,veh_0230,sp_004,preventive,completed,2025-09-22T11:00:00Z,2025-09-22T12:00:00Z,17224.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0231_1,veh_0231,sp_003,diagnostic,completed,2026-02-19T13:00:00Z,2026-02-19T17:00:00Z,22656.9,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0231_2,veh_0231,sp_011,inspection,completed,2026-04-28T02:00:00Z,2026-04-28T03:00:00Z,30370.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0231_3,veh_0231,sp_006,preventive,completed,2026-07-13T18:00:00Z,2026-07-13T21:00:00Z,35270.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0232_1,veh_0232,sp_007,preventive,completed,2025-09-16T09:00:00Z,2025-09-16T10:00:00Z,19997.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0232_2,veh_0232,sp_002,recall,completed,2025-12-18T21:00:00Z,2025-12-19T04:00:00Z,33978.6,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0232_3,veh_0232,sp_007,preventive,completed,2026-04-19T04:00:00Z,2026-04-19T09:00:00Z,44568.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0234_1,veh_0234,sp_010,inspection,completed,2025-11-28T08:00:00Z,2025-11-28T16:00:00Z,16565.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0235_1,veh_0235,sp_011,preventive,completed,2025-10-24T14:00:00Z,2025-10-24T17:00:00Z,20775.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0235_2,veh_0235,sp_006,inspection,completed,2026-02-06T02:00:00Z,2026-02-06T07:00:00Z,36678.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0236_1,veh_0236,sp_010,preventive,completed,2026-01-31T15:00:00Z,2026-01-31T16:00:00Z,27168.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0236_2,veh_0236,sp_005,inspection,completed,2026-06-24T07:00:00Z,2026-06-24T10:00:00Z,33235.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0236_3,veh_0236,sp_010,preventive,completed,2026-09-07T19:00:00Z,2026-09-08T00:00:00Z,53195.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0237_1,veh_0237,sp_012,preventive,completed,2025-10-24T15:00:00Z,2025-10-24T23:00:00Z,19619.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0238_1,veh_0238,sp_012,repair,completed,2025-10-29T11:00:00Z,2025-10-29T17:00:00Z,16281.1,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0239_1,veh_0239,sp_010,inspection,completed,2025-07-18T16:00:00Z,2025-07-18T23:00:00Z,26288.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0239_2,veh_0239,sp_005,preventive,completed,2025-10-06T07:00:00Z,2025-10-06T12:00:00Z,38245.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0239_3,veh_0239,sp_005,inspection,completed,2025-12-05T18:00:00Z,2025-12-06T01:00:00Z,52979.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0240_1,veh_0240,sp_006,preventive,completed,2026-01-13T09:00:00Z,2026-01-13T13:00:00Z,15318.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0241_1,veh_0241,sp_006,recall,completed,2025-12-12T10:00:00Z,2025-12-12T17:00:00Z,20495.7,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0241_2,veh_0241,sp_010,preventive,completed,2026-04-12T23:00:00Z,2026-04-13T02:00:00Z,35399.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0241_3,veh_0241,sp_005,preventive,completed,2026-09-01T06:00:00Z,2026-09-01T08:00:00Z,47519.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0243_1,veh_0243,sp_012,inspection,completed,2025-11-03T16:00:00Z,2025-11-03T19:00:00Z,22018.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0243_2,veh_0243,sp_012,preventive,completed,2026-01-26T08:00:00Z,2026-01-26T16:00:00Z,33900.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0245_1,veh_0245,sp_012,inspection,completed,2025-10-17T13:00:00Z,2025-10-17T19:00:00Z,20186.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0245_2,veh_0245,sp_006,preventive,completed,2026-03-02T05:00:00Z,2026-03-02T08:00:00Z,32072.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0246_1,veh_0246,sp_001,inspection,completed,2025-12-22T08:00:00Z,2025-12-22T10:00:00Z,20033.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0246_2,veh_0246,sp_001,preventive,completed,2026-05-17T00:00:00Z,2026-05-17T01:00:00Z,34884.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0247_1,veh_0247,sp_011,preventive,completed,2025-11-12T15:00:00Z,2025-11-12T19:00:00Z,22567.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0247_2,veh_0247,sp_012,inspection,completed,2026-03-15T04:00:00Z,2026-03-15T10:00:00Z,29388.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0248_1,veh_0248,sp_012,preventive,completed,2025-09-15T16:00:00Z,2025-09-15T21:00:00Z,21943.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0249_1,veh_0249,sp_010,preventive,completed,2025-09-14T10:00:00Z,2025-09-14T11:00:00Z,20460.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0250_1,veh_0250,sp_007,diagnostic,completed,2025-09-30T15:00:00Z,2025-09-30T17:00:00Z,18204.8,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0250_2,veh_0250,sp_006,inspection,completed,2026-01-25T06:00:00Z,2026-01-25T11:00:00Z,28148.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0251_1,veh_0251,sp_006,preventive,completed,2026-01-22T09:00:00Z,2026-01-22T15:00:00Z,20395.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0251_2,veh_0251,sp_006,repair,completed,2026-04-10T23:00:00Z,2026-04-11T07:00:00Z,26469.3,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0253_1,veh_0253,sp_002,preventive,completed,2025-11-13T10:00:00Z,2025-11-13T17:00:00Z,29369.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0253_2,veh_0253,sp_010,preventive,completed,2026-02-09T23:00:00Z,2026-02-10T00:00:00Z,37754.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0253_3,veh_0253,sp_008,preventive,completed,2026-06-18T15:00:00Z,2026-06-18T22:00:00Z,55358.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0255_1,veh_0255,sp_010,preventive,completed,2025-11-17T14:00:00Z,2025-11-17T21:00:00Z,16969.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0255_2,veh_0255,sp_002,inspection,completed,2026-02-27T00:00:00Z,2026-02-27T03:00:00Z,28830.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0256_1,veh_0256,sp_012,preventive,completed,2025-11-12T08:00:00Z,2025-11-12T09:00:00Z,23885.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0256_2,veh_0256,sp_004,preventive,completed,2026-01-28T00:00:00Z,2026-01-28T05:00:00Z,32847.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0257_1,veh_0257,sp_002,preventive,completed,2025-10-21T13:00:00Z,2025-10-21T18:00:00Z,23326.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0257_2,veh_0257,sp_008,preventive,completed,2026-02-01T03:00:00Z,2026-02-01T04:00:00Z,41473.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0257_3,veh_0257,sp_002,preventive,completed,2026-06-03T18:00:00Z,2026-06-04T01:00:00Z,45959.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0258_1,veh_0258,sp_005,inspection,completed,2025-11-03T07:00:00Z,2025-11-03T09:00:00Z,16716.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0258_2,veh_0258,sp_001,preventive,completed,2026-01-05T15:00:00Z,2026-01-05T22:00:00Z,26730.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0259_1,veh_0259,sp_010,repair,completed,2025-11-10T12:00:00Z,2025-11-10T19:00:00Z,18490.0,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0259_2,veh_0259,sp_002,repair,completed,2026-01-19T04:00:00Z,2026-01-19T08:00:00Z,26159.7,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0260_1,veh_0260,sp_004,preventive,completed,2025-12-27T08:00:00Z,2025-12-27T15:00:00Z,22805.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0261_1,veh_0261,sp_004,preventive,completed,2025-08-08T10:00:00Z,2025-08-08T12:00:00Z,7166.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0261_2,veh_0261,sp_012,diagnostic,completed,2025-11-15T21:00:00Z,2025-11-16T01:00:00Z,26761.3,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0262_1,veh_0262,sp_004,repair,completed,2025-08-02T16:00:00Z,2025-08-02T21:00:00Z,23226.5,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0262_2,veh_0262,sp_012,preventive,completed,2025-11-10T01:00:00Z,2025-11-10T07:00:00Z,40647.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0262_3,veh_0262,sp_004,repair,completed,2026-03-30T13:00:00Z,2026-03-30T14:00:00Z,60063.6,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0264_1,veh_0264,sp_008,repair,completed,2026-01-24T10:00:00Z,2026-01-24T16:00:00Z,17571.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0264_2,veh_0264,sp_005,inspection,completed,2026-06-06T18:00:00Z,2026-06-07T00:00:00Z,30054.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0265_1,veh_0265,sp_010,preventive,completed,2025-12-26T12:00:00Z,2025-12-26T18:00:00Z,22811.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0265_2,veh_0265,sp_005,diagnostic,completed,2026-04-29T23:00:00Z,2026-04-30T03:00:00Z,40793.6,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0266_1,veh_0266,sp_006,preventive,completed,2025-11-23T16:00:00Z,2025-11-23T17:00:00Z,29873.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0266_2,veh_0266,sp_006,inspection,completed,2026-03-29T23:00:00Z,2026-03-30T00:00:00Z,42779.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0267_1,veh_0267,sp_010,inspection,completed,2025-10-23T16:00:00Z,2025-10-23T17:00:00Z,17084.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0267_2,veh_0267,sp_002,preventive,completed,2025-12-29T04:00:00Z,2025-12-29T10:00:00Z,32261.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0268_1,veh_0268,sp_006,inspection,completed,2025-09-19T16:00:00Z,2025-09-19T21:00:00Z,20399.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0269_1,veh_0269,sp_012,inspection,completed,2025-11-19T12:00:00Z,2025-11-19T20:00:00Z,18671.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0269_2,veh_0269,sp_004,preventive,completed,2026-03-25T20:00:00Z,2026-03-26T02:00:00Z,27573.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0269_3,veh_0269,sp_004,repair,completed,2026-07-17T08:00:00Z,2026-07-17T15:00:00Z,44369.8,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0270_1,veh_0270,sp_009,repair,completed,2025-11-14T12:00:00Z,2025-11-14T16:00:00Z,22091.0,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0270_2,veh_0270,sp_009,preventive,completed,2026-04-14T01:00:00Z,2026-04-14T09:00:00Z,36102.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0270_3,veh_0270,sp_golden_east,preventive,completed,2026-07-04T15:00:00Z,2026-07-04T18:00:00Z,51712.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0271_1,veh_0271,sp_006,diagnostic,completed,2025-09-04T07:00:00Z,2025-09-04T09:00:00Z,10103.6,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0271_2,veh_0271,sp_005,inspection,completed,2026-01-06T23:00:00Z,2026-01-07T03:00:00Z,25394.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0271_3,veh_0271,sp_006,inspection,completed,2026-03-19T15:00:00Z,2026-03-19T23:00:00Z,44913.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0273_1,veh_0273,sp_012,preventive,completed,2025-09-22T10:00:00Z,2025-09-22T15:00:00Z,11643.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0273_2,veh_0273,sp_006,repair,completed,2026-02-18T02:00:00Z,2026-02-18T07:00:00Z,25543.4,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0275_1,veh_0275,sp_002,preventive,completed,2025-11-30T12:00:00Z,2025-11-30T13:00:00Z,19204.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0276_1,veh_0276,sp_golden_east,diagnostic,completed,2025-08-25T12:00:00Z,2025-08-25T17:00:00Z,19709.4,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0276_2,veh_0276,sp_009,diagnostic,completed,2025-12-07T19:00:00Z,2025-12-08T01:00:00Z,24904.8,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0276_3,veh_0276,sp_001,repair,completed,2026-03-21T02:00:00Z,2026-03-21T03:00:00Z,35418.4,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0277_1,veh_0277,sp_002,repair,completed,2025-11-03T08:00:00Z,2025-11-03T15:00:00Z,20113.0,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0278_1,veh_0278,sp_005,preventive,completed,2025-11-23T16:00:00Z,2025-11-23T20:00:00Z,13122.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0279_1,veh_0279,sp_007,diagnostic,completed,2025-12-05T08:00:00Z,2025-12-05T14:00:00Z,28749.1,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0281_1,veh_0281,sp_002,recall,completed,2025-10-09T13:00:00Z,2025-10-09T14:00:00Z,18602.7,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0281_2,veh_0281,sp_008,inspection,completed,2026-02-19T22:00:00Z,2026-02-19T23:00:00Z,36517.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0283_1,veh_0283,sp_010,inspection,completed,2025-10-04T10:00:00Z,2025-10-04T11:00:00Z,24376.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0284_1,veh_0284,sp_004,preventive,completed,2025-12-05T12:00:00Z,2025-12-05T15:00:00Z,15462.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0285_1,veh_0285,sp_golden_east,preventive,completed,2025-10-14T07:00:00Z,2025-10-14T12:00:00Z,21914.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0286_1,veh_0286,sp_012,preventive,completed,2025-08-25T07:00:00Z,2025-08-25T11:00:00Z,22409.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0286_2,veh_0286,sp_003,preventive,completed,2025-12-16T20:00:00Z,2025-12-17T03:00:00Z,38555.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0286_3,veh_0286,sp_003,preventive,completed,2026-03-10T09:00:00Z,2026-03-10T10:00:00Z,56676.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0288_1,veh_0288,sp_004,preventive,completed,2025-10-12T10:00:00Z,2025-10-12T14:00:00Z,24105.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0289_1,veh_0289,sp_008,inspection,completed,2025-11-23T11:00:00Z,2025-11-23T15:00:00Z,15193.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0289_2,veh_0289,sp_002,preventive,completed,2026-02-03T22:00:00Z,2026-02-04T01:00:00Z,25732.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0289_3,veh_0289,sp_008,inspection,completed,2026-06-24T08:00:00Z,2026-06-24T16:00:00Z,39752.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0291_1,veh_0291,sp_002,inspection,completed,2025-10-25T09:00:00Z,2025-10-25T12:00:00Z,23578.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0291_2,veh_0291,sp_002,repair,completed,2026-01-29T18:00:00Z,2026-01-29T20:00:00Z,36908.1,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0292_1,veh_0292,sp_golden_east,diagnostic,completed,2025-12-02T14:00:00Z,2025-12-02T21:00:00Z,16360.2,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0292_2,veh_0292,sp_009,preventive,completed,2026-04-30T21:00:00Z,2026-05-01T02:00:00Z,32285.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0293_1,veh_0293,sp_012,repair,completed,2025-08-01T14:00:00Z,2025-08-01T21:00:00Z,12697.1,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0293_2,veh_0293,sp_004,repair,completed,2025-11-21T00:00:00Z,2025-11-21T06:00:00Z,17375.0,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0294_1,veh_0294,sp_003,preventive,completed,2025-08-02T16:00:00Z,2025-08-02T22:00:00Z,13287.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0294_2,veh_0294,sp_003,preventive,completed,2025-10-03T01:00:00Z,2025-10-03T06:00:00Z,32158.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0295_1,veh_0295,sp_008,repair,completed,2025-12-15T15:00:00Z,2025-12-15T23:00:00Z,29692.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0296_1,veh_0296,sp_005,preventive,completed,2025-10-21T15:00:00Z,2025-10-21T19:00:00Z,23449.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0298_1,veh_0298,sp_007,preventive,completed,2025-12-12T16:00:00Z,2025-12-12T19:00:00Z,27827.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0301_1,veh_0301,sp_007,preventive,completed,2025-09-10T11:00:00Z,2025-09-10T13:00:00Z,13837.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0301_2,veh_0301,sp_006,repair,completed,2025-11-10T23:00:00Z,2025-11-11T02:00:00Z,20419.1,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0302_1,veh_0302,sp_006,preventive,completed,2025-10-17T08:00:00Z,2025-10-17T13:00:00Z,15525.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0302_2,veh_0302,sp_005,repair,completed,2025-12-29T21:00:00Z,2025-12-30T04:00:00Z,24418.9,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0303_1,veh_0303,sp_006,diagnostic,completed,2025-12-18T10:00:00Z,2025-12-18T11:00:00Z,17343.9,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0303_2,veh_0303,sp_006,inspection,completed,2026-05-02T18:00:00Z,2026-05-02T19:00:00Z,28231.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0303_3,veh_0303,sp_006,preventive,completed,2026-08-10T03:00:00Z,2026-08-10T11:00:00Z,39133.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0304_1,veh_0304,sp_012,recall,completed,2025-08-19T08:00:00Z,2025-08-19T10:00:00Z,30697.9,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0304_2,veh_0304,sp_006,inspection,completed,2026-01-15T16:00:00Z,2026-01-15T20:00:00Z,35355.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0304_3,veh_0304,sp_007,inspection,completed,2026-04-01T02:00:00Z,2026-04-01T03:00:00Z,42051.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0305_1,veh_0305,sp_001,preventive,completed,2025-11-18T16:00:00Z,2025-11-18T18:00:00Z,25504.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0306_1,veh_0306,sp_008,inspection,completed,2025-10-29T13:00:00Z,2025-10-29T15:00:00Z,17956.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0307_1,veh_0307,sp_006,preventive,completed,2026-01-10T15:00:00Z,2026-01-10T22:00:00Z,21917.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0307_2,veh_0307,sp_002,inspection,completed,2026-03-17T05:00:00Z,2026-03-17T10:00:00Z,34818.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0308_1,veh_0308,sp_004,inspection,completed,2025-12-08T10:00:00Z,2025-12-08T13:00:00Z,21826.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0308_2,veh_0308,sp_004,preventive,completed,2026-05-03T20:00:00Z,2026-05-04T01:00:00Z,33008.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0309_1,veh_0309,sp_004,diagnostic,completed,2025-09-12T11:00:00Z,2025-09-12T19:00:00Z,8471.7,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0311_1,veh_0311,sp_012,repair,completed,2026-01-17T16:00:00Z,2026-01-17T21:00:00Z,21352.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0311_2,veh_0311,sp_002,preventive,completed,2026-04-04T04:00:00Z,2026-04-04T09:00:00Z,32980.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0311_3,veh_0311,sp_007,repair,completed,2026-06-05T19:00:00Z,2026-06-06T00:00:00Z,51034.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0312_1,veh_0312,sp_003,preventive,completed,2025-09-28T16:00:00Z,2025-09-29T00:00:00Z,17334.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0312_2,veh_0312,sp_012,preventive,completed,2026-01-29T06:00:00Z,2026-01-29T09:00:00Z,33099.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0313_1,veh_0313,sp_005,diagnostic,completed,2025-10-25T15:00:00Z,2025-10-25T21:00:00Z,16302.7,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0314_1,veh_0314,sp_006,preventive,completed,2025-11-14T11:00:00Z,2025-11-14T16:00:00Z,22518.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0314_2,veh_0314,sp_002,repair,completed,2026-03-28T03:00:00Z,2026-03-28T07:00:00Z,31353.0,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0315_1,veh_0315,sp_002,preventive,completed,2025-10-30T14:00:00Z,2025-10-30T18:00:00Z,12552.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0316_1,veh_0316,sp_012,inspection,completed,2025-09-13T12:00:00Z,2025-09-13T20:00:00Z,22676.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0316_2,veh_0316,sp_004,inspection,completed,2025-12-22T03:00:00Z,2025-12-22T04:00:00Z,39291.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0316_3,veh_0316,sp_012,diagnostic,completed,2026-03-24T10:00:00Z,2026-03-24T11:00:00Z,57674.6,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0317_1,veh_0317,sp_004,repair,completed,2025-08-13T16:00:00Z,2025-08-13T19:00:00Z,17468.3,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0320_1,veh_0320,sp_012,inspection,completed,2026-01-19T09:00:00Z,2026-01-19T13:00:00Z,15979.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0322_1,veh_0322,sp_001,inspection,completed,2025-10-28T09:00:00Z,2025-10-28T12:00:00Z,23727.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0322_2,veh_0322,sp_008,repair,completed,2026-01-15T23:00:00Z,2026-01-16T07:00:00Z,36893.4,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0323_1,veh_0323,sp_004,diagnostic,completed,2025-08-24T13:00:00Z,2025-08-24T14:00:00Z,8460.4,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0323_2,veh_0323,sp_004,diagnostic,completed,2025-10-27T21:00:00Z,2025-10-28T02:00:00Z,20232.8,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0324_1,veh_0324,sp_010,preventive,completed,2025-10-19T16:00:00Z,2025-10-19T21:00:00Z,22570.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0325_1,veh_0325,sp_012,inspection,completed,2025-09-16T12:00:00Z,2025-09-16T15:00:00Z,14044.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0325_2,veh_0325,sp_004,inspection,completed,2025-12-18T21:00:00Z,2025-12-19T00:00:00Z,18763.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0326_1,veh_0326,sp_002,preventive,completed,2025-10-29T16:00:00Z,2025-10-29T18:00:00Z,19086.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0326_2,veh_0326,sp_007,preventive,completed,2026-01-18T03:00:00Z,2026-01-18T11:00:00Z,31069.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0327_1,veh_0327,sp_008,preventive,completed,2025-10-27T10:00:00Z,2025-10-27T12:00:00Z,30557.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0327_2,veh_0327,sp_002,inspection,completed,2026-01-19T22:00:00Z,2026-01-20T00:00:00Z,41760.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0328_1,veh_0328,sp_002,preventive,completed,2025-12-17T12:00:00Z,2025-12-17T15:00:00Z,20637.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0328_2,veh_0328,sp_008,repair,completed,2026-02-18T19:00:00Z,2026-02-18T20:00:00Z,36897.6,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0328_3,veh_0328,sp_002,preventive,completed,2026-05-04T02:00:00Z,2026-05-04T09:00:00Z,54693.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0329_1,veh_0329,sp_012,inspection,completed,2025-08-14T13:00:00Z,2025-08-14T21:00:00Z,23881.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0330_1,veh_0330,sp_010,preventive,completed,2025-11-21T09:00:00Z,2025-11-21T12:00:00Z,17416.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0330_2,veh_0330,sp_008,preventive,completed,2026-03-05T01:00:00Z,2026-03-05T02:00:00Z,23373.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0331_1,veh_0331,sp_002,preventive,completed,2025-11-14T13:00:00Z,2025-11-14T17:00:00Z,21529.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0331_2,veh_0331,sp_006,preventive,completed,2026-01-27T05:00:00Z,2026-01-27T12:00:00Z,31000.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0332_1,veh_0332,sp_004,inspection,completed,2025-12-04T11:00:00Z,2025-12-04T13:00:00Z,24724.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0332_2,veh_0332,sp_004,preventive,completed,2026-04-08T01:00:00Z,2026-04-08T04:00:00Z,36202.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0335_1,veh_0335,sp_010,repair,completed,2025-08-08T16:00:00Z,2025-08-09T00:00:00Z,9135.0,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0336_1,veh_0336,sp_005,inspection,completed,2025-11-14T13:00:00Z,2025-11-14T18:00:00Z,18081.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0337_1,veh_0337,sp_004,preventive,completed,2025-12-16T12:00:00Z,2025-12-16T13:00:00Z,28191.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0337_2,veh_0337,sp_004,preventive,completed,2026-04-08T02:00:00Z,2026-04-08T06:00:00Z,45124.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0337_3,veh_0337,sp_012,inspection,completed,2026-07-04T15:00:00Z,2026-07-04T16:00:00Z,54505.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0338_1,veh_0338,sp_012,preventive,completed,2025-11-06T11:00:00Z,2025-11-06T12:00:00Z,23154.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0338_2,veh_0338,sp_003,inspection,completed,2026-01-29T19:00:00Z,2026-01-30T01:00:00Z,31882.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0338_3,veh_0338,sp_012,preventive,completed,2026-04-24T02:00:00Z,2026-04-24T06:00:00Z,36499.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0339_1,veh_0339,sp_010,preventive,completed,2025-09-26T12:00:00Z,2025-09-26T14:00:00Z,17722.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0339_2,veh_0339,sp_010,diagnostic,completed,2026-01-06T22:00:00Z,2026-01-07T05:00:00Z,34049.7,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0340_1,veh_0340,sp_006,repair,completed,2025-10-14T13:00:00Z,2025-10-14T16:00:00Z,25466.0,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0342_1,veh_0342,sp_002,preventive,completed,2025-08-29T16:00:00Z,2025-08-29T21:00:00Z,15754.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0343_1,veh_0343,sp_005,preventive,completed,2025-10-12T11:00:00Z,2025-10-12T16:00:00Z,23047.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0343_2,veh_0343,sp_006,repair,completed,2026-02-24T22:00:00Z,2026-02-25T00:00:00Z,31307.3,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0343_3,veh_0343,sp_005,preventive,completed,2026-05-24T06:00:00Z,2026-05-24T08:00:00Z,45638.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0344_1,veh_0344,sp_002,inspection,completed,2026-02-09T11:00:00Z,2026-02-09T19:00:00Z,11697.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0345_1,veh_0345,sp_006,inspection,completed,2026-01-02T14:00:00Z,2026-01-02T17:00:00Z,17341.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0346_1,veh_0346,sp_006,preventive,completed,2025-08-22T14:00:00Z,2025-08-22T22:00:00Z,29715.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0346_2,veh_0346,sp_010,inspection,completed,2025-12-24T00:00:00Z,2025-12-24T01:00:00Z,45362.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0347_1,veh_0347,sp_006,preventive,completed,2025-11-26T11:00:00Z,2025-11-26T15:00:00Z,23309.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0347_2,veh_0347,sp_010,recall,completed,2026-03-21T21:00:00Z,2026-03-21T22:00:00Z,38460.3,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0348_1,veh_0348,sp_008,preventive,completed,2025-09-21T11:00:00Z,2025-09-21T19:00:00Z,22365.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0348_2,veh_0348,sp_005,inspection,completed,2026-02-16T20:00:00Z,2026-02-17T02:00:00Z,37974.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0348_3,veh_0348,sp_005,preventive,completed,2026-04-24T11:00:00Z,2026-04-24T17:00:00Z,49161.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0349_1,veh_0349,sp_004,inspection,completed,2026-02-03T12:00:00Z,2026-02-03T19:00:00Z,25605.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0349_2,veh_0349,sp_004,preventive,completed,2026-04-21T04:00:00Z,2026-04-21T09:00:00Z,40217.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0349_3,veh_0349,sp_004,repair,completed,2026-08-10T13:00:00Z,2026-08-10T18:00:00Z,48141.7,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0350_1,veh_0350,sp_002,inspection,completed,2025-12-11T08:00:00Z,2025-12-11T12:00:00Z,13790.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0350_2,veh_0350,sp_012,inspection,completed,2026-02-18T19:00:00Z,2026-02-19T01:00:00Z,31575.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0350_3,veh_0350,sp_007,preventive,completed,2026-05-13T06:00:00Z,2026-05-13T08:00:00Z,43885.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0352_1,veh_0352,sp_012,preventive,completed,2025-11-06T15:00:00Z,2025-11-06T16:00:00Z,16030.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0352_2,veh_0352,sp_004,preventive,completed,2026-04-01T01:00:00Z,2026-04-01T08:00:00Z,28533.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0354_1,veh_0354,sp_006,preventive,completed,2025-08-14T09:00:00Z,2025-08-14T14:00:00Z,23613.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0356_1,veh_0356,sp_006,preventive,completed,2026-02-13T10:00:00Z,2026-02-13T11:00:00Z,18460.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0357_1,veh_0357,sp_008,preventive,completed,2025-09-19T07:00:00Z,2025-09-19T14:00:00Z,29294.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0357_2,veh_0357,sp_002,inspection,completed,2026-01-13T14:00:00Z,2026-01-13T20:00:00Z,43547.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0358_1,veh_0358,sp_009,repair,completed,2025-10-11T08:00:00Z,2025-10-11T13:00:00Z,18605.5,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0359_1,veh_0359,sp_004,inspection,completed,2025-10-15T07:00:00Z,2025-10-15T11:00:00Z,16992.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0359_2,veh_0359,sp_012,repair,completed,2026-02-19T22:00:00Z,2026-02-19T23:00:00Z,29703.8,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0360_1,veh_0360,sp_006,repair,completed,2026-01-14T14:00:00Z,2026-01-14T19:00:00Z,11368.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0361_1,veh_0361,sp_007,preventive,completed,2025-09-03T13:00:00Z,2025-09-03T16:00:00Z,28417.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0362_1,veh_0362,sp_005,inspection,completed,2025-08-28T08:00:00Z,2025-08-28T14:00:00Z,18991.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0363_1,veh_0363,sp_006,repair,completed,2025-12-20T07:00:00Z,2025-12-20T08:00:00Z,17113.8,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0364_1,veh_0364,sp_009,preventive,completed,2025-12-07T09:00:00Z,2025-12-07T15:00:00Z,18991.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0364_2,veh_0364,sp_005,inspection,completed,2026-03-24T19:00:00Z,2026-03-25T00:00:00Z,27465.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0366_1,veh_0366,sp_005,preventive,completed,2025-12-31T09:00:00Z,2025-12-31T12:00:00Z,11728.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0367_1,veh_0367,sp_006,repair,completed,2025-09-23T16:00:00Z,2025-09-23T20:00:00Z,17350.4,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0368_1,veh_0368,sp_012,inspection,completed,2025-11-27T16:00:00Z,2025-11-27T19:00:00Z,13941.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0368_2,veh_0368,sp_012,inspection,completed,2026-02-10T02:00:00Z,2026-02-10T07:00:00Z,32837.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0368_3,veh_0368,sp_006,preventive,completed,2026-06-14T11:00:00Z,2026-06-14T13:00:00Z,49096.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0369_1,veh_0369,sp_002,diagnostic,completed,2025-10-12T11:00:00Z,2025-10-12T15:00:00Z,16236.9,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0369_2,veh_0369,sp_002,repair,completed,2026-02-19T20:00:00Z,2026-02-20T00:00:00Z,31638.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0369_3,veh_0369,sp_002,preventive,completed,2026-06-02T04:00:00Z,2026-06-02T11:00:00Z,43910.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0370_1,veh_0370,sp_006,preventive,completed,2025-11-01T11:00:00Z,2025-11-01T15:00:00Z,14679.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0370_2,veh_0370,sp_006,inspection,completed,2026-02-04T03:00:00Z,2026-02-04T07:00:00Z,19098.8,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0371_1,veh_0371,sp_002,inspection,completed,2026-01-12T12:00:00Z,2026-01-12T13:00:00Z,25565.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0371_2,veh_0371,sp_008,preventive,completed,2026-04-27T03:00:00Z,2026-04-27T04:00:00Z,42414.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0373_1,veh_0373,sp_004,repair,completed,2025-10-07T08:00:00Z,2025-10-07T14:00:00Z,26255.4,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0373_2,veh_0373,sp_004,inspection,completed,2026-01-30T15:00:00Z,2026-01-30T18:00:00Z,37899.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0373_3,veh_0373,sp_012,preventive,completed,2026-06-10T07:00:00Z,2026-06-10T09:00:00Z,49730.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0374_1,veh_0374,sp_001,inspection,completed,2025-10-16T12:00:00Z,2025-10-16T13:00:00Z,22090.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0375_1,veh_0375,sp_012,preventive,completed,2025-07-25T08:00:00Z,2025-07-25T10:00:00Z,18780.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0375_2,veh_0375,sp_006,repair,completed,2025-11-20T20:00:00Z,2025-11-20T21:00:00Z,34175.1,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0377_1,veh_0377,sp_012,preventive,completed,2025-08-30T10:00:00Z,2025-08-30T18:00:00Z,31770.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0378_1,veh_0378,sp_002,inspection,completed,2025-12-20T16:00:00Z,2025-12-20T17:00:00Z,21089.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0378_2,veh_0378,sp_010,inspection,completed,2026-03-24T06:00:00Z,2026-03-24T14:00:00Z,27319.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0379_1,veh_0379,sp_002,preventive,completed,2026-01-31T15:00:00Z,2026-01-31T19:00:00Z,11660.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0379_2,veh_0379,sp_008,preventive,completed,2026-04-07T04:00:00Z,2026-04-07T06:00:00Z,29444.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0379_3,veh_0379,sp_008,preventive,completed,2026-08-24T19:00:00Z,2026-08-25T00:00:00Z,46020.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0380_1,veh_0380,sp_004,preventive,completed,2025-09-24T08:00:00Z,2025-09-24T15:00:00Z,24319.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0380_2,veh_0380,sp_012,preventive,completed,2025-12-20T18:00:00Z,2025-12-20T21:00:00Z,41701.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0382_1,veh_0382,sp_004,diagnostic,completed,2025-11-14T16:00:00Z,2025-11-14T22:00:00Z,18118.2,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0384_1,veh_0384,sp_002,inspection,completed,2025-11-27T09:00:00Z,2025-11-27T11:00:00Z,10931.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0384_2,veh_0384,sp_002,preventive,completed,2026-02-01T20:00:00Z,2026-02-01T22:00:00Z,22830.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0385_1,veh_0385,sp_006,preventive,completed,2025-12-23T08:00:00Z,2025-12-23T09:00:00Z,24671.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0386_1,veh_0386,sp_002,inspection,completed,2025-09-19T07:00:00Z,2025-09-19T08:00:00Z,23859.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0386_2,veh_0386,sp_007,inspection,completed,2026-01-13T21:00:00Z,2026-01-14T02:00:00Z,28304.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0386_3,veh_0386,sp_006,inspection,completed,2026-06-02T04:00:00Z,2026-06-02T11:00:00Z,35072.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0387_1,veh_0387,sp_007,inspection,completed,2025-12-06T07:00:00Z,2025-12-06T14:00:00Z,28063.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0387_2,veh_0387,sp_007,repair,completed,2026-04-12T19:00:00Z,2026-04-12T20:00:00Z,39614.0,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0390_1,veh_0390,sp_006,diagnostic,completed,2025-10-20T08:00:00Z,2025-10-20T12:00:00Z,17641.0,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0390_2,veh_0390,sp_006,preventive,completed,2026-01-19T00:00:00Z,2026-01-19T08:00:00Z,29415.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0391_1,veh_0391,sp_002,preventive,completed,2025-12-15T12:00:00Z,2025-12-15T20:00:00Z,24026.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0392_1,veh_0392,sp_001,preventive,completed,2025-11-30T08:00:00Z,2025-11-30T13:00:00Z,20525.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0393_1,veh_0393,sp_006,preventive,completed,2025-10-25T13:00:00Z,2025-10-25T21:00:00Z,16909.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0395_1,veh_0395,sp_005,preventive,completed,2025-09-15T12:00:00Z,2025-09-15T15:00:00Z,22525.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0396_1,veh_0396,sp_008,preventive,completed,2025-10-31T14:00:00Z,2025-10-31T21:00:00Z,25684.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0396_2,veh_0396,sp_002,preventive,completed,2026-01-25T05:00:00Z,2026-01-25T13:00:00Z,36677.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0397_1,veh_0397,sp_002,preventive,completed,2025-10-10T11:00:00Z,2025-10-10T18:00:00Z,27596.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0398_1,veh_0398,sp_004,inspection,completed,2025-11-08T14:00:00Z,2025-11-08T21:00:00Z,22932.7,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0399_1,veh_0399,sp_005,inspection,completed,2026-01-12T09:00:00Z,2026-01-12T13:00:00Z,9345.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0399_2,veh_0399,sp_005,diagnostic,completed,2026-05-22T23:00:00Z,2026-05-23T07:00:00Z,14302.3,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0402_1,veh_0402,sp_002,preventive,completed,2025-11-15T15:00:00Z,2025-11-15T21:00:00Z,17942.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0402_2,veh_0402,sp_002,recall,completed,2026-03-26T02:00:00Z,2026-03-26T08:00:00Z,32181.3,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0403_1,veh_0403,sp_001,preventive,completed,2025-12-18T13:00:00Z,2025-12-18T16:00:00Z,23452.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0403_2,veh_0403,sp_009,preventive,completed,2026-04-29T20:00:00Z,2026-04-30T04:00:00Z,30334.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0404_1,veh_0404,sp_012,inspection,completed,2026-01-18T15:00:00Z,2026-01-18T16:00:00Z,18377.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0405_1,veh_0405,sp_002,preventive,completed,2025-08-29T11:00:00Z,2025-08-29T12:00:00Z,16635.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0405_2,veh_0405,sp_010,repair,completed,2026-01-15T02:00:00Z,2026-01-15T07:00:00Z,33987.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0406_1,veh_0406,sp_006,repair,completed,2025-10-12T10:00:00Z,2025-10-12T13:00:00Z,26542.4,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0406_2,veh_0406,sp_002,repair,completed,2026-01-01T22:00:00Z,2026-01-02T06:00:00Z,37491.3,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0406_3,veh_0406,sp_012,diagnostic,completed,2026-05-21T13:00:00Z,2026-05-21T15:00:00Z,42257.7,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0407_1,veh_0407,sp_002,preventive,completed,2025-12-06T10:00:00Z,2025-12-06T15:00:00Z,19875.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0407_2,veh_0407,sp_002,preventive,completed,2026-04-06T17:00:00Z,2026-04-06T23:00:00Z,32219.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0408_1,veh_0408,sp_012,repair,completed,2026-02-02T16:00:00Z,2026-02-02T20:00:00Z,10648.2,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0408_2,veh_0408,sp_007,recall,completed,2026-05-29T23:00:00Z,2026-05-30T06:00:00Z,16065.5,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0408_3,veh_0408,sp_012,preventive,completed,2026-09-06T11:00:00Z,2026-09-06T18:00:00Z,29299.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0410_1,veh_0410,sp_012,diagnostic,completed,2025-11-04T10:00:00Z,2025-11-04T13:00:00Z,28823.9,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0410_2,veh_0410,sp_004,preventive,completed,2026-02-02T01:00:00Z,2026-02-02T03:00:00Z,35954.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0410_3,veh_0410,sp_004,inspection,completed,2026-06-17T08:00:00Z,2026-06-17T10:00:00Z,44580.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0411_1,veh_0411,sp_006,diagnostic,completed,2025-11-05T12:00:00Z,2025-11-05T17:00:00Z,25820.8,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0411_2,veh_0411,sp_006,inspection,completed,2026-03-18T03:00:00Z,2026-03-18T11:00:00Z,41659.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0411_3,veh_0411,sp_006,preventive,completed,2026-06-26T19:00:00Z,2026-06-27T00:00:00Z,55305.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0413_1,veh_0413,sp_007,preventive,completed,2025-10-12T08:00:00Z,2025-10-12T10:00:00Z,8254.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0413_2,veh_0413,sp_007,diagnostic,completed,2026-01-06T21:00:00Z,2026-01-07T00:00:00Z,19873.1,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0415_1,veh_0415,sp_001,preventive,completed,2025-10-29T15:00:00Z,2025-10-29T23:00:00Z,24421.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0415_2,veh_0415,sp_005,inspection,completed,2026-01-20T23:00:00Z,2026-01-21T03:00:00Z,37737.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0416_1,veh_0416,sp_golden_east,inspection,completed,2025-10-15T11:00:00Z,2025-10-15T18:00:00Z,21149.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0416_2,veh_0416,sp_golden_east,preventive,completed,2026-01-04T20:00:00Z,2026-01-04T22:00:00Z,27172.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0418_1,veh_0418,sp_006,diagnostic,completed,2025-11-01T11:00:00Z,2025-11-01T13:00:00Z,24876.7,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0419_1,veh_0419,sp_008,preventive,completed,2025-09-23T13:00:00Z,2025-09-23T14:00:00Z,29437.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0421_1,veh_0421,sp_008,preventive,completed,2025-09-27T14:00:00Z,2025-09-27T17:00:00Z,22196.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0421_2,veh_0421,sp_008,preventive,completed,2025-12-21T02:00:00Z,2025-12-21T07:00:00Z,26959.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0421_3,veh_0421,sp_008,preventive,completed,2026-03-08T12:00:00Z,2026-03-08T19:00:00Z,43742.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0422_1,veh_0422,sp_005,recall,completed,2025-09-15T11:00:00Z,2025-09-15T14:00:00Z,16121.0,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0423_1,veh_0423,sp_008,repair,completed,2026-01-18T16:00:00Z,2026-01-18T23:00:00Z,18313.5,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0423_2,veh_0423,sp_008,inspection,completed,2026-05-17T01:00:00Z,2026-05-17T09:00:00Z,30947.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0424_1,veh_0424,sp_012,preventive,completed,2025-10-26T08:00:00Z,2025-10-26T09:00:00Z,20826.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0425_1,veh_0425,sp_004,inspection,completed,2025-09-04T15:00:00Z,2025-09-04T22:00:00Z,27631.2,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0425_2,veh_0425,sp_004,inspection,completed,2026-01-16T07:00:00Z,2026-01-16T13:00:00Z,41595.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0425_3,veh_0425,sp_004,repair,completed,2026-06-02T23:00:00Z,2026-06-03T05:00:00Z,58671.4,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0426_1,veh_0426,sp_002,preventive,completed,2025-09-06T15:00:00Z,2025-09-06T18:00:00Z,17260.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0426_2,veh_0426,sp_008,preventive,completed,2025-12-24T03:00:00Z,2025-12-24T06:00:00Z,36940.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0427_1,veh_0427,sp_009,preventive,completed,2025-11-24T07:00:00Z,2025-11-24T14:00:00Z,22144.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0427_2,veh_0427,sp_001,preventive,completed,2026-04-14T20:00:00Z,2026-04-14T21:00:00Z,34549.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0428_1,veh_0428,sp_006,inspection,completed,2026-01-06T16:00:00Z,2026-01-06T18:00:00Z,26825.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0429_1,veh_0429,sp_002,preventive,completed,2025-10-07T15:00:00Z,2025-10-07T21:00:00Z,11762.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0429_2,veh_0429,sp_008,preventive,completed,2025-12-26T22:00:00Z,2025-12-27T00:00:00Z,17149.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0430_1,veh_0430,sp_006,repair,completed,2025-12-13T12:00:00Z,2025-12-13T17:00:00Z,17720.3,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0430_2,veh_0430,sp_005,preventive,completed,2026-05-11T19:00:00Z,2026-05-11T20:00:00Z,28921.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0430_3,veh_0430,sp_006,repair,completed,2026-09-29T04:00:00Z,2026-09-29T08:00:00Z,36454.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0431_1,veh_0431,sp_005,preventive,completed,2026-01-09T07:00:00Z,2026-01-09T14:00:00Z,22578.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0432_1,veh_0432,sp_012,preventive,completed,2025-08-05T13:00:00Z,2025-08-05T19:00:00Z,20524.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0432_2,veh_0432,sp_012,preventive,completed,2025-11-11T00:00:00Z,2025-11-11T02:00:00Z,32454.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0433_1,veh_0433,sp_012,repair,completed,2026-01-15T12:00:00Z,2026-01-15T15:00:00Z,31337.6,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0434_1,veh_0434,sp_011,recall,completed,2025-10-25T11:00:00Z,2025-10-25T17:00:00Z,29774.9,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0434_2,veh_0434,sp_003,preventive,completed,2026-01-08T18:00:00Z,2026-01-09T00:00:00Z,38180.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0436_1,veh_0436,sp_002,preventive,completed,2025-12-20T11:00:00Z,2025-12-20T16:00:00Z,13368.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0436_2,veh_0436,sp_006,inspection,completed,2026-03-04T23:00:00Z,2026-03-05T07:00:00Z,19002.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0438_1,veh_0438,sp_002,repair,completed,2025-11-26T07:00:00Z,2025-11-26T10:00:00Z,18716.2,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0438_2,veh_0438,sp_002,preventive,completed,2026-01-26T21:00:00Z,2026-01-27T05:00:00Z,26870.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0438_3,veh_0438,sp_002,repair,completed,2026-05-28T12:00:00Z,2026-05-28T20:00:00Z,46543.2,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0439_1,veh_0439,sp_006,preventive,completed,2025-12-31T15:00:00Z,2025-12-31T18:00:00Z,16618.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0440_1,veh_0440,sp_004,preventive,completed,2025-11-04T13:00:00Z,2025-11-04T17:00:00Z,26144.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0441_1,veh_0441,sp_011,preventive,completed,2025-08-13T13:00:00Z,2025-08-13T17:00:00Z,22650.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0441_2,veh_0441,sp_011,repair,completed,2025-11-30T23:00:00Z,2025-12-01T05:00:00Z,36184.0,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0441_3,veh_0441,sp_012,repair,completed,2026-04-06T15:00:00Z,2026-04-06T18:00:00Z,43345.0,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0442_1,veh_0442,sp_010,inspection,completed,2025-11-06T13:00:00Z,2025-11-06T17:00:00Z,27925.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0442_2,veh_0442,sp_010,repair,completed,2026-03-23T04:00:00Z,2026-03-23T05:00:00Z,38275.0,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0443_1,veh_0443,sp_007,inspection,completed,2025-10-27T14:00:00Z,2025-10-27T22:00:00Z,13517.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0444_1,veh_0444,sp_012,preventive,completed,2025-12-05T12:00:00Z,2025-12-05T19:00:00Z,13569.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0446_1,veh_0446,sp_008,repair,completed,2025-11-16T09:00:00Z,2025-11-16T14:00:00Z,28793.4,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0447_1,veh_0447,sp_001,inspection,completed,2026-01-26T12:00:00Z,2026-01-26T14:00:00Z,17196.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0447_2,veh_0447,sp_golden_east,inspection,completed,2026-05-13T01:00:00Z,2026-05-13T05:00:00Z,30491.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0448_1,veh_0448,sp_002,inspection,completed,2026-01-07T12:00:00Z,2026-01-07T17:00:00Z,16070.3,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0448_2,veh_0448,sp_002,inspection,completed,2026-03-30T01:00:00Z,2026-03-30T09:00:00Z,23770.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0449_1,veh_0449,sp_006,inspection,completed,2025-09-23T09:00:00Z,2025-09-23T12:00:00Z,22495.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0449_2,veh_0449,sp_002,repair,completed,2026-01-25T22:00:00Z,2026-01-26T04:00:00Z,38619.3,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0450_1,veh_0450,sp_005,preventive,completed,2026-01-19T14:00:00Z,2026-01-19T20:00:00Z,31152.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0451_1,veh_0451,sp_002,repair,completed,2025-08-01T09:00:00Z,2025-08-01T13:00:00Z,17084.4,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0452_1,veh_0452,sp_002,preventive,completed,2025-10-15T16:00:00Z,2025-10-15T18:00:00Z,27215.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0452_2,veh_0452,sp_002,preventive,completed,2026-03-14T00:00:00Z,2026-03-14T07:00:00Z,32821.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0453_1,veh_0453,sp_012,preventive,completed,2025-12-23T15:00:00Z,2025-12-23T20:00:00Z,8359.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0454_1,veh_0454,sp_002,preventive,completed,2025-10-15T15:00:00Z,2025-10-15T18:00:00Z,18723.0,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0454_2,veh_0454,sp_006,preventive,completed,2026-01-18T05:00:00Z,2026-01-18T11:00:00Z,27720.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0455_1,veh_0455,sp_010,preventive,completed,2025-08-17T07:00:00Z,2025-08-17T12:00:00Z,8412.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0456_1,veh_0456,sp_012,inspection,completed,2025-12-21T08:00:00Z,2025-12-21T11:00:00Z,10948.9,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0459_1,veh_0459,sp_012,preventive,completed,2025-09-28T13:00:00Z,2025-09-28T16:00:00Z,26083.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0460_1,veh_0460,sp_012,preventive,completed,2025-07-28T09:00:00Z,2025-07-28T13:00:00Z,28462.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0462_1,veh_0462,sp_008,preventive,completed,2025-07-23T13:00:00Z,2025-07-23T16:00:00Z,19377.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0462_2,veh_0462,sp_008,repair,completed,2025-12-05T22:00:00Z,2025-12-06T03:00:00Z,25644.9,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0463_1,veh_0463,sp_010,preventive,completed,2025-10-19T08:00:00Z,2025-10-19T10:00:00Z,31951.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0463_2,veh_0463,sp_010,diagnostic,completed,2026-01-20T16:00:00Z,2026-01-21T00:00:00Z,50938.0,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0463_3,veh_0463,sp_008,recall,completed,2026-04-09T07:00:00Z,2026-04-09T12:00:00Z,62128.6,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0464_1,veh_0464,sp_012,repair,completed,2025-11-20T08:00:00Z,2025-11-20T15:00:00Z,14595.8,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0464_2,veh_0464,sp_004,repair,completed,2026-02-06T22:00:00Z,2026-02-06T23:00:00Z,27106.5,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0465_1,veh_0465,sp_005,preventive,completed,2026-01-25T09:00:00Z,2026-01-25T16:00:00Z,15786.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0466_1,veh_0466,sp_004,preventive,completed,2025-12-07T16:00:00Z,2025-12-07T20:00:00Z,7430.7,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0466_2,veh_0466,sp_004,recall,completed,2026-02-15T02:00:00Z,2026-02-15T06:00:00Z,26384.6,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0466_3,veh_0466,sp_012,preventive,completed,2026-05-09T17:00:00Z,2026-05-09T22:00:00Z,44560.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0467_1,veh_0467,sp_004,preventive,completed,2025-12-03T07:00:00Z,2025-12-03T14:00:00Z,21060.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0467_2,veh_0467,sp_012,preventive,completed,2026-04-29T18:00:00Z,2026-04-29T23:00:00Z,27928.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0470_1,veh_0470,sp_006,repair,completed,2025-10-21T16:00:00Z,2025-10-21T18:00:00Z,17212.9,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0470_2,veh_0470,sp_002,preventive,completed,2026-02-05T07:00:00Z,2026-02-05T12:00:00Z,22765.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0471_1,veh_0471,sp_004,repair,completed,2025-11-26T10:00:00Z,2025-11-26T16:00:00Z,15344.9,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0472_1,veh_0472,sp_006,repair,completed,2025-08-22T12:00:00Z,2025-08-22T14:00:00Z,16128.7,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0472_2,veh_0472,sp_007,repair,completed,2025-12-26T02:00:00Z,2025-12-26T04:00:00Z,21543.4,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0472_3,veh_0472,sp_012,repair,completed,2026-05-04T17:00:00Z,2026-05-04T21:00:00Z,36750.6,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0473_1,veh_0473,sp_008,repair,completed,2025-09-28T11:00:00Z,2025-09-28T18:00:00Z,18395.6,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0473_2,veh_0473,sp_005,preventive,completed,2026-02-04T03:00:00Z,2026-02-04T11:00:00Z,27537.8,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0473_3,veh_0473,sp_001,preventive,completed,2026-06-19T15:00:00Z,2026-06-19T19:00:00Z,37594.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0474_1,veh_0474,sp_012,repair,completed,2025-08-07T09:00:00Z,2025-08-07T10:00:00Z,29391.7,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0474_2,veh_0474,sp_004,preventive,completed,2025-12-19T19:00:00Z,2025-12-19T23:00:00Z,48177.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0476_1,veh_0476,sp_010,repair,completed,2025-10-05T14:00:00Z,2025-10-05T21:00:00Z,22508.8,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0477_1,veh_0477,sp_012,inspection,completed,2025-12-09T15:00:00Z,2025-12-09T16:00:00Z,17265.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0477_2,veh_0477,sp_012,repair,completed,2026-03-28T02:00:00Z,2026-03-28T07:00:00Z,32366.9,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0481_1,veh_0481,sp_002,repair,completed,2025-11-15T15:00:00Z,2025-11-15T19:00:00Z,23364.4,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0482_1,veh_0482,sp_004,repair,completed,2025-09-24T12:00:00Z,2025-09-24T14:00:00Z,22239.7,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0483_1,veh_0483,sp_002,inspection,completed,2025-11-10T12:00:00Z,2025-11-10T20:00:00Z,13810.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0484_1,veh_0484,sp_001,preventive,completed,2025-11-08T15:00:00Z,2025-11-08T17:00:00Z,23793.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0484_2,veh_0484,sp_001,diagnostic,completed,2026-02-06T23:00:00Z,2026-02-07T00:00:00Z,39728.4,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0485_1,veh_0485,sp_002,preventive,completed,2025-09-15T11:00:00Z,2025-09-15T15:00:00Z,21641.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0485_2,veh_0485,sp_002,inspection,completed,2025-12-08T01:00:00Z,2025-12-08T08:00:00Z,37017.6,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0485_3,veh_0485,sp_008,repair,completed,2026-04-29T17:00:00Z,2026-04-29T20:00:00Z,56843.3,Brake pads replaced,Repair completed,seed-v1/maintenance
+mtn_0488_1,veh_0488,sp_010,inspection,completed,2025-10-08T11:00:00Z,2025-10-08T12:00:00Z,32611.1,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0488_2,veh_0488,sp_005,recall,completed,2026-01-17T01:00:00Z,2026-01-17T05:00:00Z,50395.6,Synthetic recall campaign completed,Repair completed,seed-v1/maintenance
+mtn_0488_3,veh_0488,sp_005,preventive,completed,2026-05-18T16:00:00Z,2026-05-18T17:00:00Z,56270.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0489_1,veh_0489,sp_005,preventive,completed,2025-09-13T12:00:00Z,2025-09-13T20:00:00Z,10885.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0490_1,veh_0490,sp_012,inspection,completed,2025-11-24T09:00:00Z,2025-11-24T10:00:00Z,16019.4,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0490_2,veh_0490,sp_012,preventive,completed,2026-02-06T17:00:00Z,2026-02-07T01:00:00Z,29174.4,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0490_3,veh_0490,sp_002,preventive,completed,2026-06-20T04:00:00Z,2026-06-20T12:00:00Z,42947.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0491_1,veh_0491,sp_005,preventive,completed,2025-09-10T10:00:00Z,2025-09-10T13:00:00Z,20722.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0491_2,veh_0491,sp_008,preventive,completed,2026-01-17T00:00:00Z,2026-01-17T02:00:00Z,33523.6,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0491_3,veh_0491,sp_008,preventive,completed,2026-04-06T08:00:00Z,2026-04-06T13:00:00Z,43206.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0492_1,veh_0492,sp_012,preventive,completed,2025-10-25T09:00:00Z,2025-10-25T15:00:00Z,29890.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0493_1,veh_0493,sp_002,inspection,completed,2025-11-23T11:00:00Z,2025-11-23T19:00:00Z,25322.0,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0494_1,veh_0494,sp_006,repair,completed,2025-11-02T09:00:00Z,2025-11-02T12:00:00Z,22533.6,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0494_2,veh_0494,sp_006,repair,completed,2026-03-26T21:00:00Z,2026-03-27T03:00:00Z,30245.7,Suspension bushing replaced,Repair completed,seed-v1/maintenance
+mtn_0494_3,veh_0494,sp_007,inspection,completed,2026-08-05T11:00:00Z,2026-08-05T13:00:00Z,41966.5,Periodic safety inspection,Completed without findings,seed-v1/maintenance
+mtn_0496_1,veh_0496,sp_009,preventive,completed,2025-09-22T08:00:00Z,2025-09-22T14:00:00Z,13823.5,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0496_2,veh_0496,sp_golden_east,repair,completed,2025-12-23T22:00:00Z,2025-12-24T06:00:00Z,22556.1,Coolant leak repaired,Repair completed,seed-v1/maintenance
+mtn_0496_3,veh_0496,sp_009,preventive,completed,2026-04-24T14:00:00Z,2026-04-24T19:00:00Z,29837.1,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0497_1,veh_0497,sp_012,preventive,completed,2025-10-03T09:00:00Z,2025-10-03T17:00:00Z,20467.3,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0500_1,veh_0500,sp_007,preventive,completed,2025-10-04T07:00:00Z,2025-10-04T15:00:00Z,23232.9,Scheduled preventive service,Completed without findings,seed-v1/maintenance
+mtn_0500_2,veh_0500,sp_012,diagnostic,completed,2026-01-18T17:00:00Z,2026-01-18T18:00:00Z,35532.8,Diagnostic check after warning light,Repair completed,seed-v1/maintenance
+mtn_0500_3,veh_0500,sp_007,preventive,completed,2026-03-25T05:00:00Z,2026-03-25T08:00:00Z,48060.2,Scheduled preventive service,Completed without findings,seed-v1/maintenance

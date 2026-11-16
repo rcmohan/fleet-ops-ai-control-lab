@@ -118,7 +118,8 @@ async def create_vehicle(ctx: RequestContext) -> dict[str, Any]:
         await require_fleet(ctx, body.fleetId)
     if body.telematicsUnitId:
         await require_unit(ctx, body.telematicsUnitId)
-        await require_unit_free(ctx, body.telematicsUnitId, None)
+        # A repeat of an import holds the unit itself; that surfaces as ALREADY_EXISTS below.
+        await require_unit_free(ctx, body.telematicsUnitId, body.vehicleId)
     values = body.model_dump(exclude={"vehicleId"})
     columns = ", ".join(["vehicle_id", *(FIELDS[field] for field in values)])
     placeholders = ", ".join(["%s"] * (len(values) + 1))

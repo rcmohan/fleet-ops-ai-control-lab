@@ -9,3 +9,5 @@ tests
 temp
 gateway
 database/docker-init
+seed
+fleetops_seed

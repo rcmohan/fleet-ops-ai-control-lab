@@ -427,6 +427,33 @@ async def test_policy_lookups(mesh: Mesh) -> None:
     assert policy["status"] == "active"
 
 
+async def test_seed_loader_loads_csvs_and_reruns_cleanly(mesh: Mesh, tmp_path) -> None:
+    from fleetops_seed import Loader, build_catalog, mesh_urls
+    from fleetops_seed.csvio import read_catalog, write_catalog
+
+    # Seed IDs (veh_0001, flt_golden, ...) never collide with the random IDs other tests use.
+    write_catalog(build_catalog(providers=4, fleets=3, vehicles=25, spare_units=2,
+                                incidents=10), tmp_path)
+    catalog = read_catalog(tmp_path)
+
+    first = await Loader(mesh.http, mesh_urls).load(catalog)
+    assert first.failures == []
+    counts = catalog.counts()
+    for kind, expected in counts.items():
+        assert first.created[kind] == expected, kind
+    assert first.created["contacts"] == counts["fleets"]
+
+    second = await Loader(mesh.http, mesh_urls).load(catalog)
+    assert second.failures == []
+    for kind, expected in counts.items():
+        assert second.existing[kind] == expected and second.created[kind] == 0, kind
+
+    fleet = catalog.fleets[0]
+    members = await mesh.ok("GET", "vehicle-master", "/v1/vehicles",
+                            params={"fleet_id": fleet["fleetId"], "limit": 200})
+    assert len(members["items"]) == fleet["declaredFleetSize"]
+
+
 async def test_audit_is_append_only(mesh: Mesh) -> None:
     trace = unique("trace")
     started = {"eventId": unique("audit"), "traceId": trace, "agentName": "triage",

@@ -1,0 +1,14 @@
+providerId,providerName,lifecycleStatus,averageResponseMinutes,dailyCapacity,regions,capabilities
+sp_golden_east,Golden Battery Service East,active,40,12,us-east,battery;diagnostics;electrical
+sp_001,Bluepeak Auto Works US-EAST,active,40,14,ca-east;us-east,battery;body_repair;diagnostics;telematics_install
+sp_002,Redrock Fleet Care US-CENTRAL,active,170,35,eu-central;eu-west;us-central,battery;body_repair;brakes;diagnostics;hydrogen_systems
+sp_003,Prairie Service Network US-WEST,active,125,23,us-west,battery;body_repair;brakes;diagnostics;tires
+sp_004,Prairie Fleet Care US-SOUTH,active,170,32,us-south,body_repair;diagnostics;tires
+sp_005,Prairie Service Network CA-EAST,active,65,34,ca-east;ca-west;us-east,battery;diagnostics;hydrogen_systems
+sp_006,Lakeshore Fleet Care CA-WEST,active,90,18,ca-west;eu-west;us-west,battery;body_repair;diagnostics
+sp_007,Ironleaf Auto Works EU-WEST,active,125,20,eu-west,diagnostics;electrical;hydrogen_systems;telematics_install
+sp_008,Cedar Auto Works EU-CENTRAL,active,145,20,ca-east;eu-central;us-central,battery;diagnostics;electrical;hydrogen_systems
+sp_009,Coastal Service Network US-EAST,active,195,36,us-east,battery;diagnostics;electrical;telematics_install
+sp_010,Northwind Fleet Care US-CENTRAL,active,120,38,ca-west;us-central,body_repair;diagnostics;electrical
+sp_011,Coastal Fleet Care US-WEST,active,80,29,us-west,battery;diagnostics;electrical
+sp_012,Ironleaf Fleet Care US-SOUTH,active,175,8,eu-west;us-south;us-west,body_repair;brakes;diagnostics

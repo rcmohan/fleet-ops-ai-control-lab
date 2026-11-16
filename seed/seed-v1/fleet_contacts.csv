@@ -1,0 +1,43 @@
+fleetId,name,role,email,phone,escalationRank
+flt_golden,Dana Synthetic,fleet_manager,dana@example.invalid,,1
+flt_golden,Lee Synthetic,operations_lead,,+1 555 0100,2
+flt_001,Coastal Lopez,fleet_manager,fleet.manager@lakeshorefreight.example.invalid,,1
+flt_001,Harbor Duty Desk,operations_lead,,+1 555 240 6947,2
+flt_002,Evergreen Okafor,fleet_manager,fleet.manager@prairietransit.example.invalid,,1
+flt_002,Evergreen Duty Desk,operations_lead,,+1 555 942 4435,2
+flt_003,Coastal Kim,fleet_manager,fleet.manager@ironleafdistribution.example.invalid,,1
+flt_003,Cedar Duty Desk,operations_lead,,+1 555 311 6740,2
+flt_004,Pinecrest Novak,fleet_manager,fleet.manager@prairieservices.example.invalid,,1
+flt_004,Northwind Duty Desk,operations_lead,,+1 555 843 8286,2
+flt_005,Evergreen Ray,fleet_manager,fleet.manager@silverlineutilities.example.invalid,,1
+flt_005,Northwind Duty Desk,operations_lead,,+1 555 700 4445,2
+flt_006,Pinecrest Lopez,fleet_manager,fleet.manager@bluepeaklogistics.example.invalid,,1
+flt_006,Ironleaf Duty Desk,operations_lead,,+1 555 592 6153,2
+flt_007,Evergreen Ray,fleet_manager,fleet.manager@prairiefreight.example.invalid,,1
+flt_007,Harbor Duty Desk,operations_lead,,+1 555 892 1337,2
+flt_008,Harbor Okafor,fleet_manager,fleet.manager@summitlogistics.example.invalid,,1
+flt_008,Pinecrest Duty Desk,operations_lead,,+1 555 446 7457,2
+flt_009,Silverline Ray,fleet_manager,fleet.manager@coastalservices.example.invalid,,1
+flt_009,Granite Duty Desk,operations_lead,,+1 555 702 9604,2
+flt_010,Coastal Novak,fleet_manager,fleet.manager@granitelogistics.example.invalid,,1
+flt_010,Redrock Duty Desk,operations_lead,,+1 555 739 7737,2
+flt_011,Harbor Okafor,fleet_manager,fleet.manager@evergreenservices.example.invalid,,1
+flt_011,Cedar Duty Desk,operations_lead,,+1 555 237 4874,2
+flt_012,Cedar Okafor,fleet_manager,fleet.manager@northwindtransit.example.invalid,,1
+flt_012,Redrock Duty Desk,operations_lead,,+1 555 285 3777,2
+flt_013,Prairie Lopez,fleet_manager,fleet.manager@prairielogistics.example.invalid,,1
+flt_013,Pinecrest Duty Desk,operations_lead,,+1 555 259 7782,2
+flt_014,Ironleaf Kim,fleet_manager,fleet.manager@harborfreight.example.invalid,,1
+flt_014,Evergreen Duty Desk,operations_lead,,+1 555 268 5893,2
+flt_015,Lakeshore Ray,fleet_manager,fleet.manager@summittransit.example.invalid,,1
+flt_015,Ironleaf Duty Desk,operations_lead,,+1 555 387 2690,2
+flt_016,Pinecrest Novak,fleet_manager,fleet.manager@pinecrestutilities.example.invalid,,1
+flt_016,Silverline Duty Desk,operations_lead,,+1 555 406 2699,2
+flt_017,Pinecrest Kim,fleet_manager,fleet.manager@cedardistribution.example.invalid,,1
+flt_017,Cedar Duty Desk,operations_lead,,+1 555 882 7454,2
+flt_018,Evergreen Kim,fleet_manager,fleet.manager@harborservices.example.invalid,,1
+flt_018,Redrock Duty Desk,operations_lead,,+1 555 821 5756,2
+flt_019,Redrock Novak,fleet_manager,fleet.manager@pinecrestlogistics.example.invalid,,1
+flt_019,Harbor Duty Desk,operations_lead,,+1 555 992 2328,2
+flt_020,Lakeshore Ray,fleet_manager,fleet.manager@summitutilities.example.invalid,,1
+flt_020,Cedar Duty Desk,operations_lead,,+1 555 616 7213,2
