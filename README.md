@@ -66,7 +66,7 @@ python -m fleetops_sim --inject battery_connectivity:veh_golden_001@20
 3. A background worker scores the incident with risk-scoring, then asks policy-playbook whether `create_service_case` is allowed at that risk level.
 4. If allowed, it opens the case. Otherwise it requests an approval and waits for the decision: approved opens the case, rejected or expired does not.
 
-Every step is on the incident's timeline and in the audit trail under one trace ID:
+Every step is on the incident's timeline and in the audit trail under one trace ID. The console below shows all of it; the same calls by hand:
 
 ```powershell
 curl http://127.0.0.1:8080/signal-correlation/v1/correlation/incidents
@@ -75,4 +75,20 @@ curl -X POST http://127.0.0.1:8080/approval/v1/approvals/<approvalId>/decisions 
      -H "X-Reviewer-Id: reviewer_ops_001" -H "Content-Type: application/json" `
      -d '{"decision": "approved"}'
 curl http://127.0.0.1:8080/audit-observability/v1/traces/<traceId>
+```
+
+## Console
+
+`docker compose up` also starts the operations console at `http://127.0.0.1:8501` (Streamlit, in `console/`):
+
+- **Incidents**: every correlated incident with its status, risk and policy decision. For each one: the approval (approve or reject with a comment), the service case (assign, move through its workflow, resolve), the timeline, the trigger and supporting events, the vehicle's profile, twin state and alerts, and the audit trail.
+- **Approvals**: requests waiting for the selected reviewer's role, each linked to its incident.
+- **Simulate**: injects the battery-connectivity fault for a vehicle, ending just before now.
+
+The browser never calls the services. The console's server side does, and it sends the reviewer identity itself, only for reviewers in `FLEETOPS_CONSOLE_REVIEWERS` (default: `reviewer_ops_001`, `reviewer_safety_001`). There is no login, so anyone who can open the console can act as those reviewers; keep it on `127.0.0.1`. To run it outside Compose:
+
+```powershell
+python -m pip install -r requirements-console.txt
+$env:FLEETOPS_CONSOLE_GATEWAY = "http://127.0.0.1:8080"
+python -m streamlit run console/app.py
 ```

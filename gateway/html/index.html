@@ -29,11 +29,12 @@
   h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
   .sub { color: var(--muted); margin-top: 2px; }
   .controls { display: flex; gap: 8px; align-items: center; color: var(--muted); }
-  select, button {
+  select, button, .controls a {
     font: inherit; color: var(--text); background: var(--surface);
     border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer;
   }
-  button:hover, select:hover { border-color: var(--accent); }
+  button:hover, select:hover, .controls a:hover { border-color: var(--accent); }
+  .controls a { text-decoration: none; }
   .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 20px 0 24px; }
   .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
   .tile .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -89,6 +90,7 @@
       </select>
       <button id="pause" type="button">Pause</button>
       <button id="now" type="button">Check now</button>
+      <a href="http://127.0.0.1:8501/" target="_blank" rel="noopener">Console</a>
     </div>
   </header>
 
