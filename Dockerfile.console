@@ -11,9 +11,11 @@ WORKDIR /app
 COPY requirements-console.txt ./requirements-console.txt
 RUN pip install --no-cache-dir -r requirements-console.txt
 
-# The console reuses the simulator's scripted faults.
+# One image for both Streamlit apps; compose picks the app with its command.
+# The operations console reuses the simulator's scripted faults.
 COPY fleetops_sim ./fleetops_sim
 COPY console ./console
+COPY fleet_console ./fleet_console
 
 EXPOSE 8501
 

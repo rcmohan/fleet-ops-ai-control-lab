@@ -6,7 +6,7 @@ from psycopg.types.json import Jsonb
 from fleetops_runtime import HandlerRegistry, RequestContext, RequestModel
 from fleetops_runtime.db import fetch_all, fetch_one
 from fleetops_runtime.errors import invalid, not_found
-from fleetops_runtime.util import iso
+from fleetops_runtime.util import encode_cursor, iso
 
 HANDLERS = HandlerRegistry()
 
@@ -63,6 +63,43 @@ async def vehicle_state(ctx: RequestContext) -> dict[str, Any]:
     if row is None:
         raise not_found("vehicle state", ctx.path["vehicle_id"])
     return to_state(row)
+
+
+HEALTH_STATES = ("healthy", "warning", "critical")
+CONNECTIVITY_STATES = ("connected", "degraded", "disconnected")
+
+
+@HANDLERS.operation("listVehicleOperationalStates")
+async def list_states(ctx: RequestContext) -> dict[str, Any]:
+    conditions, params = ["TRUE"], []
+    for name, column, allowed in (
+        ("fleet_id", "fleet_id", None),
+        ("health_state", "health_state", HEALTH_STATES),
+        ("connectivity_state", "connectivity_state", CONNECTIVITY_STATES),
+    ):
+        value = ctx.query(name)
+        if value is None:
+            continue
+        if allowed is not None and value not in allowed:
+            raise invalid(f"INVALID_{name.upper()}", f"{name} must be one of {list(allowed)}")
+        conditions.append(f"{column} = %s")
+        params.append(value)
+    after, limit = ctx.page(1, default=200)
+    if after:
+        conditions.append("vehicle_id > %s")
+        params.append(after[0])
+    rows = await fetch_all(
+        ctx.db,
+        f"SELECT * FROM twin.vehicle_states WHERE {' AND '.join(conditions)} "
+        "ORDER BY vehicle_id LIMIT %s",
+        (*params, limit + 1),
+    )
+    more = len(rows) > limit
+    rows = rows[:limit]
+    return {
+        "items": [to_state(row) for row in rows],
+        "nextCursor": encode_cursor([rows[-1]["vehicle_id"]]) if more else "",
+    }
 
 
 @HANDLERS.operation("getFleetOperationalState", nullable=("observedAt",))

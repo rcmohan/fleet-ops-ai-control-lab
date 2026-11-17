@@ -57,9 +57,11 @@ def configured_reviewers() -> tuple[str, ...]:
 
 
 @dataclass
-class Backend:
+class ServiceAPI:
+    """Synchronous calls to the services, with their typed errors raised as ServiceError.
+    Shared by the operations console and the fleet console."""
+
     url_for: Callable[[str], str] = field(default_factory=service_urls)
-    reviewers: tuple[str, ...] = field(default_factory=configured_reviewers)
     transport: httpx.BaseTransport | None = None
     timeout: float = 5.0
 
@@ -68,8 +70,6 @@ class Backend:
 
     def close(self) -> None:
         self.http.close()
-
-    # --- plumbing
 
     def call(self, method: str, slug: str, path: str, *, missing_ok: bool = False,
              **kwargs: Any) -> Any:
@@ -94,6 +94,24 @@ class Backend:
 
     def get(self, slug: str, path: str, **kwargs: Any) -> Any:
         return self.call("GET", slug, path, **kwargs)
+
+    def get_all(self, slug: str, path: str, params: dict[str, Any] | None = None,
+                max_pages: int = 50) -> list[dict[str, Any]]:
+        """Follow nextCursor through a paged list."""
+        query = {key: value for key, value in (params or {}).items() if value is not None}
+        items: list[dict[str, Any]] = []
+        for _ in range(max_pages):
+            page = self.get(slug, path, params={"limit": 200, **query})
+            items += page["items"]
+            if not page.get("nextCursor"):
+                break
+            query["cursor"] = page["nextCursor"]
+        return items
+
+
+@dataclass
+class Backend(ServiceAPI):
+    reviewers: tuple[str, ...] = field(default_factory=configured_reviewers)
 
     # --- incidents
 

@@ -85,6 +85,76 @@
         "x-dummy-implementation": false
       }
     },
+    "/v1/digital-twins/vehicles": {
+      "get": {
+        "tags": [
+          "Digital Twin Context Service"
+        ],
+        "summary": "List vehicle operational states",
+        "description": "List vehicle operational states",
+        "operationId": "listVehicleOperationalStates",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/listVehicleOperationalStatesResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fleet_id",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "health_state",
+            "in": "query",
+            "required": false,
+            "description": "healthy, warning, or critical",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "connectivity_state",
+            "in": "query",
+            "required": false,
+            "description": "connected, degraded, or disconnected",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "x-dummy-implementation": false
+      }
+    },
     "/v1/digital-twins/fleets/{fleet_id}": {
       "get": {
         "tags": [
@@ -586,6 +656,26 @@
           "sourceVersion"
         ],
         "title": "getVehicleOperationalStateResponse"
+      },
+      "listVehicleOperationalStatesResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items"
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "title": "listVehicleOperationalStatesResponse"
       }
     }
   }

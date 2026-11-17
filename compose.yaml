@@ -213,6 +213,28 @@ services:
       start_period: 10s
     ports: ["127.0.0.1:8501:8501"]
 
+  # Read-only fleet console, served only through the gateway at /fleet/.
+  fleet-console:
+    build:
+      context: .
+      dockerfile: Dockerfile.console
+    restart: unless-stopped
+    command:
+      - streamlit
+      - run
+      - fleet_console/app.py
+      - --server.address=0.0.0.0
+      - --server.port=8501
+      - --server.baseUrlPath=fleet
+    environment:
+      FLEETOPS_OPS_CONSOLE_URL: http://127.0.0.1:8501
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/fleet/_stcore/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
   gateway:
     image: nginx:1.27-alpine
     restart: unless-stopped

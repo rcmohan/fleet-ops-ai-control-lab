@@ -77,7 +77,7 @@ curl -X POST http://127.0.0.1:8080/approval/v1/approvals/<approvalId>/decisions 
 curl http://127.0.0.1:8080/audit-observability/v1/traces/<traceId>
 ```
 
-## Console
+## Consoles
 
 `docker compose up` also starts the operations console at `http://127.0.0.1:8501` (Streamlit, in `console/`):
 
@@ -85,7 +85,13 @@ curl http://127.0.0.1:8080/audit-observability/v1/traces/<traceId>
 - **Approvals**: requests waiting for the selected reviewer's role, each linked to its incident.
 - **Simulate**: injects the battery-connectivity fault for a vehicle, ending just before now.
 
-The browser never calls the services. The console's server side does, and it sends the reviewer identity itself, only for reviewers in `FLEETOPS_CONSOLE_REVIEWERS` (default: `reviewer_ops_001`, `reviewer_safety_001`). There is no login, so anyone who can open the console can act as those reviewers; keep it on `127.0.0.1`. To run it outside Compose:
+The **fleet console** at `http://127.0.0.1:8080/fleet/` (Streamlit, in `fleet_console/`, served through the gateway) is read-only:
+
+- **Fleets**: each fleet's contract, SLA, priority and regions, with live counts of healthy, warning, critical and stale vehicles and open incidents. A selected fleet shows its preferred service provider, its vehicles, and a map.
+- **Vehicles**: every vehicle, filterable by fleet, region, lifecycle and health. A selected vehicle shows its profile, telematics unit, twin state, alerts, last 24 hours of events, maintenance history, and incidents, which link to the operations console.
+- **Map**: every vehicle at its last known position, coloured by health. A vehicle is stale after 15 minutes without a report.
+
+In the operations console, the browser never calls the services. The console's server side does, and it sends the reviewer identity itself, only for reviewers in `FLEETOPS_CONSOLE_REVIEWERS` (default: `reviewer_ops_001`, `reviewer_safety_001`). There is no login, so anyone who can open the console can act as those reviewers; keep it on `127.0.0.1`. To run it outside Compose:
 
 ```powershell
 python -m pip install -r requirements-console.txt

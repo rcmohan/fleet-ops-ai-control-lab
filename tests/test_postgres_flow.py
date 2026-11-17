@@ -260,6 +260,15 @@ async def test_events_alerts_twin_and_risk(mesh: Mesh) -> None:
 
     fleet_state = await mesh.ok("GET", "digital-twin-context", f"/v1/digital-twins/fleets/{ids['fleet']}")
     assert fleet_state["warningVehicleCount"] == 1
+    listed = await mesh.ok("GET", "digital-twin-context", "/v1/digital-twins/vehicles",
+                           params={"fleet_id": ids["fleet"], "health_state": "warning"})
+    assert [item["vehicleId"] for item in listed["items"]] == [vehicle]
+    assert listed["items"][0]["batteryVoltage"] == 11.4
+    healthy = await mesh.ok("GET", "digital-twin-context", "/v1/digital-twins/vehicles",
+                            params={"fleet_id": ids["fleet"], "health_state": "healthy"})
+    assert healthy["items"] == []
+    assert await mesh.error(422, "GET", "digital-twin-context", "/v1/digital-twins/vehicles",
+                            params={"health_state": "unknown"}) == "INVALID_HEALTH_STATE"
     impact = await mesh.ok("GET", "digital-twin-context",
                            f"/v1/digital-twins/events/{low['eventId']}/downstream-impact")
     assert impact["affectedFleetIds"] == [ids["fleet"]] and impact["riskLevel"] == "medium"
@@ -481,6 +490,17 @@ async def test_simulator_drives_events_alerts_and_twin(mesh: Mesh, tmp_path) -> 
     assert {issue["issue"] for issue in state["activeIssues"]} >= {"battery", "diagnostic"}
     fleet = await mesh.ok("GET", "digital-twin-context", "/v1/digital-twins/fleets/flt_golden")
     assert fleet["criticalVehicleCount"] == 1
+    pages, cursor = [], None
+    while True:
+        page = await mesh.ok("GET", "digital-twin-context", "/v1/digital-twins/vehicles",
+                             params={"fleet_id": "flt_golden", "limit": 2, "cursor": cursor}
+                             if cursor else {"fleet_id": "flt_golden", "limit": 2})
+        pages.append([item["vehicleId"] for item in page["items"]])
+        if not (cursor := page["nextCursor"]):
+            break
+    walked = [vehicle for page in pages for vehicle in page]
+    assert walked == sorted(set(walked)) and len(walked) == fleet["vehicleCount"]
+    assert "veh_golden_001" in walked
 
     # The scripted fault is the battery-connectivity pattern, so it becomes an incident.
     incidents = await mesh.ok("GET", "signal-correlation", "/v1/correlation/incidents",

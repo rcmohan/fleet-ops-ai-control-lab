@@ -269,7 +269,8 @@ def incidents_page(reviewer: str) -> None:
                           on_select="rerun", selection_mode="single-row", key="incident_table")
     if picked.selection.rows:
         st.session_state["incident_id"] = rows[picked.selection.rows[0]]["incident"]
-    selected = st.session_state.get("incident_id")
+    # ?incident=<id> (linked from the fleet console) preselects an incident.
+    selected = st.session_state.get("incident_id") or st.query_params.get("incident")
     if selected in {row["incident"] for row in rows}:
         incident_detail(selected, reviewer)
     else:

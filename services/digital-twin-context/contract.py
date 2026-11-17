@@ -1,4 +1,4 @@
-from fleetops_runtime import Operation, ServiceContract
+from fleetops_runtime import Operation, Parameter, ServiceContract
 
 
 CONTRACT = ServiceContract(
@@ -30,6 +30,44 @@ CONTRACT = ServiceContract(
                 "observedAt": "2026-08-22T12:00:00Z",
                 "sourceVersion": 7,
             },
+        ),
+        Operation(
+            method="GET",
+            path="/v1/digital-twins/vehicles",
+            operation_id="listVehicleOperationalStates",
+            summary="List vehicle operational states",
+            response={
+                "items": [
+                    {
+                        "vehicleId": "veh_demo_001",
+                        "fleetId": "flt_demo_001",
+                        "healthState": "warning",
+                        "connectivityState": "connected",
+                        "odometerKm": 15000.0,
+                        "batteryVoltage": 11.6,
+                        "lastLocation": {"latitude": 40.71, "longitude": -74.0, "speedKph": 0},
+                        "activeIssues": [
+                            {
+                                "issue": "battery",
+                                "severity": "warning",
+                                "since": "2026-08-22T12:00:00Z",
+                                "eventId": "evt_demo_001",
+                            }
+                        ],
+                        "observedAt": "2026-08-22T12:00:00Z",
+                        "sourceVersion": 7,
+                    }
+                ],
+                "nextCursor": "",
+            },
+            parameters=(
+                Parameter("fleet_id"),
+                Parameter("health_state", description="healthy, warning, or critical"),
+                Parameter("connectivity_state",
+                          description="connected, degraded, or disconnected"),
+                Parameter("cursor"),
+                Parameter("limit", schema_type="integer"),
+            ),
         ),
         Operation(
             method="GET",
