@@ -104,6 +104,21 @@ CONTRACT = ServiceContract(
             },
         ),
         Operation(
+            method="POST",
+            path="/v1/audit/system-events",
+            operation_id="recordSystemEvent",
+            summary="Record a deterministic service transition",
+            response=RECEIPT,
+            request={
+                "eventId": "audit_demo_007",
+                "traceId": "trace_demo_001",
+                "source": "signal-correlation",
+                "eventType": "incident_detected",
+                "occurredAt": "2026-08-22T11:59:00Z",
+                "payload": {},
+            },
+        ),
+        Operation(
             method="GET",
             path="/v1/traces/{trace_id}",
             operation_id="getTrace",

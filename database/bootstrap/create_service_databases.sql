@@ -24,7 +24,8 @@ INSERT INTO fleetops_services (name) VALUES
     ('fleetops_case_management'),
     ('fleetops_notification'),
     ('fleetops_approval'),
-    ('fleetops_audit_observability');
+    ('fleetops_audit_observability'),
+    ('fleetops_signal_correlation');
 
 SELECT format('CREATE ROLE %I LOGIN PASSWORD %L', name, :'password')
 FROM fleetops_services

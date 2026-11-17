@@ -3,10 +3,11 @@
 Set FLEETOPS_TEST_DATABASE_URL to an admin connection, for example
     postgresql://postgres:<password>@localhost:5432/postgres
 Each run drops and recreates fleetops_test_<service> databases on that server, applies the
-migrations, and wires all 15 services together in-process. Skipped when the variable is unset.
+migrations, and wires all 16 services together in-process. Skipped when the variable is unset.
 """
 
 import os
+import sys
 import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
@@ -481,6 +482,11 @@ async def test_simulator_drives_events_alerts_and_twin(mesh: Mesh, tmp_path) -> 
     fleet = await mesh.ok("GET", "digital-twin-context", "/v1/digital-twins/fleets/flt_golden")
     assert fleet["criticalVehicleCount"] == 1
 
+    # The scripted fault is the battery-connectivity pattern, so it becomes an incident.
+    incidents = await mesh.ok("GET", "signal-correlation", "/v1/correlation/incidents",
+                              params={"vehicle_id": "veh_golden_001"})
+    assert [item["ruleId"] for item in incidents["items"]] == ["battery-connectivity-v1"]
+
 
 async def test_audit_is_append_only(mesh: Mesh) -> None:
     trace = unique("trace")
@@ -506,3 +512,135 @@ async def test_audit_is_append_only(mesh: Mesh) -> None:
     with pytest.raises(Exception, match="append-only"):
         async with mesh.databases["audit-observability"].transaction() as conn:
             await conn.execute("DELETE FROM audit.audit_events WHERE trace_id = %s", (trace,))
+
+
+CORRELATION = sys.modules["signal_correlation_handlers"]
+
+
+async def drain(mesh: Mesh, *slugs: str) -> None:
+    while sum([await mesh.deliver(slug) for slug in slugs]):
+        pass
+
+
+async def respond(mesh: Mesh) -> None:
+    """Run the correlation worker as if its poll interval had passed."""
+    database = mesh.databases["signal-correlation"]
+    async with database.transaction() as conn:
+        await conn.execute("UPDATE correlation.incidents SET next_attempt_at = now() "
+                           "WHERE status IN ('detected', 'awaiting_approval')")
+    while await CORRELATION.respond_to_incidents(database, mesh.clients):
+        pass
+
+
+async def send_pattern(mesh: Mesh, vehicle: str, start: int) -> list[str]:
+    """Low battery, missed heartbeat, diagnostic failure, sent newest first."""
+    events = [
+        {"eventId": unique("evt"), "vehicleId": vehicle, "eventType": "battery_voltage",
+         "observedAt": recently(start), "payload": {"voltage": 11.4}},
+        {"eventId": unique("evt"), "vehicleId": vehicle, "eventType": "heartbeat_missed",
+         "observedAt": recently(start + 3), "payload": {}},
+        {"eventId": unique("evt"), "vehicleId": vehicle, "eventType": "diagnostic_failure",
+         "observedAt": recently(start + 7), "payload": {"dtcCode": "P0562", "severity": "critical"}},
+    ]
+    for event in reversed(events):
+        await mesh.ok("POST", "telematics-event", "/v1/events", json=event)
+    await drain(mesh, "telematics-event")
+    return [event["eventId"] for event in events]
+
+
+async def test_correlation_turns_a_pattern_into_an_approved_case(mesh: Mesh) -> None:
+    ids = await master_data(mesh)
+    vehicle = ids["vehicle"]
+    # A low reading alone is not a pattern (and this one is too early to join the next one).
+    await mesh.ok("POST", "telematics-event", "/v1/events", json={
+        "vehicleId": vehicle, "eventType": "battery_voltage", "observedAt": recently(-10),
+        "payload": {"voltage": 11.5}})
+    await drain(mesh, "telematics-event")
+    listed = await mesh.ok("GET", "signal-correlation", "/v1/correlation/incidents",
+                           params={"vehicle_id": vehicle})
+    assert listed["items"] == []
+
+    # Delivered newest first: the incident forms when the last missing piece arrives.
+    triggers = await send_pattern(mesh, vehicle, 2)
+    listed = await mesh.ok("GET", "signal-correlation", "/v1/correlation/incidents",
+                           params={"vehicle_id": vehicle})
+    assert len(listed["items"]) == 1
+    incident = listed["items"][0]
+    assert incident["status"] == "detected" and incident["triggerEventIds"] == triggers
+    path = f"/v1/correlation/incidents/{incident['incidentId']}"
+
+    # A redelivered signal is a duplicate and points at the incident it belongs to.
+    replay = await mesh.ok("POST", "signal-correlation", "/v1/correlation/signals", json={
+        "eventId": triggers[0], "vehicleId": vehicle, "eventType": "battery_voltage",
+        "severity": "warning", "observedAt": recently(2), "payload": {"voltage": 11.4}})
+    assert replay == {"eventId": triggers[0], "status": "duplicate",
+                      "incidentId": incident["incidentId"]}
+
+    # Mission-critical fleet and a critical diagnostic: above the autonomous limit for cases.
+    await respond(mesh)
+    incident = await mesh.ok("GET", "signal-correlation", path)
+    assert incident["riskLevel"] in ("high", "critical")
+    assert incident["policyDecision"] == "approval_required"
+    assert incident["status"] == "awaiting_approval" and incident["caseId"] is None
+    approval = await mesh.ok("GET", "approval", f"/v1/approvals/{incident['approvalId']}")
+    assert approval["actionType"] == "create_service_case"
+    assert approval["evidenceTraceId"] == incident["traceId"]
+
+    await respond(mesh)  # still pending: nothing changes
+    assert (await mesh.ok("GET", "signal-correlation", path))["status"] == "awaiting_approval"
+
+    # The same pattern again while the incident is open adds evidence, not a new incident.
+    await send_pattern(mesh, vehicle, 12)
+    listed = await mesh.ok("GET", "signal-correlation", "/v1/correlation/incidents",
+                           params={"vehicle_id": vehicle})
+    assert len(listed["items"]) == 1
+
+    await mesh.ok("POST", "approval", f"/v1/approvals/{incident['approvalId']}/decisions",
+                  json={"decision": "approved", "comments": "Open the case"},
+                  headers={"X-Reviewer-Id": "reviewer_ops_001"})
+    await respond(mesh)
+    incident = await mesh.ok("GET", "signal-correlation", path)
+    assert incident["status"] == "case_opened"
+    case = await mesh.ok("GET", "case-management", f"/v1/cases/{incident['caseId']}/status")
+    assert case["status"] == "open" and case["auditTraceId"] == incident["traceId"]
+    assert [step["step"] for step in incident["timeline"]] == [
+        "detected", "scored", "policy_evaluated", "approval_requested", "recurred",
+        "approved", "case_opened",
+    ]
+    roles = [(event["role"], event["ruleStep"]) for event in incident["events"]]
+    assert roles.count(("trigger", "diagnostic_failure")) == 1
+    assert roles.count(("supporting", "diagnostic_failure")) == 1
+
+    # Every step reaches the audit trail under the incident's trace ID.
+    await drain(mesh, "signal-correlation")
+    trace = await mesh.ok("GET", "audit-observability", f"/v1/traces/{incident['traceId']}")
+    assert [event["category"] for event in trace["events"]] == [
+        "system_event", "system_event", "policy_decision", "system_event", "system_event",
+        "human_decision", "action_outcome",
+    ]
+
+    # Once closed, the next occurrence is a new incident.
+    closed = await mesh.ok("POST", "signal-correlation", f"{path}/close",
+                           json={"reason": "Battery replaced"})
+    assert closed["status"] == "closed"
+    await send_pattern(mesh, vehicle, 20)
+    listed = await mesh.ok("GET", "signal-correlation", "/v1/correlation/incidents",
+                           params={"vehicle_id": vehicle, "status": "detected"})
+    assert len(listed["items"]) == 1
+
+
+async def test_rejected_approval_opens_no_case(mesh: Mesh) -> None:
+    ids = await master_data(mesh)
+    await send_pattern(mesh, ids["vehicle"], 0)
+    await respond(mesh)
+    listed = await mesh.ok("GET", "signal-correlation", "/v1/correlation/incidents",
+                           params={"vehicle_id": ids["vehicle"]})
+    incident = listed["items"][0]
+    await mesh.ok("POST", "approval", f"/v1/approvals/{incident['approvalId']}/decisions",
+                  json={"decision": "rejected", "comments": "Known issue, already booked"},
+                  headers={"X-Reviewer-Id": "reviewer_ops_001"})
+    await respond(mesh)
+    incident = await mesh.ok("GET", "signal-correlation",
+                             f"/v1/correlation/incidents/{incident['incidentId']}")
+    assert incident["status"] == "rejected" and incident["caseId"] is None
+    assert incident["timeline"][-1]["step"] == "no_case"

@@ -17,14 +17,15 @@ Each child directory belongs to one service and is applied only to that service'
 | `notification/` | `fleetops_notification` | `notifications` |
 | `approval/` | `fleetops_approval` | `approvals` |
 | `audit-observability/` | `fleetops_audit_observability` | `audit` |
+| `signal-correlation/` | `fleetops_signal_correlation` | `correlation` |
 
 `risk-scoring` and `vehicle-context-facade` own no data and have no database.
 
 ## Setup
 
-With Compose, nothing is manual: the first time the `db` container starts with an empty volume, `docker-init/10-create-service-databases.sh` runs `bootstrap/create_service_databases.sql`, creating the 13 databases, each with its own login role. The roles use `POSTGRES_PASSWORD` from `.env`, which is also what the services connect with.
+With Compose, nothing is manual. The first time the `db` container starts with an empty volume, `docker-init/10-create-service-databases.sh` runs `bootstrap/create_service_databases.sql`, creating the 14 databases, each with its own login role. On every `docker compose up`, the one-shot `db-bootstrap` container runs the same script again, so a database added for a new service is created on an existing volume too; the services wait for it to finish. The roles use `POSTGRES_PASSWORD` from `.env`, which is also what the services connect with.
 
-If the volume was initialized before that script existed, run it once by hand. It is safe to re-run:
+To run it by hand (it is safe to re-run):
 
 ```powershell
 $password = (Select-String -Path .env -Pattern '^POSTGRES_PASSWORD=(.*)').Matches[0].Groups[1].Value

@@ -1,0 +1,721 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Signal Correlation Service",
+    "description": "Deterministic correlation rules over telematics signals. A match becomes an incident, which is scored, checked against policy, and turned into a service case directly or after a human approval.",
+    "contact": {
+      "name": "FleetOps AI Control Lab"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Liveness",
+        "operationId": "liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Platform"
+        ],
+        "summary": "Readiness",
+        "operationId": "readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/correlation/signals": {
+      "post": {
+        "tags": [
+          "Signal Correlation Service"
+        ],
+        "summary": "Record a signal and evaluate the correlation rules",
+        "description": "Record a signal and evaluate the correlation rules",
+        "operationId": "ingestSignal",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ingestSignalResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eventId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Eventid",
+                    "type": "string"
+                  },
+                  "vehicleId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Vehicleid",
+                    "type": "string"
+                  },
+                  "eventType": {
+                    "pattern": "^[a-z][a-z0-9_]{1,47}$",
+                    "title": "Eventtype",
+                    "type": "string"
+                  },
+                  "severity": {
+                    "enum": [
+                      "info",
+                      "warning",
+                      "critical"
+                    ],
+                    "title": "Severity",
+                    "type": "string"
+                  },
+                  "observedAt": {
+                    "format": "date-time",
+                    "title": "Observedat",
+                    "type": "string"
+                  },
+                  "payload": {
+                    "additionalProperties": true,
+                    "title": "Payload",
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "eventId",
+                  "vehicleId",
+                  "eventType",
+                  "severity",
+                  "observedAt"
+                ],
+                "title": "SignalIn",
+                "type": "object"
+              },
+              "example": {
+                "eventId": "evt_demo_003",
+                "vehicleId": "veh_demo_001",
+                "eventType": "diagnostic_failure",
+                "severity": "critical",
+                "observedAt": "2026-08-22T11:49:00Z",
+                "payload": {
+                  "dtcCode": "P0562"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/correlation/incidents": {
+      "get": {
+        "tags": [
+          "Signal Correlation Service"
+        ],
+        "summary": "List correlated incidents, newest first",
+        "description": "List correlated incidents, newest first",
+        "operationId": "listCorrelatedIncidents",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/listCorrelatedIncidentsResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vehicle_id",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "x-dummy-implementation": false
+      }
+    },
+    "/v1/correlation/incidents/{incident_id}": {
+      "get": {
+        "tags": [
+          "Signal Correlation Service"
+        ],
+        "summary": "Get an incident with its events and response timeline",
+        "description": "Get an incident with its events and response timeline",
+        "operationId": "getCorrelatedIncident",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getCorrelatedIncidentResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "incident_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false
+      }
+    },
+    "/v1/correlation/incidents/{incident_id}/close": {
+      "post": {
+        "tags": [
+          "Signal Correlation Service"
+        ],
+        "summary": "Close an incident so the rule can raise a new one for the vehicle",
+        "description": "Close an incident so the rule can raise a new one for the vehicle",
+        "operationId": "closeCorrelatedIncident",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/closeCorrelatedIncidentResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "incident_id",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "reason": {
+                    "maxLength": 2000,
+                    "minLength": 1,
+                    "title": "Reason",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "reason"
+                ],
+                "title": "Close",
+                "type": "object"
+              },
+              "example": {
+                "reason": "Battery replaced under case case_demo_001"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/correlation/rules": {
+      "get": {
+        "tags": [
+          "Signal Correlation Service"
+        ],
+        "summary": "List the correlation rules",
+        "description": "List the correlation rules",
+        "operationId": "listCorrelationRules",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/listCorrelationRulesResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-dummy-implementation": false
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthStatus": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "status",
+          "version"
+        ],
+        "title": "HealthStatus"
+      },
+      "closeCorrelatedIncidentResponse": {
+        "properties": {
+          "incidentId": {
+            "type": "string",
+            "title": "Incidentid"
+          },
+          "ruleId": {
+            "type": "string",
+            "title": "Ruleid"
+          },
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "traceId": {
+            "type": "string",
+            "title": "Traceid"
+          },
+          "triggerEventIds": {
+            "items": {},
+            "type": "array",
+            "title": "Triggereventids"
+          },
+          "firstObservedAt": {
+            "type": "string",
+            "title": "Firstobservedat"
+          },
+          "lastObservedAt": {
+            "type": "string",
+            "title": "Lastobservedat"
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risklevel"
+          },
+          "policyDecision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Policydecision"
+          },
+          "approvalId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approvalid"
+          },
+          "caseId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Caseid"
+          },
+          "lastError": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lasterror"
+          },
+          "detectedAt": {
+            "type": "string",
+            "title": "Detectedat"
+          },
+          "updatedAt": {
+            "type": "string",
+            "title": "Updatedat"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "incidentId",
+          "ruleId",
+          "vehicleId",
+          "status",
+          "traceId",
+          "triggerEventIds",
+          "firstObservedAt",
+          "lastObservedAt",
+          "riskScore",
+          "riskLevel",
+          "policyDecision",
+          "approvalId",
+          "caseId",
+          "lastError",
+          "detectedAt",
+          "updatedAt",
+          "sourceVersion"
+        ],
+        "title": "closeCorrelatedIncidentResponse"
+      },
+      "getCorrelatedIncidentResponse": {
+        "properties": {
+          "incidentId": {
+            "type": "string",
+            "title": "Incidentid"
+          },
+          "ruleId": {
+            "type": "string",
+            "title": "Ruleid"
+          },
+          "vehicleId": {
+            "type": "string",
+            "title": "Vehicleid"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "traceId": {
+            "type": "string",
+            "title": "Traceid"
+          },
+          "triggerEventIds": {
+            "items": {},
+            "type": "array",
+            "title": "Triggereventids"
+          },
+          "firstObservedAt": {
+            "type": "string",
+            "title": "Firstobservedat"
+          },
+          "lastObservedAt": {
+            "type": "string",
+            "title": "Lastobservedat"
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risklevel"
+          },
+          "policyDecision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Policydecision"
+          },
+          "approvalId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approvalid"
+          },
+          "caseId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Caseid"
+          },
+          "lastError": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lasterror"
+          },
+          "detectedAt": {
+            "type": "string",
+            "title": "Detectedat"
+          },
+          "updatedAt": {
+            "type": "string",
+            "title": "Updatedat"
+          },
+          "sourceVersion": {
+            "type": "integer",
+            "title": "Sourceversion"
+          },
+          "events": {
+            "items": {},
+            "type": "array",
+            "title": "Events"
+          },
+          "timeline": {
+            "items": {},
+            "type": "array",
+            "title": "Timeline"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "incidentId",
+          "ruleId",
+          "vehicleId",
+          "status",
+          "traceId",
+          "triggerEventIds",
+          "firstObservedAt",
+          "lastObservedAt",
+          "riskScore",
+          "riskLevel",
+          "policyDecision",
+          "approvalId",
+          "caseId",
+          "lastError",
+          "detectedAt",
+          "updatedAt",
+          "sourceVersion",
+          "events",
+          "timeline"
+        ],
+        "title": "getCorrelatedIncidentResponse"
+      },
+      "ingestSignalResponse": {
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "title": "Eventid"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "incidentId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Incidentid"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "eventId",
+          "status",
+          "incidentId"
+        ],
+        "title": "ingestSignalResponse"
+      },
+      "listCorrelatedIncidentsResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items"
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "title": "listCorrelatedIncidentsResponse"
+      },
+      "listCorrelationRulesResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "listCorrelationRulesResponse"
+      }
+    }
+  }
+}

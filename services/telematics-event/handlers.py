@@ -224,14 +224,17 @@ async def ingest(ctx: RequestContext) -> dict[str, Any]:
         ),
     )
     await apply_alerts(ctx, event, rule)
-    await enqueue(ctx.db, "digital-twin-context", "/v1/digital-twins/events", {
+    message = {
         "eventId": event["event_id"],
         "vehicleId": event["vehicle_id"],
         "eventType": event["event_type"],
         "severity": event["severity"],
         "observedAt": iso(event["observed_at"]),
         "payload": event["payload"],
-    })
+    }
+    await enqueue(ctx.db, "digital-twin-context", "/v1/digital-twins/events", message)
+    if event["severity"] != "info":  # correlation rules only look at anomalies
+        await enqueue(ctx.db, "signal-correlation", "/v1/correlation/signals", message)
     return {
         "eventId": event["event_id"],
         "status": "accepted",

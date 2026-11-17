@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import re
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager, suppress
@@ -17,11 +18,12 @@ from pydantic import BaseModel, ConfigDict, ValidationError, create_model
 from .contracts import Operation, Parameter, ServiceContract
 from .db import Database, fetch_one
 from .errors import DependencyRejected, DependencyUnavailable, invalid
-from .handlers import Handler, HandlerRegistry, RequestContext
+from .handlers import Handler, HandlerRegistry, RequestContext, Worker
 from .outbox import run_dispatcher
 from .services import ServiceClients
 from .util import content_hash
 
+log = logging.getLogger("fleetops.worker")
 
 _FORWARDED_PREFIX = re.compile(r"/[a-z0-9-]+")
 
@@ -287,6 +289,19 @@ def _install_error_handlers(app: FastAPI) -> None:
                       constraint=exc.diag.constraint_name)
 
 
+async def _run_worker(worker: Worker, database: Database, services: ServiceClients) -> None:
+    while True:
+        busy = False
+        try:
+            busy = await worker.step(database, services)
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            log.exception("worker %s failed", worker.name)
+        if not busy:
+            await asyncio.sleep(worker.interval)
+
+
 def build_app(
     contract: ServiceContract,
     handlers: HandlerRegistry | None = None,
@@ -309,18 +324,22 @@ def build_app(
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-        dispatcher = None
+        tasks: list[asyncio.Task] = []
         if database is not None:
             await database.open()
             if run_background:
-                dispatcher = asyncio.create_task(run_dispatcher(database, services))
+                tasks.append(asyncio.create_task(run_dispatcher(database, services)))
+                tasks += [
+                    asyncio.create_task(_run_worker(worker, database, services))
+                    for worker in handlers.workers
+                ]
         try:
             yield
         finally:
-            if dispatcher is not None:
-                dispatcher.cancel()
+            for task in tasks:
+                task.cancel()
                 with suppress(asyncio.CancelledError):
-                    await dispatcher
+                    await task
             await services.aclose()
             if database is not None:
                 await database.close()

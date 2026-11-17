@@ -53,6 +53,11 @@ class ActionOutcome(AuditEvent):
     status: Literal["succeeded", "failed", "skipped", "blocked"]
 
 
+class SystemEvent(AuditEvent):
+    source: Name
+    eventType: Name
+
+
 COMMON = {"eventId", "traceId", "occurredAt", "payload"}
 
 
@@ -110,6 +115,7 @@ ROUTES = [
      lambda b: f"human_decision.{b.decision}"),
     ("recordActionOutcome", ActionOutcome, "action_outcome",
      lambda b: f"action_outcome.{b.status}"),
+    ("recordSystemEvent", SystemEvent, "system_event", lambda b: b.eventType),
 ]
 for operation_id, model, category, event_type in ROUTES:
     HANDLERS.operation(operation_id, request=model)(recorder(category, event_type))

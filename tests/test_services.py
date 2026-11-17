@@ -20,7 +20,7 @@ def load_contract(path: Path):
 
 def test_every_service_is_runnable_and_has_openapi() -> None:
     contract_files = sorted((ROOT / "services").glob("*/contract.py"))
-    assert len(contract_files) == 15
+    assert len(contract_files) == 16
 
     for contract_file in contract_files:
         contract = load_contract(contract_file)

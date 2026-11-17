@@ -626,6 +626,99 @@
         }
       }
     },
+    "/v1/audit/system-events": {
+      "post": {
+        "tags": [
+          "Audit and Observability Service"
+        ],
+        "summary": "Record a deterministic service transition",
+        "description": "Record a deterministic service transition",
+        "operationId": "recordSystemEvent",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/recordSystemEventResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Replays the original response when the same request is retried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-dummy-implementation": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eventId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Eventid",
+                    "type": "string"
+                  },
+                  "traceId": {
+                    "pattern": "^[A-Za-z0-9_-]{1,64}$",
+                    "title": "Traceid",
+                    "type": "string"
+                  },
+                  "occurredAt": {
+                    "format": "date-time",
+                    "title": "Occurredat",
+                    "type": "string"
+                  },
+                  "payload": {
+                    "additionalProperties": true,
+                    "title": "Payload",
+                    "type": "object"
+                  },
+                  "source": {
+                    "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+                    "title": "Source",
+                    "type": "string"
+                  },
+                  "eventType": {
+                    "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+                    "title": "Eventtype",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "eventId",
+                  "traceId",
+                  "occurredAt",
+                  "source",
+                  "eventType"
+                ],
+                "title": "SystemEvent",
+                "type": "object"
+              },
+              "example": {
+                "eventId": "audit_demo_007",
+                "traceId": "trace_demo_001",
+                "source": "signal-correlation",
+                "eventType": "incident_detected",
+                "occurredAt": "2026-08-22T11:59:00Z",
+                "payload": {}
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/traces/{trace_id}": {
       "get": {
         "tags": [
@@ -855,6 +948,35 @@
           "recordedAt"
         ],
         "title": "recordRecommendationResponse"
+      },
+      "recordSystemEventResponse": {
+        "properties": {
+          "auditEventId": {
+            "type": "string",
+            "title": "Auditeventid"
+          },
+          "traceId": {
+            "type": "string",
+            "title": "Traceid"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "recordedAt": {
+            "type": "string",
+            "title": "Recordedat"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "auditEventId",
+          "traceId",
+          "status",
+          "recordedAt"
+        ],
+        "title": "recordSystemEventResponse"
       },
       "recordToolCallResponse": {
         "properties": {

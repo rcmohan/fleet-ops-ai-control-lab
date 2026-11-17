@@ -23,7 +23,7 @@ The entire project should use synthetic data only. It should not use data, code,
 
 ## Dummy application services
 
-The 15 independently deployable FastAPI services live under `services/`. Thirteen store their data in their own PostgreSQL database; risk scoring and the vehicle context facade compute their answers from the other services. See `services/README.md` for what each one does and `database/README.md` for the databases.
+The 16 independently deployable FastAPI services live under `services/`. Fourteen store their data in their own PostgreSQL database; risk scoring and the vehicle context facade compute their answers from the other services. See `services/README.md` for what each one does and `database/README.md` for the databases.
 
 ```powershell
 # .env must set POSTGRES_PASSWORD (git ignores .env)
@@ -35,7 +35,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q                            # Postgres tests need FLEETOPS_TEST_DATABASE_URL
 ```
 
-Swagger UI is available on `/docs` for every running service. Compose maps the services to localhost ports `8101` through `8115`, and a gateway on `http://127.0.0.1:8080` shows a live status page and serves each one at `/<service>/` (for example `/approval/docs`); see `services/README.md` for the catalog and local-run instructions.
+Swagger UI is available on `/docs` for every running service. Compose maps the services to localhost ports `8101` through `8116`, and a gateway on `http://127.0.0.1:8080` shows a live status page and serves each one at `/<service>/` (for example `/approval/docs`); see `services/README.md` for the catalog and local-run instructions.
 
 ## Simulator
 
@@ -56,3 +56,23 @@ python -m fleetops_sim --inject battery_connectivity:veh_golden_001@20
 ```
 
 `--inject` scripts the MVP incident on one vehicle at the given minute: a battery reading below 11.8 V, then a missed heartbeat, then a critical diagnostic code, all within 12 minutes. Other options: `--max-vehicles`, `--tick-seconds`, `--late-share` (out-of-order delivery), `--seed`.
+
+## Incident response without agents
+
+`signal-correlation` turns that pattern into a service case with deterministic code only:
+
+1. telematics-event forwards every warning or critical event to it through the outbox.
+2. Each arriving signal re-runs rule `battery-connectivity-v1` over that vehicle's signals around it, so late events still complete the pattern. A match becomes an incident. While a vehicle has an open incident, repeats are added to it as evidence.
+3. A background worker scores the incident with risk-scoring, then asks policy-playbook whether `create_service_case` is allowed at that risk level.
+4. If allowed, it opens the case. Otherwise it requests an approval and waits for the decision: approved opens the case, rejected or expired does not.
+
+Every step is on the incident's timeline and in the audit trail under one trace ID:
+
+```powershell
+curl http://127.0.0.1:8080/signal-correlation/v1/correlation/incidents
+curl http://127.0.0.1:8080/approval/v1/approvals?reviewer_id=reviewer_ops_001
+curl -X POST http://127.0.0.1:8080/approval/v1/approvals/<approvalId>/decisions `
+     -H "X-Reviewer-Id: reviewer_ops_001" -H "Content-Type: application/json" `
+     -d '{"decision": "approved"}'
+curl http://127.0.0.1:8080/audit-observability/v1/traces/<traceId>
+```

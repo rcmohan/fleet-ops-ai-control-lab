@@ -64,9 +64,30 @@ class Handler:
     nullable: frozenset[str] = field(default_factory=frozenset)
 
 
+WorkerStep = Callable[[Any, ServiceClients], Awaitable[bool]]
+
+
+@dataclass(frozen=True)
+class Worker:
+    """A background step the service runs repeatedly: step(database, services) -> busy.
+    When it returns False (nothing more to do now), the loop sleeps for `interval` seconds."""
+
+    name: str
+    step: WorkerStep
+    interval: float
+
+
 class HandlerRegistry:
     def __init__(self) -> None:
         self.handlers: dict[str, Handler] = {}
+        self.workers: list[Worker] = []
+
+    def worker(self, interval: float = 1.0) -> Callable[[WorkerStep], WorkerStep]:
+        def register(step: WorkerStep) -> WorkerStep:
+            self.workers.append(Worker(step.__name__, step, interval))
+            return step
+
+        return register
 
     def operation(
         self,

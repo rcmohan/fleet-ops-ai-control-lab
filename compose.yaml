@@ -15,8 +15,8 @@ x-service-defaults: &service-defaults
   extra_hosts:
     - "host.docker.internal:host-gateway"
   depends_on:
-    db:
-      condition: service_healthy
+    db-bootstrap:
+      condition: service_completed_successfully
   healthcheck:
     test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health/ready')"]
     interval: 10s
@@ -49,6 +49,24 @@ services:
       timeout: 3s
       retries: 20
       start_period: 10s
+
+  # Creates any missing service databases and roles, then exits. The init script in
+  # database/docker-init only runs on an empty volume; this also covers services added later.
+  db-bootstrap:
+    image: postgres:18
+    restart: "no"
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - ./database/bootstrap:/fleetops-bootstrap:ro
+    entrypoint: ["sh", "-c"]
+    command:
+      - >-
+        psql -h db -U postgres -d postgres -v ON_ERROR_STOP=1
+        -v password="$$PGPASSWORD" -f /fleetops-bootstrap/create_service_databases.sql
+    depends_on:
+      db:
+        condition: service_healthy
 
   vehicle-master:
     <<: *service-defaults
@@ -169,6 +187,14 @@ services:
       dockerfile: Dockerfile.service
       args: { SERVICE_PATH: services/audit-observability }
     ports: ["127.0.0.1:8115:8080"]
+
+  signal-correlation:
+    <<: *service-defaults
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+      args: { SERVICE_PATH: services/signal-correlation }
+    ports: ["127.0.0.1:8116:8080"]
 
   gateway:
     image: nginx:1.27-alpine
