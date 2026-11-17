@@ -235,6 +235,23 @@ services:
       retries: 5
       start_period: 10s
 
+  # Checks every service every 5 seconds and keeps the last hour in memory for the status
+  # page. Reached only through the gateway at /status-monitor/.
+  status-monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile.monitor
+    restart: unless-stopped
+    environment:
+      FLEETOPS_MONITOR_INTERVAL_SECONDS: "5"
+      FLEETOPS_MONITOR_RETENTION_SECONDS: "3600"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health/ready')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
   gateway:
     image: nginx:1.27-alpine
     restart: unless-stopped

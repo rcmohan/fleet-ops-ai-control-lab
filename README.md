@@ -35,7 +35,9 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q                            # Postgres tests need FLEETOPS_TEST_DATABASE_URL
 ```
 
-Swagger UI is available on `/docs` for every running service. Compose maps the services to localhost ports `8101` through `8116`, and a gateway on `http://127.0.0.1:8080` shows a live status page and serves each one at `/<service>/` (for example `/approval/docs`); see `services/README.md` for the catalog and local-run instructions.
+Swagger UI is available on `/docs` for every running service. Compose maps the services to localhost ports `8101` through `8116`, and a gateway on `http://127.0.0.1:8080` serves each one at `/<service>/` (for example `/approval/docs`); see `services/README.md` for the catalog and local-run instructions.
+
+The gateway's front page is a status page. The `status-monitor` service (`status_monitor/`) checks every service's readiness every 5 seconds, whether or not the page is open, and keeps the last hour in memory. The page loads that hour when it opens and then follows new checks. History starts over when the monitor restarts.
 
 ## Simulator
 

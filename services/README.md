@@ -26,7 +26,7 @@ Each API exposes:
 - Liveness at `/health/live`
 - Readiness at `/health/ready`
 
-Ports are assigned from `8101` through `8116` in `compose.yaml` in catalog order, bound to `127.0.0.1`. The `gateway` service also serves every API on `http://127.0.0.1:8080/<service>/`, for example `http://127.0.0.1:8080/approval/docs`, and shows a live health and latency page at `http://127.0.0.1:8080/`.
+Ports are assigned from `8101` through `8116` in `compose.yaml` in catalog order, bound to `127.0.0.1`. The `gateway` service also serves every API on `http://127.0.0.1:8080/<service>/`, for example `http://127.0.0.1:8080/approval/docs`, and shows a health and latency page at `http://127.0.0.1:8080/` with the last hour of checks made by `status-monitor`.
 
 ## Run one service locally
 
