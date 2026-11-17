@@ -15,8 +15,7 @@ from .model import Event, VehicleSim
 
 
 def battery_connectivity(vehicle: VehicleSim, at: datetime) -> list[Event]:
-    vehicle.driving = False
-    vehicle.speed_kph = 0.0
+    vehicle.stop()
     vehicle.weak_battery = True
     vehicle.voltage = 11.3
     vehicle.scripted_until = at + timedelta(minutes=12)

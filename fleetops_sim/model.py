@@ -14,18 +14,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Any
 
-# Synthetic operating areas: a centre point and radius per region code.
-REGION_AREAS: dict[str, tuple[float, float, float]] = {
-    "us-east": (40.71, -74.00, 60.0),
-    "us-central": (41.88, -87.63, 60.0),
-    "us-west": (37.77, -122.42, 60.0),
-    "us-south": (29.76, -95.37, 60.0),
-    "ca-east": (43.65, -79.38, 50.0),
-    "ca-west": (49.28, -123.12, 40.0),
-    "eu-west": (51.51, -0.13, 50.0),
-    "eu-central": (50.11, 8.68, 50.0),
-}
-DEFAULT_AREA = (40.71, -74.00, 60.0)
+from .roads import LatLon, Spot, lerp, network_for
 
 HEARTBEAT_EVERY = timedelta(minutes=5)
 BATTERY_EVERY = timedelta(minutes=15)
@@ -43,13 +32,6 @@ DTC_CODES = ["P0562", "P0300", "P0171", "P0420", "U0100"]
 def seeded(seed: str, *parts: str) -> random.Random:
     digest = hashlib.sha256(":".join((seed, *parts)).encode()).digest()
     return random.Random(int.from_bytes(digest[:8], "big"))
-
-
-def offset(lat: float, lon: float, bearing_deg: float, km: float) -> tuple[float, float]:
-    bearing = math.radians(bearing_deg)
-    new_lat = lat + (km * math.cos(bearing)) / KM_PER_DEGREE
-    new_lon = lon + (km * math.sin(bearing)) / (KM_PER_DEGREE * math.cos(math.radians(lat)))
-    return new_lat, new_lon
 
 
 def distance_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -84,8 +66,9 @@ class VehicleSim:
     reporting: bool                 # active vehicles report; inactive/ordered ones are silent
     can_drive: bool                 # in service; vehicles in maintenance only report heartbeats
     weak_battery: bool
+    spot: Spot = field(default_factory=lambda: Spot(0, 0.5))  # where it is parked, or heading
+    route: list[LatLon] = field(default_factory=list)         # waypoints left while driving
     driving: bool = False
-    destination: tuple[float, float] | None = None
     speed_kph: float = 0.0
     park_until: datetime | None = None
     next_heartbeat: datetime | None = None
@@ -93,6 +76,7 @@ class VehicleSim:
     offline_until: datetime | None = None
     diagnostic_until: datetime | None = None
     scripted_until: datetime | None = None   # a scenario owns the vehicle until then
+    relocated: bool = False   # resumed off-road and moved onto one: report the new position
     sequence: int = field(default=0)
 
     @classmethod
@@ -104,12 +88,16 @@ class VehicleSim:
         resume: dict[str, Any] | None = None,
     ) -> "VehicleSim":
         rng = seeded(seed, "vehicle", vehicle["vehicleId"])
-        clat, clon, radius = REGION_AREAS.get(vehicle["regionCode"], DEFAULT_AREA)
-        lat, lon = offset(clat, clon, rng.uniform(0, 360), rng.uniform(0, radius))
+        roads = network_for(vehicle["regionCode"])
+        spot = roads.random_spot(rng)
         odometer = rng.uniform(20_000, 150_000)
         location = (resume or {}).get("lastLocation") or {}
         if "latitude" in location and "longitude" in location:
-            lat, lon = location["latitude"], location["longitude"]
+            # Resume at the nearest point on the road network (older runs parked anywhere).
+            spot = roads.snap((location["latitude"], location["longitude"]))
+        lat, lon = roads.point(spot)
+        relocated = bool(location) and distance_km(
+            location.get("latitude", lat), location.get("longitude", lon), lat, lon) > 0.05
         if (resume or {}).get("odometerKm") is not None:
             odometer = resume["odometerKm"]
         weak = rng.random() < WEAK_BATTERY_SHARE
@@ -119,6 +107,8 @@ class VehicleSim:
             rng=rng,
             lat=lat,
             lon=lon,
+            spot=spot,
+            relocated=relocated,
             odometer_km=odometer,
             voltage=rng.uniform(12.4, 12.7) if not weak else rng.uniform(11.9, 12.1),
             reporting=vehicle["lifecycleStatus"] == "active",
@@ -140,9 +130,21 @@ class VehicleSim:
     def _chance(self, per_hour: float, dt: timedelta) -> bool:
         return self.rng.random() < per_hour * dt.total_seconds() / 3600
 
-    def _pick_destination(self) -> tuple[float, float]:
-        clat, clon, radius = REGION_AREAS.get(self.region, DEFAULT_AREA)
-        return offset(clat, clon, self.rng.uniform(0, 360), self.rng.uniform(0, radius))
+    def stop(self) -> None:
+        """Park where the vehicle is now (on a road, never on a bridge)."""
+        roads = network_for(self.region)
+        self.spot = roads.snap((self.lat, self.lon))
+        self.lat, self.lon = roads.point(self.spot)
+        self.route = []
+        self.driving = False
+        self.speed_kph = 0.0
+
+    def _plan_trip(self) -> None:
+        """Pick a parking spot elsewhere in the region and route to it along the roads."""
+        roads = network_for(self.region)
+        target = roads.random_spot(self.rng)
+        self.route = roads.route(self.spot, target)
+        self.spot = target
 
     def _location(self) -> dict[str, Any]:
         return {"latitude": round(self.lat, 5), "longitude": round(self.lon, 5),
@@ -163,6 +165,9 @@ class VehicleSim:
             self.offline_until = None
             self._emit(events, "connectivity_restored", now, **self._location())
 
+        if self.relocated:
+            self.relocated = False
+            self._emit(events, "location", now, **self._location())
         self._move(events, now, dt)
         self._battery(dt)
 
@@ -180,25 +185,32 @@ class VehicleSim:
         if not self.driving:
             if self.can_drive and self.park_until and now >= self.park_until:
                 self.driving = True
-                self.destination = self._pick_destination()
+                self._plan_trip()
                 self.speed_kph = self.rng.uniform(30, 80)
                 self._emit(events, "ignition_on", now, **self._location())
             return
-        assert self.destination is not None
-        remaining = distance_km(self.lat, self.lon, *self.destination)
         travel = self.speed_kph * dt.total_seconds() / 3600
-        if travel >= remaining:
-            self.lat, self.lon = self.destination
-            self.odometer_km += remaining
+        heading = 0.0
+        while travel > 0 and self.route:
+            target = self.route[0]
+            gap = distance_km(self.lat, self.lon, *target)
+            heading = bearing_to(self.lat, self.lon, *target) if gap > 0 else heading
+            if travel >= gap:
+                self.lat, self.lon = target
+                self.odometer_km += gap
+                travel -= gap
+                self.route.pop(0)
+            else:
+                self.lat, self.lon = lerp((self.lat, self.lon), target, travel / gap)
+                self.odometer_km += travel
+                travel = 0
+        if not self.route:
             self.driving = False
             self.speed_kph = 0.0
             self.park_until = now + timedelta(minutes=self.rng.uniform(10, 90))
             self._emit(events, "location", now, **self._location())
             self._emit(events, "ignition_off", now, **self._location())
             return
-        heading = bearing_to(self.lat, self.lon, *self.destination)
-        self.lat, self.lon = offset(self.lat, self.lon, heading, travel)
-        self.odometer_km += travel
         self.speed_kph = max(5.0, min(110.0, self.speed_kph + self.rng.uniform(-8, 8)))
         self._emit(events, "location", now, heading=round(heading), **self._location())
 

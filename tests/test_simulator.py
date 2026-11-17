@@ -1,6 +1,7 @@
 """Simulator checks that need no database."""
 
 import json
+import math
 import sys
 from datetime import UTC, datetime, timedelta
 
@@ -8,7 +9,7 @@ import httpx
 import pytest
 
 from fleetops_sim import Injection, RunConfig, Simulator, VehicleSim
-from fleetops_sim.model import REGION_AREAS, distance_km
+from fleetops_sim.roads import NETWORKS, distance_km, lerp
 from fleetops_sim.scenarios import battery_connectivity
 
 from conftest import all_services
@@ -23,6 +24,20 @@ TICK = timedelta(minutes=1)
 def vehicle(n: int, region: str = "us-east", **overrides) -> dict:
     return {"vehicleId": f"veh_{n:04d}", "regionCode": region, "lifecycleStatus": "active",
             "serviceStatus": "in_service", **overrides}
+
+
+def off_road_km(region: str, lat: float, lon: float) -> float:
+    """Distance from the nearest edge of the region's road network."""
+    roads = NETWORKS[region]
+    best = float("inf")
+    for edge in roads.edges:
+        a, b = roads.nodes[edge.a], roads.nodes[edge.b]
+        scale = math.cos(math.radians(a[0]))
+        dx, dy = (b[1] - a[1]) * scale, b[0] - a[0]
+        px, py = (lon - a[1]) * scale, lat - a[0]
+        t = max(0.0, min(1.0, (px * dx + py * dy) / (dx * dx + dy * dy)))
+        best = min(best, distance_km((lat, lon), lerp(a, b, t)))
+    return best
 
 
 def run_model(sim: VehicleSim, minutes: int) -> list:
@@ -46,9 +61,8 @@ def test_model_is_deterministic() -> None:
 def test_events_are_valid_for_telematics_event() -> None:
     seen = set()
     for n in range(1, 41):
-        region = list(REGION_AREAS)[n % len(REGION_AREAS)]
+        region = list(NETWORKS)[n % len(NETWORKS)]
         sim = VehicleSim.create("s", vehicle(n, region), START)
-        clat, clon, radius = REGION_AREAS[region]
         odometer = sim.odometer_km
         for event in run_model(sim, 8 * 60):
             seen.add(event.event_type)
@@ -60,9 +74,9 @@ def test_events_are_valid_for_telematics_event() -> None:
             if "odometerKm" in event.payload:
                 assert event.payload["odometerKm"] >= round(odometer, 1) - 0.1
                 odometer = event.payload["odometerKm"]
-            if "latitude" in event.payload:
-                assert distance_km(clat, clon, event.payload["latitude"],
-                                   event.payload["longitude"]) <= radius + 1
+            if "latitude" in event.payload:  # always on the region's roads
+                assert off_road_km(region, event.payload["latitude"],
+                                   event.payload["longitude"]) < 0.05
     assert {"location", "heartbeat", "battery_voltage", "ignition_on", "ignition_off"} <= seen
 
 

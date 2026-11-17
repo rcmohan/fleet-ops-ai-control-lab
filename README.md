@@ -41,7 +41,7 @@ The gateway's front page is a status page. The `status-monitor` service (`status
 
 ## Simulator
 
-`python -m fleetops_sim` plays the fleet as telematics devices. Each active vehicle drives trips inside its region and parks between them. It reports:
+`python -m fleetops_sim` plays the fleet as telematics devices. Each active vehicle drives trips inside its region and parks between them. Trips follow a small road network per region (`fleetops_sim/roads.py`): real town locations joined along highway corridors, so vehicles stay on land and only cross water on bridges and tunnels. `tests/test_roads.py` checks the networks against a land mask. It reports:
 
 - location, speed, and odometer while driving
 - ignition on/off at the start and end of each trip
