@@ -27,11 +27,11 @@ The 16 independently deployable FastAPI services live under `services/`. Fourtee
 
 ```powershell
 # .env must set POSTGRES_PASSWORD (git ignores .env)
+python -m pip install -r requirements-dev.txt  # once: the seed loader, simulator, and tests run on the host
 docker compose up --build                      # PostgreSQL, the services, and the gateway
 python -m fleetops_seed load                   # synthetic master data from seed/seed-v1
-python -m fleetops_sim --minutes 60           # fleet movement and telemetry for the last hour
+python -m fleetops_sim --minutes 60            # fleet movement and telemetry for the last hour
 
-python -m pip install -r requirements-dev.txt
 python -m pytest -q                            # Postgres tests need FLEETOPS_TEST_DATABASE_URL
 ```
 
