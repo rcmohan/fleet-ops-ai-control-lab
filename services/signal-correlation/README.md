@@ -16,7 +16,7 @@ Owns correlation rules, the signals they read, the incidents they raise, and eac
 5. A dependency outage is retried with backoff, and progress so far is kept. A dependency that refuses the request marks the incident `failed`, with the reason in `lastError`.
 6. `POST /v1/correlation/incidents/{id}/close` closes an incident, after which the rule can raise a new one for that vehicle.
 
-Every step goes to the incident timeline and, through the outbox, to audit-observability under the incident's `traceId`. Calls that create something (the approval and the case) send an `Idempotency-Key`, so a retry never creates a second one.
+Every step goes to the incident timeline and, through the outbox, to audit-observability under the incident's `traceId`. The same transaction also sends a change notice to `cloud-exporter`, which exports the full incident for the cloud agent. Calls that create something (the approval and the case) send an `Idempotency-Key`, so a retry never creates a second one.
 
 ## Rules
 

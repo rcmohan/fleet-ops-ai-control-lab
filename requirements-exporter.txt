@@ -1,0 +1,3 @@
+-r requirements.txt
+google-cloud-firestore==2.34.1
+google-cloud-pubsub==2.43.0

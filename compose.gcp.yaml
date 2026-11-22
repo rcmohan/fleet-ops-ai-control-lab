@@ -1,0 +1,20 @@
+# Send exports to real Pub/Sub and Firestore instead of ./.cloud-export:
+#
+#   gcloud auth application-default login
+#   $env:FLEETOPS_GCP_PROJECT = "<your project>"
+#   docker compose -f compose.yaml -f compose.gcp.yaml up -d cloud-exporter
+#
+# The exporter uses your Application Default Credentials, mounted read-only. It needs the
+# fleetops-incidents topic and a Firestore database to exist (see AGENTIC.md, section 6.1).
+# FLEETOPS_GCLOUD_ADC defaults to where gcloud writes them on Windows.
+
+services:
+  cloud-exporter:
+    environment:
+      FLEETOPS_EXPORT_SINK: gcp
+      FLEETOPS_GCP_PROJECT: ${FLEETOPS_GCP_PROJECT:?FLEETOPS_GCP_PROJECT is required}
+      FLEETOPS_FIRESTORE_DATABASE: ${FLEETOPS_FIRESTORE_DATABASE:-(default)}
+      GOOGLE_APPLICATION_CREDENTIALS: /gcloud/adc.json
+      GOOGLE_CLOUD_PROJECT: ${FLEETOPS_GCP_PROJECT}
+    volumes:
+      - ${FLEETOPS_GCLOUD_ADC:-${APPDATA}/gcloud/application_default_credentials.json}:/gcloud/adc.json:ro

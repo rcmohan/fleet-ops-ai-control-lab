@@ -39,6 +39,21 @@ Swagger UI is available on `/docs` for every running service. Compose maps the s
 
 The gateway's front page is a status page. The `status-monitor` service (`status_monitor/`) checks every service's readiness every 5 seconds, whether or not the page is open, and keeps the last hour in memory. The page loads that hour when it opens and then follows new checks. History starts over when the monitor restarts.
 
+## Cloud exporter
+
+The planned cloud agent runs on GCP while this stack stays the system of record (see `AGENTIC.md`, section 6.1). The `cloud-exporter` service (`cloud_exporter/`) sends it what it needs:
+
+- **Incidents.** For every incident step, signal-correlation's outbox notifies the exporter. The exporter then writes the full incident, with its events and timeline, to the `incidents` collection and publishes it to the `fleetops-incidents` topic.
+- **Context.** Every 5 minutes it copies fleets, vehicles and digital-twin states, rewriting only documents that changed.
+
+By default the exporter writes to `./.cloud-export/`, laid out like Pub/Sub (`topics/*.jsonl`) and Firestore (`collections/<name>/<id>.json`), so you can inspect exactly what the agent would receive without a GCP project. `GET /cloud-exporter/v1/exports/status` on the gateway shows what was exported last. To send to GCP instead:
+
+```powershell
+gcloud auth application-default login
+$env:FLEETOPS_GCP_PROJECT = "<your project>"
+docker compose -f compose.yaml -f compose.gcp.yaml up -d --build cloud-exporter
+```
+
 ## Simulator
 
 `python -m fleetops_sim` plays the fleet as telematics devices. Each active vehicle drives trips inside its region and parks between them. Trips follow a small road network per region (`fleetops_sim/roads.py`): real town locations joined along highway corridors, so vehicles stay on land and only cross water on bridges and tunnels. `tests/test_roads.py` checks the networks against a land mask. It reports:

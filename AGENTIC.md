@@ -571,6 +571,54 @@ Four deployables carry the MVP: the synthetic-data function, the MCP tool servic
 
 Google documentation indicates ADK agents can be developed and deployed on Agent Runtime, and ADK agents can also be deployed to Cloud Run. ([Google Cloud Documentation][2]) Locally `adk web` runs the same graph against in-memory sessions; deployed, Agent Runtime provisions managed sessions automatically — so no code may assume in-memory session state.
 
+## 6.1 Hybrid deployment: local system of record, agent on GCP
+
+The table above puts everything on GCP. The cheaper variant, and the one being built, keeps the existing local stack (the 16 services, Postgres, the simulator and both consoles, all in Docker Compose) as the system of record and runs **only the agent** on GCP. The local stack replaces the synthetic-data function: GCP receives a copy of what the agent needs, and nothing on GCP can change local state directly.
+
+```text
+LOCAL (system of record)                              GCP
+simulator → telematics-event → signal-correlation
+                                  │ outbox
+                                  ▼
+                            cloud-exporter ── incident changes ─→ Pub/Sub fleetops-incidents ─→ start agent run
+                                  │      └─── incident snapshots ─→ Firestore incidents/{id}
+  vehicle-master, fleet-master, ──┘ context sync (periodic) ─────→ Firestore vehicles, fleets,
+  digital-twin-context                                             vehicleStates   ←── agent tools read
+                                                                   agent: triage → score → recommend → gate
+local bridge ←──────────────────── pull ───────────────────────── Firestore recommendations/{id}
+   └→ case-management / approval (operations console decides) ─ result ─→ resume the paused agent run
+```
+
+**Design rules**
+
+1. **Send incidents, not raw telemetry.** `signal-correlation` already is the deterministic Signal Monitor (Agent A, no LLM). The agent starts once per detected incident, with that incident's events and timeline attached. The raw event stream stays local; shipping it would add cost and noise but no reasoning value.
+2. **Export through the transactional outbox.** Every incident timeline step (`detected`, `recurred`, `scored`, `case_opened`, `closed`, …) already goes to the audit trail through the outbox; the same transaction also enqueues a small change notice for `cloud-exporter`. The outbox gives retries with backoff and at-least-once delivery, and an exporter outage never blocks correlation.
+3. **Snapshots, not deltas.** On each notice the exporter fetches the current incident and writes the whole thing. Consumers never reassemble state from a sequence of messages, so a duplicate or late message is harmless.
+4. **Outbound connections only.** The agent never calls the local stack: no tunnel, no public endpoint. It writes recommendations to Firestore; a local bridge pulls them, executes through the existing service contracts, and sends the approval result back to resume the run.
+5. **The local stack stays authoritative.** Every recommendation carries the `sourceVersion` and export time it was based on. The bridge re-checks the action against current local state and the deterministic policy gate before executing; a stale or disallowed recommendation is recorded and dropped, never executed.
+6. **Least-privilege credentials.** The exporter uses a service account that can only publish to the one topic and write Firestore documents (`roles/pubsub.publisher` on the topic, `roles/datastore.user`). Development uses `gcloud auth application-default login`; no key files on the laptop.
+
+**Message contract** (`fleetops.incident-change.v1`)
+
+| Where | Content |
+| --- | --- |
+| Pub/Sub `fleetops-incidents` | JSON body `{schema, exportedAt, change: {step, stepId, at}, incident}`; attributes `incidentId`, `vehicleId`, `step`, `status`, `sourceVersion`, `dedupeKey` (`<incidentId>:<stepId>`); ordering key = `incidentId` |
+| Firestore `incidents/{incidentId}` | the full incident from `getCorrelatedIncident` (status, scores, trigger and supporting events, timeline) plus `exportedAt` |
+| Firestore `vehicles`, `fleets`, `vehicleStates` | master data and digital-twin state, keyed by ID; only changed documents are rewritten on each sync |
+
+`change` says what happened; `incident` is the state when it was exported, which may already be further along (a `detected` notice can carry an incident that is already `case_opened`). Consumers deduplicate on `dedupeKey`, start an agent run only for `step == "detected"`, and read `incident.status` before acting. Ordering is per incident and best-effort: a retried notice can arrive after a later one, which is safe because every message carries a full snapshot.
+
+**What the agent does first.** Today the correlation worker opens the case or requests approval itself, deterministically. Phase one keeps that flow unchanged: the agent only adds triage and a recommendation, shown in the operations console next to the deterministic outcome. Once the eval set shows the agent agrees with the rules, it proposes actions through the bridge and the gate.
+
+**Build order**
+
+1. `cloud-exporter` with a local file sink (a stand-in for GCP that writes the exact messages and documents to `.cloud-export/`), driven by the outbox. *Built.*
+2. The same exporter against real Pub/Sub and Firestore (`FLEETOPS_EXPORT_SINK=gcp`, `compose.gcp.yaml`). *Built; needs a GCP project to run.*
+3. A minimal ADK agent on Agent Runtime that triages a detected incident and writes its result to `recommendations/{incidentId}`.
+4. The local bridge: pull recommendations, show them in the console, and later execute approved actions.
+
+**Cost.** Pub/Sub, Firestore and a few model calls per incident cost very little, and nothing runs on a schedule: incidents arrive only while the simulator runs. The context sync rewrites only documents that changed. All data is synthetic, and must stay that way.
+
 # 7. Prototype scope
 
 Do not try to build full fleet management. Build one polished flow.

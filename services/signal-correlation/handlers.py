@@ -199,7 +199,8 @@ async def record(
     detail: dict[str, Any] | None = None,
     audit: tuple[str, dict[str, Any]] | None = None,
 ) -> None:
-    """Append to the incident timeline and send the same fact to the audit trail."""
+    """Append to the incident timeline, send the same fact to the audit trail, and tell the
+    cloud exporter the incident changed (it fetches and exports the full incident itself)."""
     detail = detail or {}
     row = await fetch_one(
         conn,
@@ -217,6 +218,12 @@ async def record(
         "payload": {"incidentId": incident["incident_id"], "ruleId": incident["rule_id"],
                     "vehicleId": incident["vehicle_id"], **detail},
         **fields,
+    })
+    await enqueue(conn, "cloud-exporter", "/v1/exports/incident-changes", {
+        "incidentId": incident["incident_id"],
+        "step": step,
+        "stepId": row["step_id"],
+        "at": iso(row["at"]),
     })
 
 

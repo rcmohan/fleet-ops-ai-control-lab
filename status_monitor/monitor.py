@@ -23,6 +23,7 @@ SERVICES = (
     "service-provider-master", "vehicle-context-facade", "telematics-event",
     "digital-twin-context", "policy-playbook", "incident-search", "risk-scoring",
     "case-management", "notification", "approval", "audit-observability", "signal-correlation",
+    "cloud-exporter",
 )
 HTTP_METHODS = {"get", "post", "put", "patch", "delete"}
 

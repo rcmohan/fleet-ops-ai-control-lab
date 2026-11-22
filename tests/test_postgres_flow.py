@@ -8,15 +8,20 @@ migrations, and wires all 16 services together in-process. Skipped when the vari
 
 import os
 import sys
+import json
 import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import httpx
 import pytest
 from psycopg import AsyncConnection, sql
 from psycopg.conninfo import conninfo_to_dict, make_conninfo
 
+from cloud_exporter.app import build_app as build_exporter
+from cloud_exporter.exporter import Exporter
+from cloud_exporter.sinks import FileSink
 from fleetops_runtime import Database, MeshTransport, ServiceClients, build_app
 from fleetops_runtime.outbox import dispatch_once
 
@@ -34,6 +39,7 @@ class Mesh:
     http: httpx.AsyncClient
     databases: dict[str, Database]
     clients: ServiceClients
+    exports: Path   # the cloud exporter's file sink
 
     async def call(self, method: str, slug: str, path: str, **kwargs) -> httpx.Response:
         return await self.http.request(method, f"http://{slug}:8080{path}", **kwargs)
@@ -54,9 +60,12 @@ class Mesh:
 
 
 @pytest.fixture(scope="module")
-async def mesh(anyio_backend):
+async def mesh(anyio_backend, tmp_path_factory):
     transport = MeshTransport()
     clients = ServiceClients(transport=transport)
+    exports = tmp_path_factory.mktemp("cloud-export")
+    transport.apps["cloud-exporter"] = build_exporter(
+        Exporter(FileSink(exports), clients, context_interval=0), run_background=False)
     databases: dict[str, Database] = {}
     async with await AsyncConnection.connect(ADMIN_URL, autocommit=True) as admin:
         for slug, service in all_services().items():
@@ -76,7 +85,7 @@ async def mesh(anyio_backend):
                 run_background=False,
             )
     async with httpx.AsyncClient(transport=transport) as http:
-        yield Mesh(http, databases, clients)
+        yield Mesh(http, databases, clients, exports)
     for database in databases.values():
         await database.close()
 
@@ -638,6 +647,19 @@ async def test_correlation_turns_a_pattern_into_an_approved_case(mesh: Mesh) -> 
         "system_event", "system_event", "policy_decision", "system_event", "system_event",
         "human_decision", "action_outcome",
     ]
+
+    # The same drain delivered every step to the cloud exporter: one message per step, in
+    # order, each carrying a snapshot, and the stored document is the final state.
+    lines = (mesh.exports / "topics" / "fleetops-incidents.jsonl").read_text().splitlines()
+    exported = [json.loads(line) for line in lines]
+    exported = [m for m in exported if m["orderingKey"] == incident["incidentId"]]
+    assert [m["attributes"]["step"] for m in exported] == [
+        step["step"] for step in incident["timeline"]]
+    assert len({m["attributes"]["dedupeKey"] for m in exported}) == len(exported)
+    assert exported[0]["data"]["incident"]["vehicleId"] == vehicle
+    stored = json.loads((mesh.exports / "collections" / "incidents"
+                         / f"{incident['incidentId']}.json").read_text())
+    assert stored["status"] == "case_opened" and stored["caseId"] == case["caseId"]
 
     # Once closed, the next occurrence is a new incident.
     closed = await mesh.ok("POST", "signal-correlation", f"{path}/close",
