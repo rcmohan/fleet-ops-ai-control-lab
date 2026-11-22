@@ -591,7 +591,7 @@ local bridge ←──────────────────── pul
 
 **Design rules**
 
-1. **Send incidents, not raw telemetry.** `signal-correlation` already is the deterministic Signal Monitor (Agent A, no LLM). The agent starts once per detected incident, with that incident's events and timeline attached. The raw event stream stays local; shipping it would add cost and noise but no reasoning value.
+1. **Send incidents, not raw telemetry.** `signal-correlation` already is the deterministic Signal Monitor (Agent A, no LLM). The agent starts once per detected incident, with that incident's events and timeline attached and an evidence bundle (below). The raw event stream stays local; shipping it would add cost and noise but no reasoning value.
 2. **Export through the transactional outbox.** Every incident timeline step (`detected`, `recurred`, `scored`, `case_opened`, `closed`, …) already goes to the audit trail through the outbox; the same transaction also enqueues a small change notice for `cloud-exporter`. The outbox gives retries with backoff and at-least-once delivery, and an exporter outage never blocks correlation.
 3. **Snapshots, not deltas.** On each notice the exporter fetches the current incident and writes the whole thing. Consumers never reassemble state from a sequence of messages, so a duplicate or late message is harmless.
 4. **Outbound connections only.** The agent never calls the local stack: no tunnel, no public endpoint. It writes recommendations to Firestore; a local bridge pulls them, executes through the existing service contracts, and sends the approval result back to resume the run.
@@ -602,20 +602,47 @@ local bridge ←──────────────────── pul
 
 | Where | Content |
 | --- | --- |
-| Pub/Sub `fleetops-incidents` | JSON body `{schema, exportedAt, change: {step, stepId, at}, incident}`; attributes `incidentId`, `vehicleId`, `step`, `status`, `sourceVersion`, `dedupeKey` (`<incidentId>:<stepId>`); ordering key = `incidentId` |
-| Firestore `incidents/{incidentId}` | the full incident from `getCorrelatedIncident` (status, scores, trigger and supporting events, timeline) plus `exportedAt` |
+| Pub/Sub `fleetops-incidents` | JSON body `{schema, exportedAt, change: {step, stepId, at}, incident, evidenceRef}`; attributes `incidentId`, `vehicleId`, `step`, `status`, `sourceVersion`, `dedupeKey` (`<incidentId>:<stepId>`), and `evidenceRef` when the step built a bundle; ordering key = `incidentId` |
+| Firestore `incidents/{incidentId}` | the full incident from `getCorrelatedIncident` (status, scores, matched symptoms, trigger and supporting events, timeline) plus `exportedAt` |
+| Firestore `evidence/{incidentId}` | the evidence bundle (`fleetops.evidence.v1`), rebuilt on `detected` and `recurred` and written before the message |
 | Firestore `vehicles`, `fleets`, `vehicleStates` | master data and digital-twin state, keyed by ID; only changed documents are rewritten on each sync |
 
 `change` says what happened; `incident` is the state when it was exported, which may already be further along (a `detected` notice can carry an incident that is already `case_opened`). Consumers deduplicate on `dedupeKey`, start an agent run only for `step == "detected"`, and read `incident.status` before acting. Ordering is per incident and best-effort: a retried notice can arrive after a later one, which is safe because every message carries a full snapshot.
 
 **What the agent does first.** Today the correlation worker opens the case or requests approval itself, deterministically. Phase one keeps that flow unchanged: the agent only adds triage and a recommendation, shown in the operations console next to the deterministic outcome. Once the eval set shows the agent agrees with the rules, it proposes actions through the bridge and the gate.
 
+**Evidence bundle** (`fleetops.evidence.v1`, `cloud_exporter/evidence.py`)
+
+Triage needs far more than the incident: the vehicle's history, its unit and firmware, the fleet's SLA, what else is happening in the region, how similar incidents were resolved, and which playbooks and actions apply. The exporter gathers all of it locally, once per `detected` or `recurred` step, into one document the agent reads instead of querying the stack:
+
+| Section | Source | Why triage needs it |
+| --- | --- | --- |
+| `vehicle`, `unit` | vehicle-context-facade, telematics-unit-master | model, fleet, current twin state, firmware and hardware |
+| `fleet` | fleet-master, digital-twin-context | SLA response target, contract, priority, how many of the fleet's vehicles are degraded |
+| `recentEvents` | telematics-event, 24 h before the incident | counts by type, the battery-voltage series, and every non-routine event; routine traffic (location, heartbeats) is counted but not carried |
+| `activeAlerts` | telematics-event | what is already raised for the vehicle |
+| `regional` | telematics-event, last hour | vehicles with lost connectivity or missed heartbeats, per region: several vehicles in one region points to the network, not this vehicle |
+| `maintenance` | maintenance-history | the last 20 records |
+| `similarIncidents`, `history` | incident-search | the top 5 past incidents matched on the rule's symptoms, with root cause and resolution; common resolutions and resolution times per event type |
+| `playbooks` | policy-playbook | matching playbooks by ID and score; their content ships with the agent as Skills |
+| `actions` | policy-playbook | each action's approval mode, maximum autonomous risk and reviewer role |
+| `downstreamImpact` | digital-twin-context | affected fleets and impact level |
+| `features` | computed by the exporter | voltage latest, minimum and trend (V/h over 6 h), low-voltage readings, missed heartbeats, DTC codes, days since the last maintenance and battery service, other vehicles affected in the region, the most common root cause among similar incidents |
+| `citations` | computed | every reference the agent may cite: `event:<id>`, `maintenance:<id>`, `incident:<id>`, `playbook:<id>`, `alert:<id>`, `feature:<name>`, `vehicle`, `unit`, `fleet`, `regional` |
+| `gaps` | computed | sources that had nothing (404) or refused (4xx), so the agent reports missing context instead of guessing |
+
+Rules: features are computed in code and the model only reads them; triage output must cite references from `citations` and is rejected otherwise. A source that is down fails the whole bundle and the outbox retries, so a bundle is never silently partial. Bundles stay under Firestore's 1 MiB limit by dropping the oldest notable events first, recorded as a gap. Stored bundles are the eval set: the same input can be replayed against a new prompt or model.
+
+What the bundle cannot anticipate is requested at run time: the triage step writes an allowlisted query to `contextRequests/{incidentId}`, the local bridge answers it into the bundle, and the paused run resumes. *(Planned.)*
+
 **Build order**
 
 1. `cloud-exporter` with a local file sink (a stand-in for GCP that writes the exact messages and documents to `.cloud-export/`), driven by the outbox. *Built.*
 2. The same exporter against real Pub/Sub and Firestore (`FLEETOPS_EXPORT_SINK=gcp`, `compose.gcp.yaml`). *Built; needs a GCP project to run.*
-3. A minimal ADK agent on Agent Runtime that triages a detected incident and writes its result to `recommendations/{incidentId}`.
-4. The local bridge: pull recommendations, show them in the console, and later execute approved actions.
+3. The evidence bundle for each detected or recurring incident. *Built.*
+4. Playbooks as repo files, seeding both policy-playbook and the agent's Skills.
+5. A minimal ADK agent on Agent Runtime that triages a detected incident and writes its result to `recommendations/{incidentId}`.
+6. The local bridge: pull recommendations, show them in the console, and later execute approved actions.
 
 **Cost.** Pub/Sub, Firestore and a few model calls per incident cost very little, and nothing runs on a schedule: incidents arrive only while the simulator runs. The context sync rewrites only documents that changed. All data is synthetic, and must stay that way.
 

@@ -14,7 +14,7 @@ from fleetops_runtime.services import ServiceClients
 
 NOW = datetime(2026, 11, 18, 9, 0, tzinfo=UTC)
 STAMP = "2026-11-18T09:00:00Z"
-CHANGE = {"incidentId": "inc_1", "step": "detected", "stepId": 7, "at": "2026-11-18T08:59:00Z"}
+CHANGE = {"incidentId": "inc_1", "step": "scored", "stepId": 7, "at": "2026-11-18T08:59:00Z"}
 
 
 class Services:
@@ -68,7 +68,7 @@ async def test_incident_change_writes_snapshot_and_publishes(tmp_path) -> None:
     first, second = topic_lines(tmp_path)
     assert first["orderingKey"] == "inc_1"
     assert first["attributes"] == {"incidentId": "inc_1", "vehicleId": "veh_1",
-                                   "step": "detected", "status": "case_opened",
+                                   "step": "scored", "status": "case_opened",
                                    "sourceVersion": "4", "dedupeKey": "inc_1:7"}
     assert first["data"]["schema"] == SCHEMA and first["data"]["change"] == CHANGE
     assert first["data"]["incident"]["status"] == "case_opened"

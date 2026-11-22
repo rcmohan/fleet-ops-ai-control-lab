@@ -418,8 +418,14 @@ async def get_incident(ctx: RequestContext) -> dict[str, Any]:
         "ORDER BY step_id",
         (incident["incident_id"],),
     )
+    rule = RULES_BY_ID[incident["rule_id"]]
+    triggers = [(row["step_name"], Signal.from_row(row)) for row in events
+                if row["role"] == "trigger"]
     return {
         **to_incident(incident),
+        # The same symptoms the service case gets; incident-search matches on them.
+        "symptoms": case_symptoms(rule, triggers),
+        "caseEventType": rule.case_event_type,
         "events": [
             {
                 "eventId": row["event_id"],

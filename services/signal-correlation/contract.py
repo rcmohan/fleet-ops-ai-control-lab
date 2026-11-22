@@ -66,6 +66,9 @@ CONTRACT = ServiceContract(
             response={
                 **INCIDENT,
                 "incidentId": "{incident_id}",
+                "symptoms": ["diagnostic_failure", "dtc_p0562", "low_voltage",
+                             "missed_heartbeat"],
+                "caseEventType": "battery_voltage",
                 "events": [
                     {
                         "eventId": "evt_demo_001",

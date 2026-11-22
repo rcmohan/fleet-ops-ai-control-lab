@@ -44,6 +44,7 @@ The gateway's front page is a status page. The `status-monitor` service (`status
 The planned cloud agent runs on GCP while this stack stays the system of record (see `AGENTIC.md`, section 6.1). The `cloud-exporter` service (`cloud_exporter/`) sends it what it needs:
 
 - **Incidents.** For every incident step, signal-correlation's outbox notifies the exporter. The exporter then writes the full incident, with its events and timeline, to the `incidents` collection and publishes it to the `fleetops-incidents` topic.
+- **Evidence.** When an incident is detected or recurs, the exporter also gathers an evidence bundle into the `evidence` collection. The bundle holds the vehicle, unit and fleet details, 24 hours of events, regional connectivity, maintenance, similar past incidents, playbooks, action rules and computed features, each with citation references the agent must use (`AGENTIC.md`, section 6.1).
 - **Context.** Every 5 minutes it copies fleets, vehicles and digital-twin states, rewriting only documents that changed.
 
 By default the exporter writes to `./.cloud-export/`, laid out like Pub/Sub (`topics/*.jsonl`) and Firestore (`collections/<name>/<id>.json`), so you can inspect exactly what the agent would receive without a GCP project. `GET /cloud-exporter/v1/exports/status` on the gateway shows what was exported last. To send to GCP instead:

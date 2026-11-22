@@ -614,6 +614,15 @@
             "type": "integer",
             "title": "Sourceversion"
           },
+          "symptoms": {
+            "items": {},
+            "type": "array",
+            "title": "Symptoms"
+          },
+          "caseEventType": {
+            "type": "string",
+            "title": "Caseeventtype"
+          },
           "events": {
             "items": {},
             "type": "array",
@@ -645,6 +654,8 @@
           "detectedAt",
           "updatedAt",
           "sourceVersion",
+          "symptoms",
+          "caseEventType",
           "events",
           "timeline"
         ],

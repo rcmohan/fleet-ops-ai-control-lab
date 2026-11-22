@@ -5,6 +5,10 @@ step. For each notice the exporter fetches the current incident (events and time
 writes it to the `incidents` collection, and publishes it to the incident topic. Messages are
 full snapshots, so a duplicate or late one is harmless.
 
+Evidence: for the steps that bring new facts (detected, recurred), the exporter also gathers
+an evidence bundle from the local services (see evidence.py) and writes it to the `evidence`
+collection before the incident and the message, so an agent woken by the message finds it.
+
 Context: every few minutes the exporter copies fleets, vehicles and digital-twin states to
 collections of the same name, rewriting only documents that changed since the last sync.
 
@@ -23,6 +27,7 @@ from typing import Any
 from fleetops_runtime.services import ServiceClients
 from fleetops_runtime.util import content_hash, iso
 
+from .evidence import build_evidence
 from .sinks import Sink
 
 log = logging.getLogger("fleetops.cloud_exporter")
@@ -30,6 +35,8 @@ log = logging.getLogger("fleetops.cloud_exporter")
 SCHEMA = "fleetops.incident-change.v1"
 DEFAULT_TOPIC = "fleetops-incidents"
 INCIDENTS = "incidents"
+EVIDENCE = "evidence"
+EVIDENCE_STEPS = frozenset({"detected", "recurred"})
 MAX_PAGES = 100
 
 # collection, service, list path, ID field
@@ -84,28 +91,38 @@ class Exporter:
                 "signal-correlation", f"/v1/correlation/incidents/{incident_id}")
             if incident is None:
                 raise IncidentGone(incident_id)
-            exported_at = iso(self.clock())
+            now = self.clock()
+            exported_at = iso(now)
+            evidence_ref = None
+            if change["step"] in EVIDENCE_STEPS:
+                bundle = await build_evidence(self.services, incident, now)
+                await self.sink.put(EVIDENCE, {incident_id: bundle})
+                evidence_ref = f"{EVIDENCE}/{incident_id}"
             await self.sink.put(INCIDENTS, {incident_id: {**incident, "exportedAt": exported_at}})
+            attributes = {
+                "incidentId": incident_id,
+                "vehicleId": incident["vehicleId"],
+                "step": change["step"],
+                "status": incident["status"],
+                "sourceVersion": str(incident["sourceVersion"]),
+                "dedupeKey": f"{incident_id}:{change['stepId']}",
+            }
+            if evidence_ref:
+                attributes["evidenceRef"] = evidence_ref
             await self.sink.publish(
                 self.topic,
                 {"schema": SCHEMA, "exportedAt": exported_at, "change": change,
-                 "incident": incident},
+                 "incident": incident, "evidenceRef": evidence_ref},
                 ordering_key=incident_id,
-                attributes={
-                    "incidentId": incident_id,
-                    "vehicleId": incident["vehicleId"],
-                    "step": change["step"],
-                    "status": incident["status"],
-                    "sourceVersion": str(incident["sourceVersion"]),
-                    "dedupeKey": f"{incident_id}:{change['stepId']}",
-                },
+                attributes=attributes,
             )
         except Exception as exc:
             self._failed(f"incident {incident_id}", exc)
             raise
         self.incidents_exported += 1
         self.last_incident = {"incidentId": incident_id, "step": change["step"],
-                              "status": incident["status"], "exportedAt": exported_at}
+                              "status": incident["status"], "exportedAt": exported_at,
+                              "evidenceRef": evidence_ref}
         return self.last_incident
 
     # --- context -----------------------------------------------------------------------------

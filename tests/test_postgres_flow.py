@@ -661,6 +661,22 @@ async def test_correlation_turns_a_pattern_into_an_approved_case(mesh: Mesh) -> 
                          / f"{incident['incidentId']}.json").read_text())
     assert stored["status"] == "case_opened" and stored["caseId"] == case["caseId"]
 
+    # Detection and the recurrence each carried an evidence bundle built from the real services.
+    with_evidence = [m["attributes"]["step"] for m in exported if "evidenceRef" in m["attributes"]]
+    assert with_evidence == ["detected", "recurred"]
+    bundle = json.loads((mesh.exports / "collections" / "evidence"
+                         / f"{incident['incidentId']}.json").read_text())
+    assert bundle["schema"] == "fleetops.evidence.v1" and bundle["vehicleId"] == vehicle
+    assert bundle["vehicle"]["profile"]["vehicleId"] == vehicle
+    assert bundle["fleet"]["sla"] is not None and bundle["unit"] is not None
+    assert bundle["features"]["heartbeatsMissed24h"] >= 1
+    assert bundle["features"]["dtcCodes24h"] == ["P0562"]
+    assert {a["actionType"] for a in bundle["actions"]} >= {"create_service_case"}
+    assert any(p["playbookId"] == "pb_battery_voltage" for p in bundle["playbooks"])
+    assert all(f"event:{event_id}" in bundle["citations"]
+               for event_id in incident["triggerEventIds"]), bundle["citations"]
+    assert bundle["gaps"] == [], bundle["gaps"]
+
     # Once closed, the next occurrence is a new incident.
     closed = await mesh.ok("POST", "signal-correlation", f"{path}/close",
                            json={"reason": "Battery replaced"})
