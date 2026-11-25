@@ -252,8 +252,8 @@ services:
       retries: 5
       start_period: 5s
 
-  # Copies incidents and fleet context for the cloud agent (AGENTIC.md, section 6.1).
-  # By default it writes to ./.cloud-export, laid out like Pub/Sub and Firestore; add
+  # Copies events, incidents, evidence and fleet context to BigQuery (AGENTIC.md, 6.1).
+  # By default it writes to ./.cloud-export, laid out like the tables and topic; add
   # compose.gcp.yaml to send to a real GCP project. Reached only through the gateway.
   cloud-exporter:
     build:
@@ -264,6 +264,8 @@ services:
       FLEETOPS_EXPORT_SINK: file
       FLEETOPS_EXPORT_DIR: /data
       FLEETOPS_EXPORT_CONTEXT_INTERVAL_SECONDS: "300"
+      FLEETOPS_EXPORT_EVENTS_INTERVAL_SECONDS: "60"
+      FLEETOPS_EXPORT_FLUSH_INTERVAL_SECONDS: "300"
     volumes:
       - ./.cloud-export:/data
     healthcheck:

@@ -2,6 +2,8 @@
 
     POST /v1/exports/incident-changes   called by signal-correlation's outbox
     POST /v1/exports/context-sync       sync context now (it also runs on a timer)
+    POST /v1/exports/events             read new telematics events now (also on a timer)
+    POST /v1/exports/flush              load buffered rows into the sink now (also on a timer)
     GET  /v1/exports/status             what was exported last, and the last error
 
 Errors map onto the outbox's retry rules: 503 when the sink or signal-correlation is down
@@ -55,8 +57,8 @@ def build_app(exporter: Exporter, *, run_background: bool = True) -> FastAPI:
 
     app = FastAPI(
         title="Cloud Exporter",
-        description="Copies incidents and fleet context from the local stack to the cloud "
-                    "agent's sink (a local directory, or Pub/Sub and Firestore).",
+        description="Copies events, incidents, evidence and fleet context from the local "
+                    "stack to a sink (a local directory, or BigQuery and Pub/Sub).",
         version="0.1.0",
         lifespan=lifespan,
     )
@@ -87,6 +89,17 @@ def build_app(exporter: Exporter, *, run_background: bool = True) -> FastAPI:
             return await exporter.sync_context()
         except (SinkUnavailable, DependencyUnavailable, DependencyRejected) as exc:
             raise api_error(503, "EXPORT_UNAVAILABLE", str(exc)) from None
+
+    @app.post("/v1/exports/events")
+    async def events() -> dict[str, Any]:
+        try:
+            return await exporter.export_events()
+        except (SinkUnavailable, DependencyUnavailable, DependencyRejected) as exc:
+            raise api_error(503, "EXPORT_UNAVAILABLE", str(exc)) from None
+
+    @app.post("/v1/exports/flush")
+    async def flush() -> dict[str, Any]:
+        return await exporter.flush()
 
     @app.get("/v1/exports/status")
     async def status() -> dict[str, Any]:

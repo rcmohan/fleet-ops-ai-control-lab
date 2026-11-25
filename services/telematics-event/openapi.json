@@ -403,6 +403,58 @@
         "x-dummy-implementation": false
       }
     },
+    "/v1/event-feed": {
+      "get": {
+        "tags": [
+          "Telematics Event Service"
+        ],
+        "summary": "Read every event in the order it was received, for export",
+        "description": "Read every event in the order it was received, for export",
+        "operationId": "getEventFeed",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getEventFeedResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "x-dummy-implementation": false
+      }
+    },
     "/v1/vehicles/{vehicle_id}/active-alerts": {
       "get": {
         "tags": [
@@ -537,6 +589,31 @@
           "synthetic"
         ],
         "title": "getEventDetailsResponse"
+      },
+      "getEventFeedResponse": {
+        "properties": {
+          "items": {
+            "items": {},
+            "type": "array",
+            "title": "Items"
+          },
+          "nextCursor": {
+            "type": "string",
+            "title": "Nextcursor"
+          },
+          "more": {
+            "type": "boolean",
+            "title": "More"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "nextCursor",
+          "more"
+        ],
+        "title": "getEventFeedResponse"
       },
       "getRecentVehicleEventsResponse": {
         "properties": {

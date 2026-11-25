@@ -35,7 +35,7 @@ MAX_NOTABLE = 100
 MAX_VOLTAGE_READINGS = 96
 MAX_MAINTENANCE = 20
 SIMILAR_INCIDENTS = 5
-MAX_BYTES = 900_000                   # Firestore documents are limited to 1 MiB
+MAX_BYTES = 900_000                   # keeps the bundle and its message small
 
 ROUTINE = {"location", "heartbeat", "ignition_on", "ignition_off", "battery_voltage"}
 CONNECTIVITY = ("connectivity_lost", "heartbeat_missed")
@@ -338,7 +338,7 @@ def size(bundle: dict[str, Any]) -> int:
 
 
 def shrink(bundle: dict[str, Any]) -> dict[str, Any]:
-    """Keep the bundle under the Firestore document limit by dropping the oldest notable
+    """Keep the bundle under MAX_BYTES by dropping the oldest notable
     events first; the counts and features still describe them."""
     notable = bundle["recentEvents"]["notable"]
     while size(bundle) > MAX_BYTES and notable:

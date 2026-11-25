@@ -657,15 +657,22 @@ async def test_correlation_turns_a_pattern_into_an_approved_case(mesh: Mesh) -> 
         step["step"] for step in incident["timeline"]]
     assert len({m["attributes"]["dedupeKey"] for m in exported}) == len(exported)
     assert exported[0]["data"]["incident"]["vehicleId"] == vehicle
-    stored = json.loads((mesh.exports / "collections" / "incidents"
-                         / f"{incident['incidentId']}.json").read_text())
-    assert stored["status"] == "case_opened" and stored["caseId"] == case["caseId"]
+    table = [json.loads(line) for line in
+             (mesh.exports / "tables" / "incidents.jsonl").read_text().splitlines()]
+    snapshots = [row for row in table if row["incidentId"] == incident["incidentId"]]
+    assert [row["step"] for row in snapshots] == [step["step"] for step in incident["timeline"]]
+    newest = max(snapshots, key=lambda row: row["sourceVersion"])   # as incidents_latest picks
+    assert newest["status"] == "case_opened" and newest["incident"]["caseId"] == case["caseId"]
 
     # Detection and the recurrence each carried an evidence bundle built from the real services.
-    with_evidence = [m["attributes"]["step"] for m in exported if "evidenceRef" in m["attributes"]]
+    with_evidence = [m["attributes"]["step"] for m in exported
+                     if m["attributes"]["hasEvidence"] == "true"]
     assert with_evidence == ["detected", "recurred"]
-    bundle = json.loads((mesh.exports / "collections" / "evidence"
-                         / f"{incident['incidentId']}.json").read_text())
+    bundles = [row["bundle"] for row in map(json.loads, (
+        mesh.exports / "tables" / "evidence.jsonl").read_text().splitlines())
+        if row["incidentId"] == incident["incidentId"]]
+    assert len(bundles) == 2
+    bundle = bundles[-1]
     assert bundle["schema"] == "fleetops.evidence.v1" and bundle["vehicleId"] == vehicle
     assert bundle["vehicle"]["profile"]["vehicleId"] == vehicle
     assert bundle["fleet"]["sla"] is not None and bundle["unit"] is not None
@@ -676,6 +683,20 @@ async def test_correlation_turns_a_pattern_into_an_approved_case(mesh: Mesh) -> 
     assert all(f"event:{event_id}" in bundle["citations"]
                for event_id in incident["triggerEventIds"]), bundle["citations"]
     assert bundle["gaps"] == [], bundle["gaps"]
+
+    # The exporter's event export reads the real feed (the 30 s settle waived for the test)
+    # and appends every event the pattern produced.
+    feed = sys.modules["telematics_event_handlers"]
+    settle, feed.FEED_SETTLE = feed.FEED_SETTLE, timedelta(0)
+    try:
+        exported_events = await mesh.ok("POST", "cloud-exporter", "/v1/exports/events")
+    finally:
+        feed.FEED_SETTLE = settle
+    assert exported_events["appended"] > 0
+    event_rows = [json.loads(line) for line in
+                  (mesh.exports / "tables" / "events.jsonl").read_text().splitlines()]
+    assert set(incident["triggerEventIds"]) <= {row["eventId"] for row in event_rows}
+
 
     # Once closed, the next occurrence is a new incident.
     closed = await mesh.ok("POST", "signal-correlation", f"{path}/close",

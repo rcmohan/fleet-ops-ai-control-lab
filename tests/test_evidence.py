@@ -249,9 +249,9 @@ async def test_detected_step_exports_evidence_before_the_message(tmp_path) -> No
     writes: list[str] = []
 
     class Recording(FileSink):
-        async def put(self, collection, documents):
-            writes.append(collection)
-            await super().put(collection, documents)
+        async def append(self, table, rows):
+            writes.append(table)
+            await super().append(table, rows)
 
         async def publish(self, topic, data, **kwargs):
             writes.append("publish")
@@ -269,11 +269,14 @@ async def test_detected_step_exports_evidence_before_the_message(tmp_path) -> No
     await exporter.export_incident_change({**change, "step": "scored", "stepId": 2})
 
     assert writes == ["evidence", "incidents", "publish", "incidents", "publish"]
-    assert result["evidenceRef"] == "evidence/inc_1"
+    assert result["evidence"] is True
     lines = [json.loads(line) for line in
              (tmp_path / "topics" / "fleetops-incidents.jsonl").read_text().splitlines()]
-    assert lines[0]["attributes"]["evidenceRef"] == "evidence/inc_1"
-    assert lines[0]["data"]["evidenceRef"] == "evidence/inc_1"
-    assert "evidenceRef" not in lines[1]["attributes"] and lines[1]["data"]["evidenceRef"] is None
-    stored = json.loads((tmp_path / "collections" / "evidence" / "inc_1.json").read_text())
-    assert stored["incidentId"] == "inc_1" and stored["features"]["heartbeatsMissed24h"] == 1
+    # The bundle travels inline, so the agent needs nothing else to start.
+    assert lines[0]["attributes"]["hasEvidence"] == "true"
+    assert lines[0]["data"]["evidence"]["features"]["heartbeatsMissed24h"] == 1
+    assert lines[1]["attributes"]["hasEvidence"] == "false" and lines[1]["data"]["evidence"] is None
+    (stored,) = [json.loads(line) for line in
+                 (tmp_path / "tables" / "evidence.jsonl").read_text().splitlines()]
+    assert stored["incidentId"] == "inc_1" and stored["step"] == "detected"
+    assert stored["bundle"] == lines[0]["data"]["evidence"]

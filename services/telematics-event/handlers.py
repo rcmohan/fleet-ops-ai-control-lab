@@ -15,6 +15,9 @@ from fleetops_runtime.util import content_hash, encode_cursor, iso, new_id, pars
 HANDLERS = HandlerRegistry()
 
 MAX_CLOCK_SKEW = timedelta(minutes=5)
+# The feed holds back the newest rows: received_at is set when an ingest transaction starts,
+# so a row can commit after a later-stamped one. Waiting this long means none are skipped.
+FEED_SETTLE = timedelta(seconds=30)
 SEVERITY_RANK = {"info": 0, "warning": 1, "critical": 2}
 
 
@@ -286,6 +289,34 @@ async def events_by_type(ctx: RequestContext) -> dict[str, Any]:
 @HANDLERS.operation("searchEventsByRegion")
 async def events_by_region(ctx: RequestContext) -> dict[str, Any]:
     return await search(ctx, "region_code", ctx.path["region"])
+
+
+@HANDLERS.operation("getEventFeed")
+async def event_feed(ctx: RequestContext) -> dict[str, Any]:
+    """Every event in the order received, for copying elsewhere. Resume with nextCursor, which
+    is returned even when the page is empty."""
+    after, limit = ctx.page(2, default=200)
+    if after:
+        start = [parse_time(after[0], "cursor"), after[1]]
+    else:
+        since = ctx.query("since")
+        start = [parse_time(since, "since") if since else datetime(1970, 1, 1, tzinfo=UTC), ""]
+    rows = await fetch_all(
+        ctx.db,
+        """
+        SELECT * FROM telemetry.events
+        WHERE (received_at, event_id) > (%s, %s) AND received_at <= now() - %s
+        ORDER BY received_at, event_id
+        LIMIT %s
+        """,
+        (*start, FEED_SETTLE, limit + 1),
+    )
+    more = len(rows) > limit
+    rows = rows[:limit]
+    last = [iso(rows[-1]["received_at"]), rows[-1]["event_id"]] if rows else [iso(start[0]),
+                                                                              start[1]]
+    return {"items": [to_event(row) for row in rows], "nextCursor": encode_cursor(last),
+            "more": more}
 
 
 @HANDLERS.operation("getEventDetails")

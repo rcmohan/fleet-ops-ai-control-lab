@@ -1,18 +1,25 @@
-"""Copies what the cloud agent needs from the local stack to a sink.
+"""Copies data from the local stack to a sink (BigQuery tables, and later the agent's topic).
 
 Incidents: signal-correlation enqueues a change notice through its outbox for every timeline
-step. For each notice the exporter fetches the current incident (events and timeline included),
-writes it to the `incidents` collection, and publishes it to the incident topic. Messages are
-full snapshots, so a duplicate or late one is harmless.
+step. For each notice the exporter fetches the current incident (events and timeline included)
+and appends it to the `incidents` table. Rows are full snapshots, so a duplicate or late one is
+harmless; the `incidents_latest` view keeps the newest.
 
 Evidence: for the steps that bring new facts (detected, recurred), the exporter also gathers
-an evidence bundle from the local services (see evidence.py) and writes it to the `evidence`
-collection before the incident and the message, so an agent woken by the message finds it.
+an evidence bundle from the local services (see evidence.py) into the `evidence` table.
 
-Context: every few minutes the exporter copies fleets, vehicles and digital-twin states to
-collections of the same name, rewriting only documents that changed since the last sync.
+Topic: when a topic is configured, each change is also published with the incident and its
+evidence inline. That is what will wake the cloud agent; until it exists, leave it unset.
 
-The message contract is described in AGENTIC.md, section 6.1.
+Events: every minute the exporter reads telematics-event's feed from where it stopped and
+appends the new events. It starts a few minutes back when it starts, and does not backfill
+time the laptop was off.
+
+Context: every few minutes the exporter appends fleets, vehicles and digital-twin states that
+changed since the last sync, and all of them once a day, so the 7-day table expiry never drops
+a vehicle that has not changed.
+
+The sink loads its buffered rows on its own interval. See AGENTIC.md, section 6.1.
 """
 
 from __future__ import annotations
@@ -20,8 +27,8 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
-from collections.abc import Callable
-from datetime import UTC, datetime
+from collections.abc import Awaitable, Callable
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from fleetops_runtime.services import ServiceClients
@@ -34,17 +41,21 @@ log = logging.getLogger("fleetops.cloud_exporter")
 
 SCHEMA = "fleetops.incident-change.v1"
 DEFAULT_TOPIC = "fleetops-incidents"
-INCIDENTS = "incidents"
-EVIDENCE = "evidence"
 EVIDENCE_STEPS = frozenset({"detected", "recurred"})
 MAX_PAGES = 100
+FEED_PAGE = 200
+MAX_FEED_PAGES = 50                    # per run; the next run carries on
+EVENTS_START_BACK = timedelta(minutes=10)
+FULL_RESYNC = timedelta(hours=24)
 
-# collection, service, list path, ID field
+# table, service, list path, ID field
 CONTEXT: tuple[tuple[str, str, str, str], ...] = (
     ("fleets", "fleet-master", "/v1/fleets", "fleetId"),
     ("vehicles", "vehicle-master", "/v1/vehicles", "vehicleId"),
     ("vehicleStates", "digital-twin-context", "/v1/digital-twins/vehicles", "vehicleId"),
 )
+EVENT_FIELDS = ("eventId", "vehicleId", "eventType", "severity", "regionCode", "observedAt",
+                "receivedAt", "payload", "synthetic")
 
 
 class IncidentGone(Exception):
@@ -57,26 +68,38 @@ class Exporter:
         sink: Sink,
         services: ServiceClients,
         *,
-        topic: str = DEFAULT_TOPIC,
+        topic: str | None = DEFAULT_TOPIC,
         context_interval: float = 300.0,
+        events_interval: float = 60.0,
+        flush_interval: float = 300.0,
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
     ) -> None:
-        self.sink, self.services, self.topic = sink, services, topic
-        self.context_interval, self.clock = context_interval, clock
-        self._hashes: dict[str, dict[str, str]] = {}   # collection -> doc ID -> content hash
+        self.sink, self.services, self.topic = sink, services, topic or None
+        self.context_interval, self.events_interval = context_interval, events_interval
+        self.flush_interval, self.clock = flush_interval, clock
+        self._hashes: dict[str, dict[str, str]] = {}   # table -> ID -> content hash
+        self._full_sync_at: datetime | None = None
         self._sync_lock = asyncio.Lock()
-        self.incidents_exported = 0
+        self._events_lock = asyncio.Lock()
+        self.events_cursor: str | None = None
+        self.incidents_exported = self.events_exported = 0
         self.last_incident: dict[str, Any] | None = None
         self.last_sync: dict[str, Any] | None = None
+        self.last_events: dict[str, Any] | None = None
+        self.last_flush: dict[str, Any] | None = None
         self.last_error: dict[str, Any] | None = None
 
     @classmethod
     def from_env(cls, sink: Sink, services: ServiceClients) -> "Exporter":
+        def seconds(name: str, default: str) -> float:
+            return float(os.environ.get(name, default))
+
         return cls(
             sink, services,
             topic=os.environ.get("FLEETOPS_EXPORT_INCIDENT_TOPIC", DEFAULT_TOPIC),
-            context_interval=float(os.environ.get("FLEETOPS_EXPORT_CONTEXT_INTERVAL_SECONDS",
-                                                  "300")),
+            context_interval=seconds("FLEETOPS_EXPORT_CONTEXT_INTERVAL_SECONDS", "300"),
+            events_interval=seconds("FLEETOPS_EXPORT_EVENTS_INTERVAL_SECONDS", "60"),
+            flush_interval=seconds("FLEETOPS_EXPORT_FLUSH_INTERVAL_SECONDS", "300"),
         )
 
     def _failed(self, what: str, exc: Exception) -> None:
@@ -93,37 +116,78 @@ class Exporter:
                 raise IncidentGone(incident_id)
             now = self.clock()
             exported_at = iso(now)
-            evidence_ref = None
+            bundle = None
             if change["step"] in EVIDENCE_STEPS:
                 bundle = await build_evidence(self.services, incident, now)
-                await self.sink.put(EVIDENCE, {incident_id: bundle})
-                evidence_ref = f"{EVIDENCE}/{incident_id}"
-            await self.sink.put(INCIDENTS, {incident_id: {**incident, "exportedAt": exported_at}})
-            attributes = {
-                "incidentId": incident_id,
-                "vehicleId": incident["vehicleId"],
-                "step": change["step"],
-                "status": incident["status"],
-                "sourceVersion": str(incident["sourceVersion"]),
-                "dedupeKey": f"{incident_id}:{change['stepId']}",
-            }
-            if evidence_ref:
-                attributes["evidenceRef"] = evidence_ref
-            await self.sink.publish(
-                self.topic,
-                {"schema": SCHEMA, "exportedAt": exported_at, "change": change,
-                 "incident": incident, "evidenceRef": evidence_ref},
-                ordering_key=incident_id,
-                attributes=attributes,
-            )
+                await self.sink.append("evidence", [{
+                    "incidentId": incident_id, "vehicleId": incident["vehicleId"],
+                    "step": change["step"], "sourceVersion": incident["sourceVersion"],
+                    "builtAt": exported_at, "bundle": bundle,
+                }])
+            await self.sink.append("incidents", [{
+                "incidentId": incident_id, "vehicleId": incident["vehicleId"],
+                "ruleId": incident.get("ruleId"), "status": incident["status"],
+                "riskLevel": incident.get("riskLevel"), "riskScore": incident.get("riskScore"),
+                "step": change["step"], "stepId": change["stepId"],
+                "sourceVersion": incident["sourceVersion"], "exportedAt": exported_at,
+                "incident": incident,
+            }])
+            if self.topic:
+                await self.sink.publish(
+                    self.topic,
+                    {"schema": SCHEMA, "exportedAt": exported_at, "change": change,
+                     "incident": incident, "evidence": bundle},
+                    ordering_key=incident_id,
+                    attributes={
+                        "incidentId": incident_id,
+                        "vehicleId": incident["vehicleId"],
+                        "step": change["step"],
+                        "status": incident["status"],
+                        "sourceVersion": str(incident["sourceVersion"]),
+                        "dedupeKey": f"{incident_id}:{change['stepId']}",
+                        "hasEvidence": "true" if bundle else "false",
+                    },
+                )
         except Exception as exc:
             self._failed(f"incident {incident_id}", exc)
             raise
         self.incidents_exported += 1
         self.last_incident = {"incidentId": incident_id, "step": change["step"],
                               "status": incident["status"], "exportedAt": exported_at,
-                              "evidenceRef": evidence_ref}
+                              "evidence": bundle is not None}
         return self.last_incident
+
+    # --- events ------------------------------------------------------------------------------
+
+    async def export_events(self) -> dict[str, Any]:
+        """Append the events received since the last run. Returns how many were appended."""
+        async with self._events_lock:
+            appended = 0
+            try:
+                for _ in range(MAX_FEED_PAGES):
+                    if self.events_cursor:
+                        query = {"cursor": self.events_cursor}
+                    else:
+                        query = {"since": iso(self.clock() - EVENTS_START_BACK)}
+                    page = await self.services.get("telematics-event", "/v1/event-feed",
+                                                   limit=FEED_PAGE, **query)
+                    if page is None:
+                        break
+                    exported_at = iso(self.clock())
+                    rows = [{**{name: event.get(name) for name in EVENT_FIELDS},
+                             "exportedAt": exported_at} for event in page["items"]]
+                    await self.sink.append("events", rows)
+                    self.events_cursor = page["nextCursor"]   # only once the sink has them
+                    appended += len(rows)
+                    if not page.get("more"):
+                        break
+            except Exception as exc:
+                self._failed("events", exc)
+                raise
+            finally:
+                self.events_exported += appended
+            self.last_events = {"at": iso(self.clock()), "appended": appended}
+            return self.last_events
 
     # --- context -----------------------------------------------------------------------------
 
@@ -141,41 +205,75 @@ class Exporter:
         return items
 
     async def sync_context(self) -> dict[str, Any]:
-        """Copy changed context documents. Returns how many were written per collection."""
+        """Append changed context rows (all of them once a day). Returns counts per table."""
         async with self._sync_lock:
+            now = self.clock()
+            full = self._full_sync_at is None or now - self._full_sync_at >= FULL_RESYNC
+            if full:
+                self._hashes.clear()
             written: dict[str, int] = {}
             try:
-                for collection, service, path, id_field in CONTEXT:
-                    known = self._hashes.setdefault(collection, {})
-                    changed, hashes = {}, {}
+                for table, service, path, id_field in CONTEXT:
+                    known = self._hashes.setdefault(table, {})
+                    rows, hashes = [], {}
+                    synced_at = iso(self.clock())
                     for item in await self._list(service, path):
                         doc_id, digest = item[id_field], content_hash(item)
                         if known.get(doc_id) != digest:
-                            changed[doc_id], hashes[doc_id] = item, digest
-                    synced_at = iso(self.clock())
-                    await self.sink.put(collection, {
-                        doc_id: {**item, "syncedAt": synced_at} for doc_id, item in changed.items()
-                    })
+                            rows.append({"id": doc_id, "syncedAt": synced_at, "data": item})
+                            hashes[doc_id] = digest
+                    await self.sink.append(table, rows)
                     known.update(hashes)   # only once the sink has them
-                    written[collection] = len(changed)
+                    written[table] = len(rows)
             except Exception as exc:
                 self._failed("context sync", exc)
                 raise
-            self.last_sync = {"at": iso(self.clock()), "written": written}
+            if full:
+                self._full_sync_at = now
+            self.last_sync = {"at": iso(self.clock()), "full": full, "written": written}
             return self.last_sync
 
-    async def run(self) -> None:
-        """Sync context now and then every context_interval seconds (0 disables it)."""
-        if self.context_interval <= 0:
-            return
+    # --- loading -----------------------------------------------------------------------------
+
+    async def flush(self) -> dict[str, Any]:
+        result = await self.sink.flush()
+        if result["failed"]:
+            self._failed("flush", RuntimeError("; ".join(
+                f"{table}: {error}" for table, error in result["failed"].items())))
+        self.last_flush = {"at": iso(self.clock()), **result}
+        return self.last_flush
+
+    async def _every(self, interval: float, name: str,
+                     step: Callable[[], Awaitable[Any]]) -> None:
         while True:
             try:
-                await self.sync_context()
+                await step()
             except asyncio.CancelledError:
                 raise
             except Exception:
-                log.exception("context sync failed")
-            await asyncio.sleep(self.context_interval)
+                log.exception("%s failed", name)
+            await asyncio.sleep(interval)
+
+    async def run(self) -> None:
+        """Sync context, read events and flush the sink, each on its own interval (0 disables).
+        Stopping flushes once more, so a clean shutdown keeps what is buffered."""
+        loops = [(self.context_interval, "context sync", self.sync_context),
+                 (self.events_interval, "event export", self.export_events),
+                 (self.flush_interval, "flush", self.flush)]
+        tasks = [asyncio.create_task(self._every(interval, name, step))
+                 for interval, name, step in loops if interval > 0]
+        try:
+            if tasks:
+                await asyncio.gather(*tasks)
+        finally:
+            for task in tasks:
+                task.cancel()
+            if tasks:
+                await asyncio.gather(*tasks, return_exceptions=True)
+                try:
+                    await asyncio.shield(self.flush())
+                except Exception:
+                    log.exception("final flush failed")
 
     def status(self) -> dict[str, Any]:
         return {
@@ -183,7 +281,12 @@ class Exporter:
             "topic": self.topic,
             "incidentsExported": self.incidents_exported,
             "lastIncident": self.last_incident,
+            "eventsExported": self.events_exported,
+            "lastEvents": self.last_events,
             "contextIntervalSeconds": self.context_interval,
+            "eventsIntervalSeconds": self.events_interval,
+            "flushIntervalSeconds": self.flush_interval,
             "lastContextSync": self.last_sync,
+            "lastFlush": self.last_flush,
             "lastError": self.last_error,
         }

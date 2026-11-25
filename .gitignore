@@ -217,5 +217,5 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Cloud exporter file sink (local stand-in for Pub/Sub and Firestore)
+# Cloud exporter file sink (local stand-in for BigQuery and Pub/Sub)
 .cloud-export/

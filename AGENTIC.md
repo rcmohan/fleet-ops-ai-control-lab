@@ -571,45 +571,68 @@ Four deployables carry the MVP: the synthetic-data function, the MCP tool servic
 
 Google documentation indicates ADK agents can be developed and deployed on Agent Runtime, and ADK agents can also be deployed to Cloud Run. ([Google Cloud Documentation][2]) Locally `adk web` runs the same graph against in-memory sessions; deployed, Agent Runtime provisions managed sessions automatically — so no code may assume in-memory session state.
 
-## 6.1 Hybrid deployment: local system of record, agent on GCP
+## 6.1 Hybrid deployment: local system of record, data and agent on GCP
 
-The table above puts everything on GCP. The cheaper variant, and the one being built, keeps the existing local stack (the 16 services, Postgres, the simulator and both consoles, all in Docker Compose) as the system of record and runs **only the agent** on GCP. The local stack replaces the synthetic-data function: GCP receives a copy of what the agent needs, and nothing on GCP can change local state directly.
+The table above puts everything on GCP. The variant being built costs almost nothing: the existing local stack (the 16 services, Postgres, the simulator and both consoles, all in Docker Compose) stays the system of record and runs on the laptop. GCP holds **a copy of the data in BigQuery**, a **static dashboard**, and, last, **the agent**. Nothing on GCP runs continuously and nothing on GCP can change local state.
 
 ```text
-LOCAL (system of record)                              GCP
-simulator → telematics-event → signal-correlation
-                                  │ outbox
-                                  ▼
-                            cloud-exporter ── incident changes ─→ Pub/Sub fleetops-incidents ─→ start agent run
-                                  │      └─── incident snapshots ─→ Firestore incidents/{id}
-  vehicle-master, fleet-master, ──┘ context sync (periodic) ─────→ Firestore vehicles, fleets,
-  digital-twin-context                                             vehicleStates   ←── agent tools read
-                                                                   agent: triage → score → recommend → gate
-local bridge ←──────────────────── pull ───────────────────────── Firestore recommendations/{id}
-   └→ case-management / approval (operations console decides) ─ result ─→ resume the paused agent run
+LOCAL (system of record, runs while the laptop is on)          GCP
+simulator → telematics-event ── event feed (every minute) ──┐
+                 └→ signal-correlation                       │
+                       │ outbox (every incident step)        │
+                       ▼                                     ▼
+                 cloud-exporter ── buffered rows, loaded every 5 min ──→ BigQuery dataset fleetops
+  vehicle-master, fleet-master,  ──┘ context (every 5 min)               events, incidents, evidence,
+  digital-twin-context                                                   fleets, vehicles, vehicleStates
+                       │                                                 + *_latest views
+                       ├── status.json (planned) ────────────────────→ Cloud Storage → static dashboard
+                       └── incident + evidence (later) ──────────────→ Pub/Sub → agent on Cloud Run
 ```
+
+**Phases**
+
+1. **Data into BigQuery.** *Built.* Events, incidents, evidence bundles and context tables, appended in batches.
+2. **Dashboard.** A static HTML page on Cloud Storage that renders JSON files. The local exporter writes `status.json` (fleet and service health) every few minutes; there is no scheduled cloud function, because the laptop already has the data and the compute.
+3. **Playbooks as repo files**, seeding both policy-playbook and the agent's Skills.
+4. **The agent.** A Cloud Run service (scales to zero) behind a Pub/Sub push subscription. Each message carries the incident and its evidence bundle inline; the agent queries BigQuery when it needs more history, writes its findings to a BigQuery table, and writes `triage.json` for the dashboard. Each file has one writer, so the two never overwrite each other.
+5. **The local bridge**, if the agent's recommendations should act locally: it pulls them over an outbound connection and executes through the existing service contracts.
 
 **Design rules**
 
-1. **Send incidents, not raw telemetry.** `signal-correlation` already is the deterministic Signal Monitor (Agent A, no LLM). The agent starts once per detected incident, with that incident's events and timeline attached and an evidence bundle (below). The raw event stream stays local; shipping it would add cost and noise but no reasoning value.
-2. **Export through the transactional outbox.** Every incident timeline step (`detected`, `recurred`, `scored`, `case_opened`, `closed`, …) already goes to the audit trail through the outbox; the same transaction also enqueues a small change notice for `cloud-exporter`. The outbox gives retries with backoff and at-least-once delivery, and an exporter outage never blocks correlation.
-3. **Snapshots, not deltas.** On each notice the exporter fetches the current incident and writes the whole thing. Consumers never reassemble state from a sequence of messages, so a duplicate or late message is harmless.
-4. **Outbound connections only.** The agent never calls the local stack: no tunnel, no public endpoint. It writes recommendations to Firestore; a local bridge pulls them, executes through the existing service contracts, and sends the approval result back to resume the run.
-5. **The local stack stays authoritative.** Every recommendation carries the `sourceVersion` and export time it was based on. The bridge re-checks the action against current local state and the deterministic policy gate before executing; a stale or disallowed recommendation is recorded and dropped, never executed.
-6. **Least-privilege credentials.** The exporter uses a service account that can only publish to the one topic and write Firestore documents (`roles/pubsub.publisher` on the topic, `roles/datastore.user`). Development uses `gcloud auth application-default login`; no key files on the laptop.
+1. **Periodic, best effort.** The exporter buffers rows in memory and loads them with BigQuery batch load jobs (free; streaming inserts are not) every 5 minutes, and once more on a clean shutdown. While the laptop is off nothing is produced and nothing is exported; rows still buffered when the exporter is killed are lost. The local stack is authoritative, so a gap in the copy is acceptable. A failed load keeps its rows for the next flush, up to 200,000 rows per table, after which the oldest are dropped and counted (`droppedRows` in the status).
+2. **Append-only, deduplicated in views.** Every table only ever gets new rows: an outbox retry or a resync adds a duplicate instead of updating. Each table has a `<table>_latest` view that keeps the newest row per key, and readers use the views. No MERGE or DML, which would cost query bytes.
+3. **Incidents through the transactional outbox.** Every incident timeline step (`detected`, `recurred`, `scored`, `case_opened`, `closed`, …) enqueues a change notice for `cloud-exporter` in the same transaction that records it. The exporter fetches the current incident and appends a full snapshot, so consumers never reassemble state from deltas.
+4. **Events from a feed.** telematics-event serves `GET /v1/event-feed`: every event in the order received (`received_at`, `event_id`), resumable by cursor. It holds back the newest 30 seconds, because `received_at` is stamped when an ingest transaction starts and a row can commit after a later-stamped one. The exporter keeps its cursor in memory and, on start, begins 10 minutes back; it does not backfill time the exporter was down.
+5. **Cheap scans.** Tables are partitioned by day and clustered on the columns queries filter by, with the full record in a JSON column, so a new field in a service response needs no schema change. Raw telemetry and the context copies expire after 7 days; incidents and evidence are kept, because they are small and they are what the agent compares against. The exporter rewrites every context row once a day, so the expiry never drops a vehicle that has not changed.
+6. **The local stack stays authoritative.** When the agent exists, every recommendation carries the `sourceVersion` and export time it was based on; the bridge re-checks it against current local state and the deterministic policy gate before executing anything.
+7. **Least-privilege credentials.** The exporter's identity needs `roles/bigquery.dataEditor` on the dataset and `roles/bigquery.jobUser` on the project (plus `roles/pubsub.publisher` on the topic once the agent exists). Development uses `gcloud auth application-default login`; no key files on the laptop.
 
-**Message contract** (`fleetops.incident-change.v1`)
+**Tables** (dataset `fleetops`; definitions in `cloud_exporter/tables.py`)
 
-| Where | Content |
+| Table | One row per | Partitioned by, clustered by | Kept | `_latest` keeps the newest per |
+| --- | --- | --- | --- | --- |
+| `events` | telematics event: IDs, type, severity, region, times, `payload` (JSON) | `observedAt`; `vehicleId`, `eventType` | 7 days | `eventId` |
+| `incidents` | incident step: status, risk, step, `sourceVersion`, full `incident` (JSON, with events and timeline) | `exportedAt`; `incidentId` | always | `incidentId`, by `sourceVersion` |
+| `evidence` | evidence bundle, on `detected` and `recurred`: `bundle` (JSON, `fleetops.evidence.v1`) | `builtAt`; `incidentId` | always | `incidentId` |
+| `fleets`, `vehicles`, `vehicleStates` | changed record, and every record daily: `id`, `syncedAt`, `data` (JSON) | `syncedAt`; `id` | 7 days | `id` |
+
+The exporter creates the tables and views on its first load; the dataset is created once by hand (`bq mk --location=US --dataset <project>:fleetops`).
+
+**Cost.** At simulator volumes (about 200 MB of events a day, so about 1.4 GB kept) everything stays inside BigQuery's free tier: 10 GB of storage and 1 TB of queries a month, and load jobs are free. Native tables with expiry beat CSV files behind an external table: storage costs the same, but external CSV cannot skip columns or clusters, so every query reads whole files. The dashboard is a few small files on Cloud Storage. The agent, when it comes, is the only real cost: model tokens per triaged incident, bounded by triaging only `detected` and `recurred` steps and a daily cap. All data is synthetic, and must stay that way.
+
+**Message contract** (`fleetops.incident-change.v1`, for the agent phase)
+
+Published only when `FLEETOPS_EXPORT_INCIDENT_TOPIC` names a topic (`fleetops-incidents`). The local file sink writes it by default so it can be inspected.
+
+| Part | Content |
 | --- | --- |
-| Pub/Sub `fleetops-incidents` | JSON body `{schema, exportedAt, change: {step, stepId, at}, incident, evidenceRef}`; attributes `incidentId`, `vehicleId`, `step`, `status`, `sourceVersion`, `dedupeKey` (`<incidentId>:<stepId>`), and `evidenceRef` when the step built a bundle; ordering key = `incidentId` |
-| Firestore `incidents/{incidentId}` | the full incident from `getCorrelatedIncident` (status, scores, matched symptoms, trigger and supporting events, timeline) plus `exportedAt` |
-| Firestore `evidence/{incidentId}` | the evidence bundle (`fleetops.evidence.v1`), rebuilt on `detected` and `recurred` and written before the message |
-| Firestore `vehicles`, `fleets`, `vehicleStates` | master data and digital-twin state, keyed by ID; only changed documents are rewritten on each sync |
+| body | `{schema, exportedAt, change: {incidentId, step, stepId, at}, incident, evidence}`; `evidence` is the bundle on `detected` and `recurred`, otherwise `null` (a bundle is under 900 KB; a message may be 10 MB) |
+| attributes | `incidentId`, `vehicleId`, `step`, `status`, `sourceVersion`, `dedupeKey` (`<incidentId>:<stepId>`), `hasEvidence` |
+| ordering key | `incidentId` |
 
-`change` says what happened; `incident` is the state when it was exported, which may already be further along (a `detected` notice can carry an incident that is already `case_opened`). Consumers deduplicate on `dedupeKey`, start an agent run only for `step == "detected"`, and read `incident.status` before acting. Ordering is per incident and best-effort: a retried notice can arrive after a later one, which is safe because every message carries a full snapshot.
+`change` says what happened; `incident` is the state when it was exported, which may already be further along. Consumers deduplicate on `dedupeKey`, start a triage run only for `hasEvidence == "true"`, and read `incident.status` before acting. Ordering is per incident and best-effort, which is safe because every message carries a full snapshot.
 
-**What the agent does first.** Today the correlation worker opens the case or requests approval itself, deterministically. Phase one keeps that flow unchanged: the agent only adds triage and a recommendation, shown in the operations console next to the deterministic outcome. Once the eval set shows the agent agrees with the rules, it proposes actions through the bridge and the gate.
+**What the agent does first.** The correlation worker opens the case or requests approval itself, deterministically. The first agent only adds triage and a recommendation, shown on the dashboard next to the deterministic outcome. Once the eval set (the stored evidence bundles, replayed against a prompt or model) shows it agrees with the rules, it proposes actions through the bridge and the gate.
 
 **Evidence bundle** (`fleetops.evidence.v1`, `cloud_exporter/evidence.py`)
 
@@ -631,20 +654,9 @@ Triage needs far more than the incident: the vehicle's history, its unit and fir
 | `citations` | computed | every reference the agent may cite: `event:<id>`, `maintenance:<id>`, `incident:<id>`, `playbook:<id>`, `alert:<id>`, `feature:<name>`, `vehicle`, `unit`, `fleet`, `regional` |
 | `gaps` | computed | sources that had nothing (404) or refused (4xx), so the agent reports missing context instead of guessing |
 
-Rules: features are computed in code and the model only reads them; triage output must cite references from `citations` and is rejected otherwise. A source that is down fails the whole bundle and the outbox retries, so a bundle is never silently partial. Bundles stay under Firestore's 1 MiB limit by dropping the oldest notable events first, recorded as a gap. Stored bundles are the eval set: the same input can be replayed against a new prompt or model.
+Rules: features are computed in code and the model only reads them; triage output must cite references from `citations` and is rejected otherwise. A source that is down fails the whole bundle and the outbox retries, so a bundle is never silently partial. Bundles stay under 900 KB by dropping the oldest notable events first, recorded as a gap.
 
-What the bundle cannot anticipate is requested at run time: the triage step writes an allowlisted query to `contextRequests/{incidentId}`, the local bridge answers it into the bundle, and the paused run resumes. *(Planned.)*
-
-**Build order**
-
-1. `cloud-exporter` with a local file sink (a stand-in for GCP that writes the exact messages and documents to `.cloud-export/`), driven by the outbox. *Built.*
-2. The same exporter against real Pub/Sub and Firestore (`FLEETOPS_EXPORT_SINK=gcp`, `compose.gcp.yaml`). *Built; needs a GCP project to run.*
-3. The evidence bundle for each detected or recurring incident. *Built.*
-4. Playbooks as repo files, seeding both policy-playbook and the agent's Skills.
-5. A minimal ADK agent on Agent Runtime that triages a detected incident and writes its result to `recommendations/{incidentId}`.
-6. The local bridge: pull recommendations, show them in the console, and later execute approved actions.
-
-**Cost.** Pub/Sub, Firestore and a few model calls per incident cost very little, and nothing runs on a schedule: incidents arrive only while the simulator runs. The context sync rewrites only documents that changed. All data is synthetic, and must stay that way.
+What the bundle cannot anticipate is requested at run time through the local bridge: the agent writes an allowlisted query, the bridge answers it, and the run resumes. *(Planned, with the bridge.)*
 
 # 7. Prototype scope
 

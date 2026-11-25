@@ -41,19 +41,25 @@ The gateway's front page is a status page. The `status-monitor` service (`status
 
 ## Cloud exporter
 
-The planned cloud agent runs on GCP while this stack stays the system of record (see `AGENTIC.md`, section 6.1). The `cloud-exporter` service (`cloud_exporter/`) sends it what it needs:
+A copy of the stack's data goes to BigQuery on GCP, for a static dashboard and, later, a cloud agent, while this stack stays the system of record (see `AGENTIC.md`, section 6.1). The `cloud-exporter` service (`cloud_exporter/`) sends:
 
-- **Incidents.** For every incident step, signal-correlation's outbox notifies the exporter. The exporter then writes the full incident, with its events and timeline, to the `incidents` collection and publishes it to the `fleetops-incidents` topic.
-- **Evidence.** When an incident is detected or recurs, the exporter also gathers an evidence bundle into the `evidence` collection. The bundle holds the vehicle, unit and fleet details, 24 hours of events, regional connectivity, maintenance, similar past incidents, playbooks, action rules and computed features, each with citation references the agent must use (`AGENTIC.md`, section 6.1).
-- **Context.** Every 5 minutes it copies fleets, vehicles and digital-twin states, rewriting only documents that changed.
+- **Events.** Every minute it reads telematics-event's feed (`GET /v1/event-feed`) from where it stopped and appends the new events to the `events` table.
+- **Incidents.** For every incident step, signal-correlation's outbox notifies the exporter, which appends the full incident, with its events and timeline, to the `incidents` table.
+- **Evidence.** When an incident is detected or recurs, the exporter also gathers an evidence bundle into the `evidence` table. The bundle holds the vehicle, unit and fleet details, 24 hours of events, regional connectivity, maintenance, similar past incidents, playbooks, action rules and computed features, each with citation references the agent must use.
+- **Context.** Every 5 minutes it appends the fleets, vehicles and digital-twin states that changed, and all of them once a day.
 
-By default the exporter writes to `./.cloud-export/`, laid out like Pub/Sub (`topics/*.jsonl`) and Firestore (`collections/<name>/<id>.json`), so you can inspect exactly what the agent would receive without a GCP project. `GET /cloud-exporter/v1/exports/status` on the gateway shows what was exported last. To send to GCP instead:
+Rows are buffered and loaded every 5 minutes with batch load jobs, which are free. Tables are append-only; each has a `<table>_latest` view that keeps the newest row per key. Events and context expire after 7 days; incidents and evidence are kept. Export is best effort: while the laptop is off nothing is exported, and rows still buffered when the exporter is killed are lost.
+
+By default the exporter writes to `./.cloud-export/` instead: `tables/<table>.jsonl` holds the rows that would be loaded, and `topics/fleetops-incidents.jsonl` the incident messages the agent will receive. `GET /cloud-exporter/v1/exports/status` on the gateway shows what was exported last, what is buffered, and the last error. To send to BigQuery:
 
 ```powershell
 gcloud auth application-default login
+bq mk --location=US --dataset <your project>:fleetops
 $env:FLEETOPS_GCP_PROJECT = "<your project>"
 docker compose -f compose.yaml -f compose.gcp.yaml up -d --build cloud-exporter
 ```
+
+The exporter creates its tables and views on the first load. It needs BigQuery Data Editor on the dataset and BigQuery Job User on the project. Nothing goes to Pub/Sub until `FLEETOPS_EXPORT_INCIDENT_TOPIC` is set, which is for the agent phase.
 
 ## Simulator
 

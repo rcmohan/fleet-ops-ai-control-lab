@@ -86,6 +86,19 @@ CONTRACT = ServiceContract(
         ),
         Operation(
             method="GET",
+            path="/v1/event-feed",
+            operation_id="getEventFeed",
+            summary="Read every event in the order it was received, for export",
+            response={"items": [EVENT], "nextCursor": "WyIyMDI2LTA4LTIyVDEyOjAwOjAxWiJd",
+                      "more": False},
+            parameters=(
+                Parameter("since"),
+                Parameter("cursor"),
+                Parameter("limit", schema_type="integer"),
+            ),
+        ),
+        Operation(
+            method="GET",
             path="/v1/vehicles/{vehicle_id}/active-alerts",
             operation_id="getActiveAlerts",
             summary="Get active vehicle alerts",
