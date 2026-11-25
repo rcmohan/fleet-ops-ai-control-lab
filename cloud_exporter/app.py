@@ -5,6 +5,7 @@
     POST /v1/exports/events             read new telematics events now (also on a timer)
     POST /v1/exports/flush              load buffered rows into the sink now (also on a timer)
     GET  /v1/exports/status             what was exported last, and the last error
+    GET  /v1/dashboard/status.json      the dashboard snapshot (rebuilt every minute)
 
 Errors map onto the outbox's retry rules: 503 when the sink or signal-correlation is down
 (the outbox retries with backoff), 410 when the incident no longer exists (the outbox gives
@@ -22,6 +23,7 @@ from contextlib import asynccontextmanager, suppress
 from typing import Annotated, Any
 
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from fleetops_runtime.errors import DependencyRejected, DependencyUnavailable, api_error
@@ -100,6 +102,13 @@ def build_app(exporter: Exporter, *, run_background: bool = True) -> FastAPI:
     @app.post("/v1/exports/flush")
     async def flush() -> dict[str, Any]:
         return await exporter.flush()
+
+    @app.get("/v1/dashboard/status.json")
+    async def dashboard_status() -> JSONResponse:
+        if exporter.dashboard is None:
+            raise api_error(404, "DASHBOARD_DISABLED", "the dashboard is turned off")
+        status = exporter.dashboard.latest or await exporter.dashboard.refresh()
+        return JSONResponse(status, headers={"Cache-Control": "no-store"})
 
     @app.get("/v1/exports/status")
     async def status() -> dict[str, Any]:

@@ -573,10 +573,10 @@ Google documentation indicates ADK agents can be developed and deployed on Agent
 
 ## 6.1 Hybrid deployment: local system of record, data and agent on GCP
 
-The table above puts everything on GCP. The variant being built costs almost nothing: the existing local stack (the 16 services, Postgres, the simulator and both consoles, all in Docker Compose) stays the system of record and runs on the laptop. GCP holds **a copy of the data in BigQuery**, a **static dashboard**, and, last, **the agent**. Nothing on GCP runs continuously and nothing on GCP can change local state.
+The table above puts everything on GCP. The variant being built costs almost nothing: the existing local stack (the 16 services, Postgres, the simulator and both consoles, all in Docker Compose) stays the system of record and runs on the laptop. GCP holds, in order of when they are built, a **static dashboard**, optionally **a copy of the data in BigQuery**, and, last, **the agent**. Nothing on GCP runs continuously and nothing on GCP can change local state.
 
 ```text
-LOCAL (system of record, runs while the laptop is on)          GCP
+LOCAL (system of record, runs while the laptop is on)          GCP (all optional)
 simulator → telematics-event ── event feed (every minute) ──┐
                  └→ signal-correlation                       │
                        │ outbox (every incident step)        │
@@ -585,14 +585,14 @@ simulator → telematics-event ── event feed (every minute) ──┐
   vehicle-master, fleet-master,  ──┘ context (every 5 min)               events, incidents, evidence,
   digital-twin-context                                                   fleets, vehicles, vehicleStates
                        │                                                 + *_latest views
-                       ├── status.json (planned) ────────────────────→ Cloud Storage → static dashboard
+                       ├── status.json (every minute) ───────────────→ Cloud Storage → static dashboard
                        └── incident + evidence (later) ──────────────→ Pub/Sub → agent on Cloud Run
 ```
 
 **Phases**
 
-1. **Data into BigQuery.** *Built.* Events, incidents, evidence bundles and context tables, appended in batches.
-2. **Dashboard.** A static HTML page on Cloud Storage that renders JSON files. The local exporter writes `status.json` (fleet and service health) every few minutes; there is no scheduled cloud function, because the laptop already has the data and the compute.
+1. **Dashboard.** *Built.* A static HTML page (`gateway/html/dashboard/`) that renders one JSON file. The local exporter rebuilds `status.json` (`fleetops.status.v1`: fleet health by region, battery distribution, incidents per hour, recent incidents with their steps and time to a case, vehicles and fleets needing attention, service health) every minute and, when `FLEETOPS_DASHBOARD_BUCKET` is set, uploads it to a public Cloud Storage bucket that also holds the page. There is no cloud function: the laptop already has the data and the compute. Locally the gateway serves it at `/dashboard/`, so screenshots never depend on GCP.
+2. **Data into BigQuery.** *Built, off by default.* Events, incidents, evidence bundles and context tables, appended in batches (`compose.gcp.yaml`). Nothing reads them yet; they are for history and analytics (for example Looker Studio reports linked from the dashboard) once that is worth its setup.
 3. **Playbooks as repo files**, seeding both policy-playbook and the agent's Skills.
 4. **The agent.** A Cloud Run service (scales to zero) behind a Pub/Sub push subscription. Each message carries the incident and its evidence bundle inline; the agent queries BigQuery when it needs more history, writes its findings to a BigQuery table, and writes `triage.json` for the dashboard. Each file has one writer, so the two never overwrite each other.
 5. **The local bridge**, if the agent's recommendations should act locally: it pulls them over an outbound connection and executes through the existing service contracts.
@@ -618,7 +618,7 @@ simulator → telematics-event ── event feed (every minute) ──┐
 
 The exporter creates the tables and views on its first load; the dataset is created once by hand (`bq mk --location=US --dataset <project>:fleetops`).
 
-**Cost.** At simulator volumes (about 200 MB of events a day, so about 1.4 GB kept) everything stays inside BigQuery's free tier: 10 GB of storage and 1 TB of queries a month, and load jobs are free. Native tables with expiry beat CSV files behind an external table: storage costs the same, but external CSV cannot skip columns or clusters, so every query reads whole files. The dashboard is a few small files on Cloud Storage. The agent, when it comes, is the only real cost: model tokens per triaged incident, bounded by triaging only `detected` and `recurred` steps and a daily cap. All data is synthetic, and must stay that way.
+**Cost.** The dashboard is two small files in a bucket, rewritten once a minute (about 43,000 writes a month, a few cents). With BigQuery on, at simulator volumes (about 200 MB of events a day, so about 1.4 GB kept) everything stays inside BigQuery's free tier: 10 GB of storage and 1 TB of queries a month, and load jobs are free. Native tables with expiry beat CSV files behind an external table: storage costs the same, but external CSV cannot skip columns or clusters, so every query reads whole files. The agent, when it comes, is the only real cost: model tokens per triaged incident, bounded by triaging only `detected` and `recurred` steps and a daily cap. All data is synthetic, and must stay that way.
 
 **Message contract** (`fleetops.incident-change.v1`, for the agent phase)
 

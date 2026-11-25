@@ -19,7 +19,11 @@ Context: every few minutes the exporter appends fleets, vehicles and digital-twi
 changed since the last sync, and all of them once a day, so the 7-day table expiry never drops
 a vehicle that has not changed.
 
-The sink loads its buffered rows on its own interval. See AGENTIC.md, section 6.1.
+The sink loads its buffered rows on its own interval. Events and context feed BigQuery only,
+so the default local setup turns them off.
+
+Dashboard: every minute the exporter also rebuilds status.json for the static dashboard (see
+dashboard.py). See AGENTIC.md, section 6.1.
 """
 
 from __future__ import annotations
@@ -34,6 +38,7 @@ from typing import Any
 from fleetops_runtime.services import ServiceClients
 from fleetops_runtime.util import content_hash, iso
 
+from .dashboard import Dashboard
 from .evidence import build_evidence
 from .sinks import Sink
 
@@ -72,8 +77,10 @@ class Exporter:
         context_interval: float = 300.0,
         events_interval: float = 60.0,
         flush_interval: float = 300.0,
+        dashboard: Dashboard | None = None,
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
     ) -> None:
+        self.dashboard = dashboard
         self.sink, self.services, self.topic = sink, services, topic or None
         self.context_interval, self.events_interval = context_interval, events_interval
         self.flush_interval, self.clock = flush_interval, clock
@@ -94,8 +101,11 @@ class Exporter:
         def seconds(name: str, default: str) -> float:
             return float(os.environ.get(name, default))
 
+        dashboard_interval = seconds("FLEETOPS_DASHBOARD_INTERVAL_SECONDS", "60")
         return cls(
             sink, services,
+            dashboard=Dashboard.from_env(services, dashboard_interval)
+            if dashboard_interval > 0 else None,
             topic=os.environ.get("FLEETOPS_EXPORT_INCIDENT_TOPIC", DEFAULT_TOPIC),
             context_interval=seconds("FLEETOPS_EXPORT_CONTEXT_INTERVAL_SECONDS", "300"),
             events_interval=seconds("FLEETOPS_EXPORT_EVENTS_INTERVAL_SECONDS", "60"),
@@ -260,6 +270,8 @@ class Exporter:
         loops = [(self.context_interval, "context sync", self.sync_context),
                  (self.events_interval, "event export", self.export_events),
                  (self.flush_interval, "flush", self.flush)]
+        if self.dashboard:
+            loops.append((self.dashboard.refresh_seconds, "dashboard", self.dashboard.refresh))
         tasks = [asyncio.create_task(self._every(interval, name, step))
                  for interval, name, step in loops if interval > 0]
         try:
@@ -288,5 +300,6 @@ class Exporter:
             "flushIntervalSeconds": self.flush_interval,
             "lastContextSync": self.last_sync,
             "lastFlush": self.last_flush,
+            "dashboard": self.dashboard.describe() if self.dashboard else None,
             "lastError": self.last_error,
         }

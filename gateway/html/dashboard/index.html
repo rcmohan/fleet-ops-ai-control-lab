@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FleetOps Live Fleet</title>
+<meta name="description" content="Live status of a synthetic connected-vehicle fleet: health, battery, incidents and services.">
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb; --border: rgba(11,11,11,0.10);
+    --text: #0b0b0b; --text-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --axis: #c3c2b7;
+    --series: #2a78d6;
+    --good: #0ca30c; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b; --stale: #b5b3ab;
+    --good-ink: #006300; --warning-ink: #8a5a00; --critical-ink: #b02a2a;
+    --chip: #f0efec; --banner: #fff6e0; --banner-ink: #6b4a00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19; --border: rgba(255,255,255,0.10);
+      --text: #f0efec; --text-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #383835;
+      --series: #3987e5;
+      --stale: #5f5e59;
+      --good-ink: #0ca30c; --warning-ink: #fab219; --critical-ink: #ff7b7b;
+      --chip: #262624; --banner: #2b2111; --banner-ink: #f0c060;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --border: rgba(255,255,255,0.10);
+    --text: #f0efec; --text-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835;
+    --series: #3987e5;
+    --stale: #5f5e59;
+    --good-ink: #0ca30c; --warning-ink: #fab219; --critical-ink: #ff7b7b;
+    --chip: #262624; --banner: #2b2111; --banner-ink: #f0c060;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text);
+         font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 24px 16px 48px; }
+  header { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: end; justify-content: space-between; }
+  h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
+  h2 { font-size: 15px; margin: 0; }
+  .sub { color: var(--text-2); margin-top: 2px; }
+  .badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+           background: var(--chip); color: var(--text-2); }
+  .banner { margin-top: 16px; padding: 10px 14px; border-radius: 10px; background: var(--banner); color: var(--banner-ink); }
+  .banner:empty { display: none; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0; }
+  .tile, .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+  .tile { padding: 14px 16px; }
+  .tile .label { color: var(--text-2); font-size: 12px; }
+  .tile .value { font-size: 28px; font-weight: 650; margin-top: 2px; }
+  .tile .value small { font-size: 14px; font-weight: 500; color: var(--text-2); margin-left: 3px; }
+  .tile .note { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 14px; margin-bottom: 14px; }
+  .panel { padding: 16px; min-width: 0; }
+  .panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; margin-bottom: 12px; }
+  .panel-head .hint { color: var(--muted); font-size: 12px; }
+  details { margin-top: 10px; color: var(--text-2); font-size: 12px; }
+  summary { cursor: pointer; }
+
+  /* legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--text-2); margin-bottom: 10px; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px;
+                         margin-right: 6px; vertical-align: -1px; background: var(--c); }
+
+  /* stacked health bars */
+  .hbar { display: grid; grid-template-columns: 92px 1fr 40px; gap: 10px; align-items: center; padding: 5px 0; }
+  .hbar .name { color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hbar .total { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .stack { display: flex; gap: 2px; height: 16px; }
+  .stack i { display: block; height: 100%; min-width: 3px; background: var(--c); }
+  .stack i:first-child { border-radius: 4px 0 0 4px; }
+  .stack i:last-child { border-radius: 0 4px 4px 0; }
+  .stack i:only-child { border-radius: 4px; }
+
+  /* column charts */
+  .cols { position: relative; height: 170px; display: flex; align-items: flex-end; gap: 2px;
+          border-bottom: 1px solid var(--axis); margin-left: 28px; }
+  .cols .gl { position: absolute; left: 0; right: 0; border-top: 1px solid var(--grid); pointer-events: none; }
+  .cols .gl span { position: absolute; left: -28px; top: -8px; width: 22px; text-align: right;
+                   color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .col { flex: 1; height: 100%; display: flex; align-items: flex-end; position: relative; }
+  .col i { display: block; width: 100%; background: var(--series); border-radius: 4px 4px 0 0; }
+  .col:hover i { filter: brightness(1.15); }
+  .xlabels { display: flex; gap: 2px; margin-left: 28px; margin-top: 4px; color: var(--muted); font-size: 11px; }
+  .xlabels span { flex: 1; text-align: center; white-space: nowrap; overflow: visible; }
+  .threshold { position: absolute; top: 0; bottom: 0; border-left: 2px dashed var(--critical); pointer-events: none; }
+  .threshold span { position: absolute; top: -2px; left: 6px; font-size: 11px; color: var(--text-2); white-space: nowrap; }
+  .empty { color: var(--muted); padding: 24px 0; text-align: center; }
+
+  /* tables */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-weight: 600; color: var(--text-2); font-size: 12px; padding: 6px 8px; border-bottom: 1px solid var(--axis); white-space: nowrap; }
+  td { padding: 7px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; white-space: nowrap; color: var(--text); }
+  .pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--stale)); flex: none; }
+  .steps { display: flex; flex-wrap: wrap; gap: 3px; }
+  .steps span { background: var(--chip); color: var(--text-2); border-radius: 6px; padding: 1px 6px; font-size: 11px; white-space: nowrap; }
+
+  /* services */
+  .services { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 16px; }
+  .svc { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--grid); }
+  .svc .meta { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  footer { margin-top: 24px; color: var(--muted); font-size: 12px; }
+  #tip { position: fixed; z-index: 10; pointer-events: none; background: var(--surface); color: var(--text);
+         border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 12px;
+         box-shadow: 0 4px 16px rgba(0,0,0,0.12); display: none; max-width: 260px; }
+  @media (max-width: 560px) { .hbar { grid-template-columns: 72px 1fr 32px; } .tile .value { font-size: 24px; } }
+  @media (forced-colors: active) { .stack i, .col i, .pill::before, .legend span::before { forced-color-adjust: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>FleetOps live fleet</h1>
+      <div class="sub"><span class="badge">Synthetic data</span> <span id="updated">Loading…</span></div>
+    </div>
+  </header>
+  <div class="banner" id="banner" role="status"></div>
+
+  <section class="tiles" id="tiles" aria-label="Summary"></section>
+
+  <div class="row">
+    <section class="panel">
+      <div class="panel-head"><h2>Vehicle health by region</h2><span class="hint">Stale: nothing reported for 15 min</span></div>
+      <div class="legend" id="health-legend"></div>
+      <div id="regions"></div>
+      <details><summary>Show as table</summary><div class="table-wrap" id="regions-table"></div></details>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Battery voltage</h2><span class="hint" id="battery-hint"></span></div>
+      <div id="battery"></div>
+      <details><summary>Show as table</summary><div class="table-wrap" id="battery-table"></div></details>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-bottom:14px">
+    <div class="panel-head"><h2>Incidents detected per hour</h2><span class="hint">Last 24 hours, local time</span></div>
+    <div id="hourly"></div>
+    <details><summary>Show as table</summary><div class="table-wrap" id="hourly-table"></div></details>
+  </section>
+
+  <section class="panel" style="margin-bottom:14px">
+    <div class="panel-head"><h2>Recent incidents</h2><span class="hint">Each correlated pattern, scored, checked against policy, and turned into a case</span></div>
+    <div class="table-wrap" id="incidents"></div>
+  </section>
+
+  <div class="row">
+    <section class="panel">
+      <div class="panel-head"><h2>Vehicles needing attention</h2><span class="hint" id="attention-hint"></span></div>
+      <div class="table-wrap" id="attention"></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Fleets</h2><span class="hint">Most open incidents first</span></div>
+      <div class="table-wrap" id="fleets"></div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Services</h2><span class="hint">Uptime and median readiness latency over the last hour</span></div>
+    <div class="services" id="services"></div>
+  </section>
+
+  <footer id="footer">All vehicles, fleets and events are synthetic. This page renders a snapshot that the FleetOps stack publishes every minute.</footer>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+"use strict";
+const HEALTH = [
+  ["healthy", "Healthy", "--good"], ["warning", "Warning", "--warning"],
+  ["critical", "Critical", "--critical"], ["stale", "Stale", "--stale"],
+];
+const STATUS_COLOR = {
+  healthy: "--good", warning: "--warning", critical: "--critical", stale: "--stale",
+  degraded: "--warning", down: "--critical", pending: "--stale",
+  detected: "--warning", awaiting_approval: "--serious", case_opened: "--good", closed: "--stale",
+  rejected: "--stale", approval_expired: "--serious", blocked: "--critical", failed: "--critical",
+};
+const LABEL = { awaiting_approval: "awaiting approval", case_opened: "case opened",
+                approval_expired: "approval expired", policy_evaluated: "policy checked",
+                approval_requested: "approval requested", no_case: "no case" };
+let data = null, timer = null;
+
+const $ = (id) => document.getElementById(id);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const words = (v) => esc(LABEL[v] || String(v ?? "").replaceAll("_", " "));
+const num = (v, digits = 0) => v == null ? "—" : Number(v).toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: digits });
+const pct = (part, whole) => whole ? Math.round(100 * part / whole) : 0;
+const pill = (status) => `<span class="pill" style="--c:var(${STATUS_COLOR[status] || "--stale"})">${words(status)}</span>`;
+const time = (iso) => iso ? new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "—";
+function ago(iso) {
+  const s = Math.max(0, (Date.now() - new Date(iso)) / 1000);
+  if (s < 60) return `${Math.round(s)} s ago`;
+  if (s < 3600) return `${Math.round(s / 60)} min ago`;
+  if (s < 86400) return `${Math.round(s / 3600)} h ago`;
+  return `${Math.round(s / 86400)} days ago`;
+}
+function table(head, rows) {
+  const th = head.map(([label, cls]) => `<th class="${cls || ""}">${esc(label)}</th>`).join("");
+  return `<table><thead><tr>${th}</tr></thead><tbody>${rows.join("")}</tbody></table>`;
+}
+function niceMax(v) {
+  if (v <= 4) return 4;
+  const step = Math.pow(10, Math.floor(Math.log10(v)));
+  for (const m of [1, 2, 2.5, 5, 10]) if (m * step >= v) return m * step;
+  return 10 * step;
+}
+
+function renderTiles(s) {
+  const tiles = [
+    ["Vehicles reporting", `${num(s.reporting)}<small>of ${num(s.vehicles)}</small>`, `${num(s.stale)} stale`],
+    ["Healthy", `${pct(s.healthy, s.vehicles)}<small>%</small>`, `${num(s.healthy)} vehicles`],
+    ["Needing attention", num(s.warning + s.critical), `${num(s.critical)} critical, ${num(s.warning)} warning`],
+    ["Open incidents", num(s.openIncidents), "detected, awaiting approval or case opened"],
+    ["Incidents, last 24 h", num(s.incidents24h), `${num(s.casesOpened24h)} became service cases`],
+    ["Detection to case", s.medianMinutesToCase == null ? "—" : `${num(s.medianMinutesToCase, 1)}<small>min</small>`,
+     s.caseTimingSample ? `median of the last ${s.caseTimingSample} cases` : "no cases yet"],
+    ["Services healthy", `${num(s.servicesHealthy)}<small>of ${num(s.servicesTotal)}</small>`, "readiness checks every 5 s"],
+  ];
+  $("tiles").innerHTML = tiles.map(([label, value, note]) =>
+    `<div class="tile"><div class="label">${esc(label)}</div><div class="value">${value}</div><div class="note">${esc(note)}</div></div>`).join("");
+}
+
+function renderRegions(regions) {
+  $("health-legend").innerHTML = HEALTH.map(([, label, c]) => `<span style="--c:var(${c})">${label}</span>`).join("");
+  if (!regions.length) { $("regions").innerHTML = `<div class="empty">No vehicles</div>`; $("regions-table").innerHTML = ""; return; }
+  $("regions").innerHTML = regions.map((r) => {
+    const segs = HEALTH.filter(([k]) => r[k] > 0).map(([k, label, c]) =>
+      `<i style="--c:var(${c});flex:${r[k]}" data-tip="${esc(`<b>${esc(r.regionCode)}</b><br>${label}: ${r[k]} of ${r.vehicles} (${pct(r[k], r.vehicles)}%)`)}"></i>`).join("");
+    return `<div class="hbar"><span class="name">${esc(r.regionCode)}</span><div class="stack">${segs}</div><span class="total">${r.vehicles}</span></div>`;
+  }).join("");
+  $("regions-table").innerHTML = table([["Region"], ...HEALTH.map(([, l]) => [l, "num"]), ["Vehicles", "num"]],
+    regions.map((r) => `<tr><td>${esc(r.regionCode)}</td>${HEALTH.map(([k]) => `<td class="num">${r[k]}</td>`).join("")}<td class="num">${r.vehicles}</td></tr>`));
+}
+
+function columns(container, items, { value, label, tip, every = 1, threshold }) {
+  const max = niceMax(Math.max(0, ...items.map(value)));
+  const grid = [0.5, 1].map((f) => `<div class="gl" style="bottom:${f * 100}%"><span>${num(max * f)}</span></div>`).join("");
+  const cols = items.map((it, i) => {
+    const h = value(it) ? Math.max(2, 100 * value(it) / max) : 0;
+    return `<div class="col" data-tip="${esc(tip(it))}"><i style="height:${h}%"></i></div>`;
+  }).join("");
+  const mark = threshold ? `<div class="threshold" style="left:calc(${threshold.at * 100}% - 1px)"><span>${esc(threshold.label)}</span></div>` : "";
+  // Label every nth column, sparser on narrow screens, so labels never run together.
+  const fit = Math.max(1, Math.floor((container.clientWidth - 28) / 66));
+  const step = Math.max(every, Math.ceil(items.length / fit));
+  const xs = items.map((it, i) => `<span>${i % step === 0 ? esc(label(it)) : ""}</span>`).join("");
+  container.innerHTML = `<div class="cols">${grid}${cols}${mark}</div><div class="xlabels">${xs}</div>`;
+}
+
+function renderBattery(b) {
+  $("battery-hint").textContent = `Volts · ${num(b.reporting)} vehicles reporting`;
+  if (!b.reporting) { $("battery").innerHTML = `<div class="empty">No battery readings</div>`; $("battery-table").innerHTML = ""; return; }
+  const lowBins = b.bins.filter((x) => x.low).length;
+  columns($("battery"), b.bins, {
+    value: (x) => x.vehicles, label: (x) => x.label,
+    tip: (x) => `<b>${esc(x.label)} V</b><br>${num(x.vehicles)} vehicles (${pct(x.vehicles, b.reporting)}%)`,
+    threshold: { at: lowBins / b.bins.length, label: `${b.lowThreshold} V low-voltage line` },
+  });
+  $("battery-table").innerHTML = table([["Voltage"], ["Vehicles", "num"]],
+    b.bins.map((x) => `<tr><td>${esc(x.label)} V</td><td class="num">${x.vehicles}</td></tr>`));
+}
+
+function renderHourly(hours) {
+  const total = hours.reduce((a, h) => a + h.detected, 0);
+  if (!total) { $("hourly").innerHTML = `<div class="empty">No incidents in the last 24 hours</div>`; }
+  else columns($("hourly"), hours, {
+    value: (h) => h.detected, every: 3,
+    label: (h) => new Date(h.hour).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    tip: (h) => `<b>${esc(time(h.hour))}–${esc(time(new Date(new Date(h.hour).getTime() + 3600e3).toISOString()))}</b><br>${num(h.detected)} incidents detected`,
+  });
+  $("hourly-table").innerHTML = table([["Hour starting"], ["Detected", "num"]],
+    hours.map((h) => `<tr><td>${time(h.hour)}</td><td class="num">${h.detected}</td></tr>`));
+}
+
+function renderIncidents(items) {
+  if (!items.length) { $("incidents").innerHTML = `<div class="empty">No incidents in the last 24 hours</div>`; return; }
+  $("incidents").innerHTML = table(
+    [["Detected"], ["Incident"], ["Vehicle"], ["Region"], ["Risk", "num"], ["Policy"], ["Status"], ["To case", "num"], ["Response steps"]],
+    items.map((i) => `<tr>
+      <td title="${esc(i.detectedAt)}">${time(i.detectedAt)}</td>
+      <td class="mono">${esc(i.incidentId)}</td>
+      <td class="mono">${esc(i.vehicleId)}</td>
+      <td>${esc(i.regionCode || "—")}</td>
+      <td class="num">${num(i.riskScore, 1)} <span style="color:var(--muted)">${esc(i.riskLevel || "")}</span></td>
+      <td>${words(i.policyDecision || "—")}</td>
+      <td>${pill(i.status)}</td>
+      <td class="num">${i.minutesToCase == null ? "—" : `${num(i.minutesToCase, 1)} min`}</td>
+      <td><div class="steps">${i.steps.map((s) => `<span>${words(s)}</span>`).join("")}</div></td></tr>`));
+}
+
+function renderAttention(items, s) {
+  $("attention-hint").textContent = items.length < s.warning + s.critical + s.stale
+    ? `Worst ${items.length} of ${s.warning + s.critical + s.stale}` : "Critical first, then lowest battery";
+  if (!items.length) { $("attention").innerHTML = `<div class="empty">Every vehicle is healthy</div>`; return; }
+  $("attention").innerHTML = table([["Vehicle"], ["Region"], ["Health"], ["Battery", "num"], ["Issues"], ["Last report", "num"]],
+    items.map((v) => `<tr><td class="mono">${esc(v.vehicleId)}</td><td>${esc(v.regionCode || "—")}</td><td>${pill(v.health)}</td>
+      <td class="num">${v.batteryVoltage == null ? "—" : `${num(v.batteryVoltage, 2)} V`}</td>
+      <td>${v.issues.length ? v.issues.map(words).join(", ") : (v.connectivityState ? words(v.connectivityState) : "—")}</td>
+      <td class="num">${v.observedAt ? ago(v.observedAt) : "never"}</td></tr>`));
+}
+
+function renderFleets(items) {
+  if (!items.length) { $("fleets").innerHTML = `<div class="empty">No fleets</div>`; return; }
+  $("fleets").innerHTML = table([["Fleet"], ["SLA"], ["Vehicles", "num"], ["Healthy", "num"], ["Attention", "num"], ["Open incidents", "num"]],
+    items.map((f) => `<tr><td>${esc(f.customerName || f.fleetId)}<div class="mono" style="color:var(--muted)">${esc(f.fleetId)}</div></td>
+      <td>${words(f.slaLevel || "—")}</td><td class="num">${f.vehicles}</td><td class="num">${pct(f.healthy, f.vehicles)}%</td>
+      <td class="num">${f.warning + f.critical}</td><td class="num">${f.openIncidents}</td></tr>`));
+}
+
+function renderServices(items) {
+  if (!items.length) { $("services").innerHTML = `<div class="empty">Service health is unavailable</div>`; return; }
+  $("services").innerHTML = items.map((s) => `<div class="svc"><span>${esc(s.name)}<div class="meta">${s.uptimePct == null ? "—" : `${num(s.uptimePct, 1)}% up`} · ${s.latencyMsP50 == null ? "—" : `${num(s.latencyMsP50, 0)} ms`}</div></span>
+    ${pill(s.status)}</div>`).join("");
+}
+
+function renderFreshness() {
+  if (!data) return;
+  $("updated").textContent = `Snapshot ${ago(data.generatedAt)} · refreshes every ${num(data.refreshSeconds)} s`;
+  const notes = [];
+  const age = (Date.now() - new Date(data.generatedAt)) / 1000;
+  if (age > 3 * data.refreshSeconds) notes.push(`This snapshot is ${ago(data.generatedAt).replace(" ago", "")} old: the FleetOps stack that publishes it is probably not running right now.`);
+  if (data.errors.length) notes.push(`Some sections could not be gathered: ${data.errors.map((e) => e.section).join(", ")}.`);
+  $("banner").textContent = notes.join(" ");
+}
+
+function render(d) {
+  data = d;
+  renderTiles(d.summary);
+  renderRegions(d.regions);
+  renderBattery(d.battery);
+  renderHourly(d.incidentsByHour);
+  renderIncidents(d.recentIncidents);
+  renderAttention(d.attention, d.summary);
+  renderFleets(d.fleets);
+  renderServices(d.services);
+  renderFreshness();
+}
+
+async function load() {
+  clearTimeout(timer);
+  try {
+    const response = await fetch("status.json", { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    render(await response.json());
+  } catch (err) {
+    $("banner").textContent = `Could not load status.json (${err.message}). Retrying shortly.`;
+  }
+  timer = setTimeout(load, 1000 * ((data && data.refreshSeconds) || 60));
+}
+
+// One tooltip for every mark that carries data-tip (the text is escaped when it is built).
+const tip = $("tip");
+document.addEventListener("mousemove", (e) => {
+  const el = e.target.closest("[data-tip]");
+  if (!el) { tip.style.display = "none"; return; }
+  tip.innerHTML = el.dataset.tip;
+  tip.style.display = "block";
+  const x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8);
+  const y = e.clientY + 16 + tip.offsetHeight > window.innerHeight ? e.clientY - tip.offsetHeight - 10 : e.clientY + 16;
+  tip.style.left = `${x}px`; tip.style.top = `${y}px`;
+});
+document.addEventListener("mouseleave", () => { tip.style.display = "none"; });
+setInterval(renderFreshness, 5000);
+let resizing = null;
+window.addEventListener("resize", () => {
+  clearTimeout(resizing);
+  resizing = setTimeout(() => { if (data) { renderBattery(data.battery); renderHourly(data.incidentsByHour); } }, 150);
+});
+load();
+</script>
+</body>
+</html>

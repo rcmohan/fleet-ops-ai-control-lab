@@ -20,6 +20,7 @@ from psycopg import AsyncConnection, sql
 from psycopg.conninfo import conninfo_to_dict, make_conninfo
 
 from cloud_exporter.app import build_app as build_exporter
+from cloud_exporter.dashboard import build_status
 from cloud_exporter.exporter import Exporter
 from cloud_exporter.sinks import FileSink
 from fleetops_runtime import Database, MeshTransport, ServiceClients, build_app
@@ -697,6 +698,15 @@ async def test_correlation_turns_a_pattern_into_an_approved_case(mesh: Mesh) -> 
                   (mesh.exports / "tables" / "events.jsonl").read_text().splitlines()]
     assert set(incident["triggerEventIds"]) <= {row["eventId"] for row in event_rows}
 
+    # The dashboard snapshot built from the real services shows the incident and its case.
+    # (There is no status monitor in the test mesh, so only that section is missing.)
+    status = await build_status(mesh.clients, datetime.now(UTC))
+    assert [e["section"] for e in status["errors"]] == ["services"], status["errors"]
+    shown = next(i for i in status["recentIncidents"]
+                 if i["incidentId"] == incident["incidentId"])
+    assert shown["status"] == "case_opened" and shown["caseId"] == case["caseId"]
+    assert shown["minutesToCase"] is not None and shown["steps"][0] == "detected"
+    assert status["summary"]["vehicles"] > 0 and status["summary"]["casesOpened24h"] >= 1
 
     # Once closed, the next occurrence is a new incident.
     closed = await mesh.ok("POST", "signal-correlation", f"{path}/close",

@@ -252,9 +252,9 @@ services:
       retries: 5
       start_period: 5s
 
-  # Copies events, incidents, evidence and fleet context to BigQuery (AGENTIC.md, 6.1).
-  # By default it writes to ./.cloud-export, laid out like the tables and topic; add
-  # compose.gcp.yaml to send to a real GCP project. Reached only through the gateway.
+  # Builds the dashboard's status.json every minute, and copies incidents and evidence (and,
+  # with compose.gcp.yaml, events and context) toward GCP; see AGENTIC.md, section 6.1.
+  # By default everything goes to ./.cloud-export. Reached only through the gateway.
   cloud-exporter:
     build:
       context: .
@@ -263,9 +263,11 @@ services:
     environment:
       FLEETOPS_EXPORT_SINK: file
       FLEETOPS_EXPORT_DIR: /data
-      FLEETOPS_EXPORT_CONTEXT_INTERVAL_SECONDS: "300"
-      FLEETOPS_EXPORT_EVENTS_INTERVAL_SECONDS: "60"
+      # Events and context only feed BigQuery (compose.gcp.yaml turns them on).
+      FLEETOPS_EXPORT_CONTEXT_INTERVAL_SECONDS: "0"
+      FLEETOPS_EXPORT_EVENTS_INTERVAL_SECONDS: "0"
       FLEETOPS_EXPORT_FLUSH_INTERVAL_SECONDS: "300"
+      FLEETOPS_DASHBOARD_INTERVAL_SECONDS: "60"
     volumes:
       - ./.cloud-export:/data
     healthcheck:

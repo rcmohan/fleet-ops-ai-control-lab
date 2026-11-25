@@ -37,29 +37,42 @@ python -m pytest -q                            # Postgres tests need FLEETOPS_TE
 
 Swagger UI is available on `/docs` for every running service. Compose maps the services to localhost ports `8101` through `8116`, and a gateway on `http://127.0.0.1:8080` serves each one at `/<service>/` (for example `/approval/docs`); see `services/README.md` for the catalog and local-run instructions.
 
-The gateway's front page is a status page. The `status-monitor` service (`status_monitor/`) checks every service's readiness every 5 seconds, whether or not the page is open, and keeps the last hour in memory. The page loads that hour when it opens and then follows new checks. History starts over when the monitor restarts.
+The gateway's front page is a status page. The `status-monitor` service (`status_monitor/`) checks every service's readiness every 5 seconds, whether or not the page is open, and keeps the last hour in memory. The page loads that hour when it opens and then follows new checks. History starts over when the monitor restarts. The fleet dashboard is at `/dashboard/` (see [Dashboard](#dashboard)).
 
-## Cloud exporter
+## Dashboard
 
-A copy of the stack's data goes to BigQuery on GCP, for a static dashboard and, later, a cloud agent, while this stack stays the system of record (see `AGENTIC.md`, section 6.1). The `cloud-exporter` service (`cloud_exporter/`) sends:
+`http://127.0.0.1:8080/dashboard/` is a static page for showing the fleet to people outside the project: vehicle health by region, battery voltage, incidents per hour, recent incidents with their response steps and time to a case, the vehicles and fleets needing attention, and service health. It renders one JSON file, `status.json`, which the `cloud-exporter` service rebuilds from the local services every minute (`cloud_exporter/dashboard.py`). A section whose service is down is left empty and named in a banner; a snapshot older than three refreshes says the stack is probably not running.
 
-- **Events.** Every minute it reads telematics-event's feed (`GET /v1/event-feed`) from where it stopped and appends the new events to the `events` table.
-- **Incidents.** For every incident step, signal-correlation's outbox notifies the exporter, which appends the full incident, with its events and timeline, to the `incidents` table.
-- **Evidence.** When an incident is detected or recurs, the exporter also gathers an evidence bundle into the `evidence` table. The bundle holds the vehicle, unit and fleet details, 24 hours of events, regional connectivity, maintenance, similar past incidents, playbooks, action rules and computed features, each with citation references the agent must use.
-- **Context.** Every 5 minutes it appends the fleets, vehicles and digital-twin states that changed, and all of them once a day.
-
-Rows are buffered and loaded every 5 minutes with batch load jobs, which are free. Tables are append-only; each has a `<table>_latest` view that keeps the newest row per key. Events and context expire after 7 days; incidents and evidence are kept. Export is best effort: while the laptop is off nothing is exported, and rows still buffered when the exporter is killed are lost.
-
-By default the exporter writes to `./.cloud-export/` instead: `tables/<table>.jsonl` holds the rows that would be loaded, and `topics/fleetops-incidents.jsonl` the incident messages the agent will receive. `GET /cloud-exporter/v1/exports/status` on the gateway shows what was exported last, what is buffered, and the last error. To send to BigQuery:
+The page has no server-side code, so the same two files work from a public Cloud Storage bucket. The exporter can upload `status.json` there every minute while the stack runs:
 
 ```powershell
 gcloud auth application-default login
+gcloud storage buckets create gs://<bucket> --location=US --uniform-bucket-level-access
+gcloud storage buckets add-iam-policy-binding gs://<bucket> --member=allUsers --role=roles/storage.objectViewer
+gcloud storage cp gateway/html/dashboard/index.html gs://<bucket>/index.html --cache-control="no-cache"
+$env:FLEETOPS_DASHBOARD_BUCKET = "<bucket>"
+docker compose -f compose.yaml -f compose.dashboard.yaml up -d --build cloud-exporter
+```
+
+The page is then at `https://storage.googleapis.com/<bucket>/index.html`. Anyone with the link can read it, which is fine only because all data is synthetic.
+
+## Cloud exporter
+
+The `cloud-exporter` service (`cloud_exporter/`) prepares what the cloud side needs while this stack stays the system of record (see `AGENTIC.md`, section 6.1):
+
+- **Dashboard.** `status.json`, every minute (above).
+- **Incidents.** For every incident step, signal-correlation's outbox notifies the exporter, which appends the full incident, with its events and timeline, to `incidents`, and writes a message for the future agent topic.
+- **Evidence.** When an incident is detected or recurs, the exporter also gathers an evidence bundle into `evidence` and into that message. The bundle holds the vehicle, unit and fleet details, 24 hours of events, regional connectivity, maintenance, similar past incidents, playbooks, action rules and computed features, each with citation references the agent must use.
+
+By default everything goes to `./.cloud-export/`: `dashboard/status.json`, `tables/<table>.jsonl`, and `topics/fleetops-incidents.jsonl`. `GET /cloud-exporter/v1/exports/status` on the gateway shows what was exported last and the last error.
+
+**BigQuery (built, off by default).** `compose.gcp.yaml` sends the same rows to BigQuery instead, and also copies every telematics event (from `GET /v1/event-feed`) and the fleets, vehicles and digital-twin states. Rows are loaded in batches every 5 minutes with free load jobs; tables are append-only with `<table>_latest` views, and events and context expire after 7 days. Nothing reads them yet; they are there for history and analytics later.
+
+```powershell
 bq mk --location=US --dataset <your project>:fleetops
 $env:FLEETOPS_GCP_PROJECT = "<your project>"
 docker compose -f compose.yaml -f compose.gcp.yaml up -d --build cloud-exporter
 ```
-
-The exporter creates its tables and views on the first load. It needs BigQuery Data Editor on the dataset and BigQuery Job User on the project. Nothing goes to Pub/Sub until `FLEETOPS_EXPORT_INCIDENT_TOPIC` is set, which is for the agent phase.
 
 ## Simulator
 

@@ -1,0 +1,21 @@
+# Publish the dashboard to a public Cloud Storage bucket as well as /dashboard/ locally:
+#
+#   gcloud auth application-default login
+#   gcloud storage buckets create gs://<bucket> --location=US --uniform-bucket-level-access
+#   gcloud storage buckets add-iam-policy-binding gs://<bucket> --member=allUsers --role=roles/storage.objectViewer
+#   gcloud storage cp gateway/html/dashboard/index.html gs://<bucket>/index.html --cache-control="no-cache"
+#   $env:FLEETOPS_DASHBOARD_BUCKET = "<bucket>"
+#   docker compose -f compose.yaml -f compose.dashboard.yaml up -d --build cloud-exporter
+#
+# The page is then at https://storage.googleapis.com/<bucket>/index.html. The exporter
+# uploads status.json every minute while the stack runs; anyone with the link can read it,
+# so it must only ever hold synthetic data. Overwriting it needs roles/storage.objectUser
+# on the bucket for your account (bucket owners already have it).
+
+services:
+  cloud-exporter:
+    environment:
+      FLEETOPS_DASHBOARD_BUCKET: ${FLEETOPS_DASHBOARD_BUCKET:?FLEETOPS_DASHBOARD_BUCKET is required}
+      GOOGLE_APPLICATION_CREDENTIALS: /gcloud/adc.json
+    volumes:
+      - ${FLEETOPS_GCLOUD_ADC:-${APPDATA}/gcloud/application_default_credentials.json}:/gcloud/adc.json:ro
