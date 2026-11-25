@@ -147,7 +147,10 @@ async def update_status(ctx: RequestContext) -> dict[str, Any]:
             raise invalid("RESOLUTION_REQUIRED", "a resolution is required to resolve a case")
         values.update(
             resolution=body.resolution, root_cause=body.rootCause,
-            resolution_outcome=body.outcome, resolved_at=datetime.now(UTC),
+            resolution_outcome=body.outcome,
+            # created_at comes from the database clock and this from the app's; the two can
+            # differ by a fraction of a second, so never resolve before the case was opened.
+            resolved_at=max(datetime.now(UTC), case["created_at"]),
         )
     row = await update_versioned(ctx.db, "cases.service_cases", "case_id", case["case_id"], values)
     if body.status == "resolved" and row["event_type"]:
